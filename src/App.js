@@ -5,6 +5,12 @@ import GlobalStyled from './Components/GlobalStyle/GlobalStyled';
 import Layout from './Components/Layout/Layout';
 import Homepage from './Components/Pages/Homepage';
 import { ThemeProvider } from 'styled-components';
+import LoginpageAnimation from './Components/Pages/CMS/LoginPage/LoginpageAnimation';
+import AdminPage from './Components/Pages/CMS/AdminPage/AdminPage';
+import UpdateUserProfilePage from './Components/Pages/CMS/AdminPage/AdminPageComponents/Common/UserProfile/UpdateuserProfile/UpdateUserProfile';
+import ArticleFormPage from './Components/Pages/CMS/AdminPage/AdminPageComponents/Common/CreateArticle/ArticleFormPage';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { SideNavStateContextProvider } from './Components/Hooks/Context/SideNavStateContext';
 
 const queryClient = new QueryClient();
 
@@ -28,14 +34,24 @@ function App() {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <GlobalStyled />
         <ThemeProvider theme={theme}>
-          <Routes>
-            <Route path='/' element={<Layout />}>
-              <Route index element={<Homepage />} />
-            </Route>
-          </Routes>
+          <GlobalStyled />
+          <SideNavStateContextProvider>
+            <Routes>
+              <Route path='/' element={<Layout />}>
+                <Route index element={<Homepage />} />
+              </Route>
+              <Route path='theiautoCMS'>
+                <Route index element={<LoginpageAnimation />} />
+                <Route path='adminpage' element={<AdminPage />} />
+                <Route path='adminpage/create-article' element={<ArticleFormPage mode={'create'} key="create" />} />
+                <Route path='adminpage/update-article/:articleId' element={<ArticleFormPage mode={'update'} key="update" />} />
+                <Route path='adminpage/update-user-profile' element={<UpdateUserProfilePage />} />
+              </Route>
+            </Routes>
+          </SideNavStateContextProvider>
         </ThemeProvider>
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </BrowserRouter>
   )
