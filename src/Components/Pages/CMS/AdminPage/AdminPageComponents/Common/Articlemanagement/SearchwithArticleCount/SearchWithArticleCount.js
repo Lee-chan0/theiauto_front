@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { BsFilterRight } from "react-icons/bs";
 import SearchForm from "./SearchForm";
-import { useState } from "react";
 
 const Container = styled.div`
   width: 100%;
@@ -29,8 +28,7 @@ const SearchDescrip = styled.span`
   color : ${({ theme }) => theme.neutral.gray600};
 `;
 
-function SearchWithArticleCount({ total: articleTotal, categoryName, query, needImportant }) {
-  const [isSearchBarActive, setIsSearchBarActive] = useState(false);
+function SearchWithArticleCount({ total: articleTotal, categoryName, query, needImportant, setIsSearchBarActive, isSearchBarActive }) {
   const total = articleTotal || articleTotal === 0 ? articleTotal : '';
 
   function insertEveryThreeFromEnd(str, separator = ",") {

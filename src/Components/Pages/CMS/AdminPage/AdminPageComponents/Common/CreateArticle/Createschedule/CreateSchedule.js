@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useState } from "react";
 import { ko } from 'date-fns/locale'
+import { addDays, isToday } from "date-fns";
+import { CgCloseR } from "react-icons/cg";
+import React from "react";
 
 const ScheduleContainer = styled.div`
   position: absolute;
@@ -26,6 +28,12 @@ const ScheduleContainer = styled.div`
       }
     }
   }
+
+  & > svg {
+    &:hover {
+      opacity: 0.7;
+    }
+  }
 `;
 
 const IsScheduleActive = styled.span`
@@ -38,21 +46,40 @@ const IsScheduleActive = styled.span`
   border-radius: 4px;
 `;
 
-function CreateSchedule() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
+  <input
+    readOnly
+    ref={ref}
+    value={value}
+    onClick={onClick}
+    style={{ cursor: 'pointer' }}
+  />
+))
+
+function CreateSchedule({ setIsReservation, articleValues, setArticleValues }) {
+  const isTodaySelected = isToday(articleValues.publishTime);
 
   return (
     <ScheduleContainer>
+      <CgCloseR size={24} style={{ marginRight: '4px', cursor: 'pointer' }} onClick={() => {
+        setIsReservation(false)
+        setArticleValues((prev) => ({ ...prev, articleStatus: 'publish' }))
+      }} />
       <IsScheduleActive>예약 시간</IsScheduleActive>
       <DatePicker
         locale={ko}
-        selected={selectedDate}
+        selected={articleValues.publishTime}
         showTimeSelect
-        timeIntervals={15}
-        onChange={(date) => setSelectedDate(date)}
+        minDate={new Date()}
+        maxDate={addDays(new Date(), 7)}
+        minTime={isTodaySelected ? new Date() : new Date(0, 0, 0, 0, 0)}
+        maxTime={new Date(0, 0, 0, 23, 59)}
+        timeIntervals={5}
+        onChange={(date) => setArticleValues((prev) => ({ ...prev, publishTime: date }))}
         dateFormat="yyyy-MM-dd :: aa HH시 mm분"
         timeCaption="시간"
         popperPlacement='bottom-start'
+        customInput={<CustomInput />}
       />
     </ScheduleContainer>
   )

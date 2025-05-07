@@ -44,3 +44,10 @@ export async function fetchSearchArticle(page, categoryId, searchQuery) {
   });
   return response.data;
 }
+
+export async function deleteArticle(articleId, prevImageUrls) {
+  const response = await axiosInstance.delete(`/article/delete/${articleId}`, {
+    data: { prevImageUrls }
+  });
+  return response.data;
+}

@@ -8,8 +8,8 @@ import { BiArrowFromLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useSideNavState } from "../../../../../../../Hooks/Context/SideNavStateContext";
 
-function SideNavMenu() {
-  const { data: categories, isLoading, isError } = useFetchCategories();
+function SideNavMenu({ setIsSearchBarActive }) {
+  const { data: categories } = useFetchCategories();
   const [parentCategories, setParentCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -28,12 +28,14 @@ function SideNavMenu() {
   }, [categoriesArray]);
 
   const handleClickCategory = (categoryId) => {
-    navigate(`/theiautoCMS/adminpage?category=${categoryId}&page=1`);
     setNeedImportant(false);
+    setIsSearchBarActive(false);
+    navigate(`/theiautoCMS/adminpage?category=${categoryId}&page=1`);
   }
 
   const handleClickImportantArticle = () => {
     setNeedImportant(true);
+    setIsSearchBarActive(false);
     navigate('/theiautoCMS/adminpage?query=&category=none&page=1&isImportant=true');
   }
 
@@ -83,6 +85,7 @@ function SideNavMenu() {
         </SideNavMenuLists>
         <SideNavMenuTitle style={{ marginTop: '16px' }}>옵션</SideNavMenuTitle>
         <span onClick={handleClickImportantArticle}>중요한 기사</span>
+        <span>배너 기사</span>
       </SideNavMenuTitleBox>
     </SideNavMenuContainer>
   )

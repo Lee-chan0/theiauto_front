@@ -9,6 +9,7 @@ import logo from '../../../../Assets/theiautoLogoWhite.png';
 import logoBlack from '../../../../Assets/theiautoLogo.png';
 import { useState } from 'react';
 import { useLogin } from '../../../Hooks/ApiHooks/User/useLogin';
+import { CgSpinner } from "react-icons/cg";
 
 function LoginForm() {
   const loginMutation = useLogin();
@@ -117,7 +118,7 @@ function LoginForm() {
             <LoginPlaceHolder $isActive={isActiveInput.password}>PASSWORD</LoginPlaceHolder>
           </LoginFormLabel>
           <HasValues $hasValues={hasValues}>아이디 및 비밀번호를 확인해 주세요.</HasValues>
-          <LoginFormButton type='submit'>LOGIN</LoginFormButton>
+          <LoginFormButton type='submit'>{loginMutation.isPending ? <CgSpinner size={24} /> : 'LOGIN'}</LoginFormButton>
         </LoginFormLayoutBox>
       </LoginFormBox>
     </LoginFormContainer>

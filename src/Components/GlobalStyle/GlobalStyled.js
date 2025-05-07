@@ -1,15 +1,26 @@
+import { useLocation } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
-const GlobalStyled = createGlobalStyle`
+const GlobalStyledComponent = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
 
   body {
     font-family: 'Noto Sans KR', sans-serif;
-    max-width: 1440px;
-    margin : 0 auto;
+    margin : 0;
     font-size: 16px;
+    background-color: ${({ isCms, theme }) => isCms ? '#ffffff' : theme.neutral.gray100};
+  }
+
+  ul {
+    list-style: none;
+    margin : 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin : 0;
   }
 
   .quill {
@@ -70,6 +81,76 @@ const GlobalStyled = createGlobalStyle`
     display : flex;
     box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.5);
   }
+
+  .delete-popup {
+    width: 500px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color : #fff;
+    font-size: 13px;
+  }
+
+  .create-popup {
+    width: 500px;
+    font-size : 13px;
+    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.2);
+
+    & > .swal2-html-container {
+      & > .values-parent {
+        display: flex;
+        flex-direction: column;
+        border-radius: 4px;
+        gap : 8px;
+
+        & > p {
+          margin : 4px 0;
+          text-align: left;
+          font-weight: 500;
+          line-height: 1.7;
+          font-size: .9rem;
+
+          & > strong {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding : 4px 8px;
+            color : #fff;
+            display: block;
+            margin-bottom: 4px;
+          }
+        }
+      }
+    }
+  }
+  
+  .description-popup {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+
+    display : flex !important;
+    align-items: center;
+
+    & > .swal2-title {
+      margin: 0;
+      margin-left: 8px;
+
+    }
+  }
+
+  .success-popup {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: ${({ theme }) => theme.neutral.gray900};
+    font-size: 0.9rem;
+    padding : 8px 16px;
+    box-shadow: 0 0 8px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  
 `;
 
-export default GlobalStyled
+export default function GlobalStyle() {
+  const location = useLocation();
+  const isCms = location.pathname.startsWith('/theiautoCMS');
+
+  return <GlobalStyledComponent isCms={isCms} />;
+};

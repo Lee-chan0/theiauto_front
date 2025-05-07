@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { CreateFileContainer, CreateFileForm, CreateFileDesc, CreateFileImgBox, FileAlert } from './CreateFile.style';
+import { BiImageAdd } from "react-icons/bi";
 
-
-function CreateFile({ articleValues, setArticleValues, mode }) {
+function CreateFile({ articleValues, setArticleValues, mode, prevImageUrls, setPrevImageUrls }) {
   const [previewImg, setPreviewImg] = useState([]);
   const oneRun = useRef(false);
-  const [prevImageUrls, setPrevImageUrls] = useState([]); // 삭제되면 object storage에서 삭제하는 로직
 
   const handleChangeFiles = (e, index) => {
     if (previewImg.length === 30) return alert('이미지는 *30*장 까지 가능합니다');
@@ -66,7 +65,7 @@ function CreateFile({ articleValues, setArticleValues, mode }) {
     oneRun.current = true;
 
     setPrevImageUrls(articleValues.articleImageUrl);
-  }, [oneRun, articleValues]);
+  }, [oneRun, articleValues, setPrevImageUrls]);
 
   useEffect(() => {
     return () => {
@@ -106,7 +105,9 @@ function CreateFile({ articleValues, setArticleValues, mode }) {
       }
       <CreateFileForm htmlFor='image-uploader'>
         <input type='file' accept='image/*' id='image-uploader' style={{ display: 'none' }} onChange={(e) => handleChangeFiles(e)} />
-        <CreateFileImgBox />
+        <CreateFileImgBox style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <BiImageAdd size={40} color='gray' />
+        </CreateFileImgBox>
         <CreateFileDesc id='select'>사진 선택</CreateFileDesc>
       </CreateFileForm>
     </CreateFileContainer>

@@ -19,6 +19,38 @@ const CreateCategoryContainer = styled.div`
     font-size: .85rem;
     font-weight: bold;
   }
+
+  & > .banner-box {
+    width: 120px;
+    margin-top: 16px;
+    display : flex;
+    align-items: center;
+    justify-content: left;
+    gap : 8px;
+    position: relative;
+
+    & > .banner-check-descrip {
+      border-radius: 4px;
+      background-color: ${({ theme }) => theme.neutral.gray900};
+      color : ${({ theme }) => theme.neutral.gray0};
+      font-weight: bold;
+      padding : 4px 8px;
+      font-size : .85rem;
+    }
+
+    & > .banner-checkbox {
+      width: 20px;
+      height: 20px;
+    }
+
+    & > small {
+      position: absolute;
+      left : 100%;
+      width: 100%;
+      font-size: .65rem;
+      color : ${({ theme }) => theme.neutral.gray600};
+    }
+  }
 `;
 
 const CreateCategoryLayOut = styled.div`
@@ -41,6 +73,7 @@ const CreateCategoryParent = styled.div`
     font-weight: bold;
     width: 100%;
     text-align: center;
+    padding : 4px 4px;
   }
 `;
 

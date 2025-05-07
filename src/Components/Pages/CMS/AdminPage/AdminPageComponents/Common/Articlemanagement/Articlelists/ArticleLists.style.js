@@ -1,4 +1,13 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
+
+const rotate = keyframes`
+  from {
+    transform : rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 const ArticleListBox = styled.div`
   width: 100%;
@@ -83,4 +92,20 @@ const ArticleListItem = styled.span`
   }
 `;
 
-export { ArticleListContainer, ArticleListItem, ArticleListBox, BorderBottom };
+const LoadingContainer = styled.div`
+  width: 100%;
+  padding : 0 32px;
+  margin-top : 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  animation: ${rotate} 1s linear infinite;
+`;
+
+
+
+
+
+export { ArticleListContainer, ArticleListItem, ArticleListBox, BorderBottom, LoadingContainer };

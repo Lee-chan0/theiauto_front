@@ -8,13 +8,13 @@ import { useFetchImportantArticle } from "../../../../../../Hooks/ApiHooks/Artic
 import { useFetchSearchArticle } from "../../../../../../Hooks/ApiHooks/Article/useFetchSearchArticle";
 import { useSearchParams } from "react-router-dom";
 
-function ArticleManagement() {
+function ArticleManagement({ setIsSearchBarActive, isSearchBarActive }) {
   const [searchString, setSearchString] = useSearchParams();
   const query = searchString.get("query") || "";
   const category_id = searchString.get("category") || "none";
   const page = searchString.get("page") || 1;
   const { needImportant } = useSideNavState();
-  const { data: categoryByArticles, isLoading, isError } = useFetchCategoryByArticle(page, category_id);
+  const { data: categoryByArticles, isLoading } = useFetchCategoryByArticle(page, category_id);
   const { data: importantArticle } = useFetchImportantArticle(page, needImportant);
   const { data: searchArticles } = useFetchSearchArticle(page, category_id, query);
 
@@ -29,11 +29,14 @@ function ArticleManagement() {
         categoryName={categoryName}
         query={query}
         needImportant={needImportant}
+        setIsSearchBarActive={setIsSearchBarActive}
+        isSearchBarActive={isSearchBarActive}
       />
       <ArticleLists
         data={needImportant ? importantArticle : !query ? categoryByArticles : searchArticles}
         searchString={searchString}
         setSearchString={setSearchString}
+        isLoading={isLoading}
       />
     </ManagementContainer>
   )

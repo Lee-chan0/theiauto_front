@@ -6,11 +6,12 @@ import CreateButton from "./CreateButton/CreateButton";
 import { Link } from "react-router-dom";
 import { useSideNavState } from "../../../../../../Hooks/Context/SideNavStateContext";
 
-function AdminPageSideNav({ mode }) {
+function AdminPageSideNav({ mode, setIsSearchBarActive }) {
   const { setNeedImportant } = useSideNavState();
 
   const handleClickLogo = () => {
     setNeedImportant(false);
+    setIsSearchBarActive?.(false);
   }
 
   return (
@@ -18,7 +19,7 @@ function AdminPageSideNav({ mode }) {
       <CreateButton />
       <Link to={'/theiautoCMS/adminpage'} onClick={handleClickLogo}><SideNavBannerImg src={logo} alt="theiauto-logo" /></Link>
       <UserProfile />
-      <SideNavMenu mode={mode} />
+      <SideNavMenu mode={mode} setIsSearchBarActive={setIsSearchBarActive} />
     </SideNavContainer>
   );
 };

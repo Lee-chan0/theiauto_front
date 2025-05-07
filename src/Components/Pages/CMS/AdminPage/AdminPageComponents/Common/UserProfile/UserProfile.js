@@ -1,26 +1,42 @@
 import { useFetchAdminInfo } from "../../../../../../Hooks/ApiHooks/User/useFetchAdminInfo";
 import defaultImg from '../../../../../../../Assets/theiautoLogo.png';
+import { BiImageAdd } from "react-icons/bi";
 import {
   UserProfileContainer, UserProfileImg,
   UserProfileName, UserProfileEmail,
-  UserProfileImgBox
+  UserProfileImgBox,
+  UserImageWrap
 } from "./UserProfile.style";
-import { BsFillGearFill } from "react-icons/bs";
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useUpdateUser } from "../../../../../../Hooks/ApiHooks/User/useUpdateUser";
 
-function UserProfile({ isUpdate }) {
-  const navigate = useNavigate();
-  const { data: adminInfo, isLoading, isError } = useFetchAdminInfo();
+function UserProfile() {
+  const { data: adminInfo } = useFetchAdminInfo();
+  const [mouseHover, setMouseHover] = useState(false);
   const userInfo = useMemo(() => adminInfo?.userInfo || {}, [adminInfo]);
+  const userProfileImgMutation = useUpdateUser();
 
-  const handleClickUpdate = () => {
-    navigate('/theiautoCMS/adminpage/update-user-profile');
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formDate = new FormData();
+
+    formDate.append('file', file);
+
+    userProfileImgMutation.mutate(formDate);
   }
 
   return (
     <UserProfileContainer>
-      <UserProfileImgBox>
+      <UserProfileImgBox
+        onMouseEnter={() => setMouseHover(true)}
+        onMouseLeave={() => setMouseHover(false)}
+      >
+        <UserImageWrap $isHover={mouseHover} htmlFor="userProfile">
+          <input type="file" accept="image/*" style={{ display: 'none' }} id="userProfile" onChange={handleFileUpload} />
+          <BiImageAdd size={28} color="gray" />
+        </UserImageWrap>
         <UserProfileImg
           src={userInfo?.profileImg ? userInfo?.profileImg : defaultImg}
           alt="user-profile-img"
@@ -29,7 +45,6 @@ function UserProfile({ isUpdate }) {
       </UserProfileImgBox>
       <UserProfileName><strong>{userInfo?.name}</strong>&nbsp;{userInfo?.rank}</UserProfileName>
       <UserProfileEmail>{userInfo?.email}</UserProfileEmail>
-      {!isUpdate && <BsFillGearFill size={12} color="white" onClick={handleClickUpdate} />}
     </UserProfileContainer>
   )
 }

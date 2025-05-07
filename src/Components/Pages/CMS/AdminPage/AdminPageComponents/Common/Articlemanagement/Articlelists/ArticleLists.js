@@ -1,22 +1,19 @@
-import { ArticleListContainer, ArticleListItem, ArticleListBox, BorderBottom } from './ArticleLists.style';
+import { ArticleListContainer, ArticleListItem, ArticleListBox, BorderBottom, LoadingContainer } from './ArticleLists.style';
 import { BiSolidStar } from "react-icons/bi";
 import { BiStar } from "react-icons/bi";
 import { BsFillPatchCheckFill } from "react-icons/bs";
 import PageNumber from './PageNumber';
 import { useNavigate } from 'react-router-dom';
 import { useUpdateImportant } from '../../../../../../../Hooks/ApiHooks/Article/useUpdateImportant';
+import { formatDateOnly } from '../../../../../../../Hooks/Utils/formatDateOnly';
+import { CgSpinner } from "react-icons/cg";
 
-function ArticleLists({ data: categoryByArticles, setSearchString, searchString }) {
+function ArticleLists({ data: categoryByArticles, setSearchString, searchString, isLoading }) {
   const importantMutation = useUpdateImportant();
   const navigate = useNavigate();
 
   const fetchedArticles = categoryByArticles?.filteredArticles || [];
   const { totalPage } = categoryByArticles || 0;
-
-  function formatDateOnly(dateInput) {
-    const date = new Date(dateInput);
-    return date.toISOString().substring(0, 10);
-  }
 
   const clickStar = (e, isImportant, articleId) => {
     e.preventDefault();
@@ -24,6 +21,14 @@ function ArticleLists({ data: categoryByArticles, setSearchString, searchString 
   }
 
   const articleForm = ['중요', '카테고리', '제목', '글쓴이', '날짜', '확인'];
+
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <CgSpinner size={32} />
+      </LoadingContainer>
+    )
+  }
 
   return (
     <ArticleListBox>

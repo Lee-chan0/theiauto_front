@@ -62,12 +62,14 @@ function CreateBanner({ articleValues, setArticleValues, mode }) {
       </label>
       <TitleInput
         value={articleValues.articleTitle || ''}
+        maxLength={100}
         onChange={handleTitleChange}
         placeholder="제목을 입력하세요."
       />
       <SubTitleContainer>
         <SubTitleInput
           type="text"
+          maxLength={100}
           placeholder="소제목을 입력하세요."
           value={articleValues.articleSubTitle || ''}
           onChange={(e) => setArticleValues((prev) => ({ ...prev, articleSubTitle: e.target.value }))}

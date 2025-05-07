@@ -9,8 +9,8 @@ export const useUpdateImportant = (currentPage, categoryId) => {
     onSuccess: () => {
       queryClient.invalidateQueries(['articles', currentPage, categoryId]);
     },
-    onError: (e) => {
-      alert(e.message);
+    onError: () => {
+      alert('알 수 없는 오류가 발생했습니다.');
     }
   })
 };

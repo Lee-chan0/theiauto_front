@@ -7,10 +7,10 @@ import Homepage from './Components/Pages/Homepage';
 import { ThemeProvider } from 'styled-components';
 import LoginpageAnimation from './Components/Pages/CMS/LoginPage/LoginpageAnimation';
 import AdminPage from './Components/Pages/CMS/AdminPage/AdminPage';
-import UpdateUserProfilePage from './Components/Pages/CMS/AdminPage/AdminPageComponents/Common/UserProfile/UpdateuserProfile/UpdateUserProfile';
 import ArticleFormPage from './Components/Pages/CMS/AdminPage/AdminPageComponents/Common/CreateArticle/ArticleFormPage';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SideNavStateContextProvider } from './Components/Hooks/Context/SideNavStateContext';
+import CategoryByArticlePage from './Components/Pages/CategoryByArticlePage';
 
 const queryClient = new QueryClient();
 
@@ -40,13 +40,13 @@ function App() {
             <Routes>
               <Route path='/' element={<Layout />}>
                 <Route index element={<Homepage />} />
+                <Route path='category/:categoryId_param' element={<CategoryByArticlePage />} />
               </Route>
               <Route path='theiautoCMS'>
                 <Route index element={<LoginpageAnimation />} />
                 <Route path='adminpage' element={<AdminPage />} />
                 <Route path='adminpage/create-article' element={<ArticleFormPage mode={'create'} key="create" />} />
                 <Route path='adminpage/update-article/:articleId' element={<ArticleFormPage mode={'update'} key="update" />} />
-                <Route path='adminpage/update-user-profile' element={<UpdateUserProfilePage />} />
               </Route>
             </Routes>
           </SideNavStateContextProvider>

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
-import { EditorContainer } from "./Createcontent.style";
+import { EditorContainer, NeedReservation, ReservationDescrip } from "./Createcontent.style";
 import { createContentImage } from "../../../../../../../../API/article.api";
 import CreateSchedule from "../Createschedule/CreateSchedule";
 
 
-function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, mode }) {
+function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, mode, isReservation, setIsReservation }) {
   const quillRef = useRef(null);
   const contentOneRun = useRef(false);
 
@@ -79,7 +79,23 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
 
   return (
     <EditorContainer>
-      {mode === 'create' && <CreateSchedule />}
+      {mode === 'create' &&
+        <NeedReservation
+          onClick={() => {
+            setIsReservation(true)
+            setArticleValues((prev) => ({ ...prev, articleStatus: 'scheduled' }))
+          }}
+          $isReservation={isReservation}
+        >
+          <ReservationDescrip>예약 기사 작성</ReservationDescrip>
+        </NeedReservation>
+      }
+      {(mode === 'create' && isReservation) &&
+        <CreateSchedule
+          setIsReservation={setIsReservation}
+          setArticleValues={setArticleValues}
+          articleValues={articleValues}
+        />}
       <ReactQuill
         ref={quillRef}
         value={articleValues.articleContent}

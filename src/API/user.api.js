@@ -10,7 +10,7 @@ export async function fetchAdminInfo() {
   return response.data;
 }
 
-export async function updateUserInfo(adminId, formData) {
-  const response = await axiosInstance.patch(`/adminInfo/${adminId}`, formData);
+export async function updateUserInfo(formData) {
+  const response = await axiosInstance.patch(`/adminInfo`, formData);
   return response.data;
 }

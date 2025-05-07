@@ -1,7 +1,16 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import mainBanner from '../../../../Assets/12572931_SL-090119-22970-05-Photoroom.png';
 import userIcon from '../../../../Assets/userIcon.svg';
 import passwordIcon from '../../../../Assets/passwordIcon.svg';
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 const LoginFormContainer = styled.div`
   width: 100%;
@@ -182,6 +191,10 @@ const LoginFormButton = styled.button`
       content : "";
       right : 0%;
     }
+  }
+
+  svg {
+    animation: ${rotate} 0.5s linear infinite;
   }
 `;
 

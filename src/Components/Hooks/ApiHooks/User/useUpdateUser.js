@@ -1,16 +1,40 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { updateUserInfo } from "../../../../API/user.api";
+import Swal from "sweetalert2";
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ adminId, formData }) => updateUserInfo(adminId, formData),
+    mutationFn: updateUserInfo,
     onSuccess: () => {
-      queryClient.invalidateQueries(['admin'])
+      queryClient.invalidateQueries(['admin']);
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        width: 'fit-content',
+        title: '프로필 이미지 변경이 완료되었습니다.',
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'success-popup'
+        }
+      })
     },
     onError: (e) => {
-      alert(e.message)
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        width: 'fit-content',
+        icon: 'error',
+        timer: 2000,
+        title: `${e.response?.data?.message}`,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'description-popup'
+        }
+      })
     }
   })
 };

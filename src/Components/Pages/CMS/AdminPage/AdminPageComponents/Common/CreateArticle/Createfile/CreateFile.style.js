@@ -3,7 +3,7 @@ import styled from "styled-components";
 const CreateFileContainer = styled.div`
   padding : 0 24px;
   display : grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   grid-auto-rows: auto;
   gap : 8px;
   margin-bottom : 40px;
@@ -27,6 +27,16 @@ const CreateFileImgBox = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-color: ${({ theme }) => theme.neutral.gray300};
+
+  svg {
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+  &:hover {
+      svg {
+      opacity: 0.5;
+    }
+  }
 `;
 
 const CreateFileDesc = styled.span`

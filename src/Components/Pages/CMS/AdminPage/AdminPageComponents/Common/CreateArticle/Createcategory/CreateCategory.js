@@ -8,8 +8,15 @@ import {
 function CreateCategory({ articleValues, setArticleValues, mode }) {
   const [clickCategoryName, setClickCategoryName] = useState("");
   const [parentCategories, setParentCategories] = useState([]);
-  const { data: categories, isLoading, isError } = useFetchCategories();
+  const { data: categories } = useFetchCategories();
   const categoriesArray = useMemo(() => categories?.categories || [], [categories]);
+
+  const handleCheck = (e) => {
+    setArticleValues((prev) => ({
+      ...prev,
+      isBanner: e.target.checked
+    }))
+  }
 
   const handleChangeCategory = useCallback((e, name) => {
     const categoryId = e.target.id;
@@ -18,7 +25,8 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
 
     setArticleValues((prev) => ({
       ...prev,
-      categoryId: +categoryId
+      categoryId: +categoryId,
+      categoryName: name,
     }));
   }, [setArticleValues]);
 
@@ -58,6 +66,16 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
           </CreateCategoryParent>
         ))
       }
+      <div className='banner-box'>
+        <span className='banner-check-descrip'>TOP 배너</span>
+        <small>배너 기사는 최대 3개까지 가능합니다.</small>
+        {mode === 'create'
+          ?
+          <input type='checkbox' className='banner-checkbox' onChange={handleCheck} />
+          :
+          <input type='checkbox' className='banner-checkbox' onChange={handleCheck} checked={articleValues.isBanner} />
+        }
+      </div>
     </CreateCategoryContainer>
   )
 }
