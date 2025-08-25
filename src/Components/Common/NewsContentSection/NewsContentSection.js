@@ -163,7 +163,7 @@ const RemoteControler = styled.aside.attrs(props => ({
 
   & > #basic-btn {
     background-color: ${({ $isBasic, theme }) => !$isBasic && theme.primary.red300};
-    color: ${({ $isBasic, theme }) => !$isBasic && theme.neutral.gray100};
+    color: ${({ $isBasic, theme }) => !$isBasic ? theme.neutral.gray100 : 'black'};
     font-size: .95rem;
     font-weight: 300;
 
@@ -174,7 +174,7 @@ const RemoteControler = styled.aside.attrs(props => ({
 
   & > #large-btn {
     background-color: ${({ $isBasic, theme }) => $isBasic && theme.primary.red300};
-    color: ${({ $isBasic, theme }) => $isBasic && theme.neutral.gray100};
+    color: ${({ $isBasic, theme }) => $isBasic ? theme.neutral.gray100 : 'black'};
     font-size: 1.4rem;
     font-weight: bold;
 
