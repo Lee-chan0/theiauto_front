@@ -33,6 +33,10 @@ const BannerBackImg = styled.div`
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
   }
+
+  @media (max-width : 767px) {
+    background-attachment: local;
+  }
 `;
 
 const TextBox = styled.div`

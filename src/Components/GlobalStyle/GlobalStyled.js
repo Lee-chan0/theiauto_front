@@ -6,6 +6,13 @@ const GlobalStyledComponent = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html {
+
+    @media (max-width : 767px) {
+      overflow-x: hidden;
+    }
+  }
+
   body {
     font-family: 'Noto Sans KR', sans-serif;
     margin : 0;
@@ -16,8 +23,6 @@ const GlobalStyledComponent = createGlobalStyle`
     @media (max-width : 1279px) {
       font-size: 15px;
     }
-
-    
   }
 
   ul {

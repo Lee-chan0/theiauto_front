@@ -423,19 +423,19 @@ function NewsContentSection({ newsData, isSticky }) {
               <button id="basic-btn" title="기본 글자" onClick={clickTextSizeBtn}>가</button>
               <button id="large-btn" title="큰 글자" onClick={clickTextSizeBtn}>가</button>
               <button className="flex-box" title="카카오톡 공유하기">
-                <RiKakaoTalkFill size={24} />
+                <RiKakaoTalkFill size={24} color="black" />
               </button>
               <button className="flex-box" title="페이스북 공유하기">
-                <FaFacebook size={20} />
+                <FaFacebook size={20} color="black" />
               </button>
               <button className="flex-box" title="인스타그램 공유하기">
-                <AiFillInstagram size={26} />
+                <AiFillInstagram size={26} color="black" />
               </button>
               <button className="flex-box" title="기사 내용 복사" onClick={handleCopyContent}>
-                <RiFileCopy2Fill size={24} />
+                <RiFileCopy2Fill size={24} color="black" />
               </button>
               <button className="flex-box" onClick={handleTopClick} title="최상단 바로가기">
-                <FaCaretUp size={24} />
+                <FaCaretUp size={24} color="black" />
               </button>
             </RemoteControler>
             <NewsContainer ref={progressRef}>
