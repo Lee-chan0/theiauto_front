@@ -1,33 +1,79 @@
-import { useFetchTodayArticle } from "../../../Hooks/ApiHooks/GeneralArticle/useFetchTodayArticle";
-import { formatDateOnly } from "../../../Hooks/Utils/formatDateOnly";
-import { HeaderDescrip, NewsCardContainer, NewsCardItems, NewsTextBox } from "./HomeTodayNews.style";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { ArrowBox, TodayArticle, TodayContainer, TodayDescription, TodayItems, TodayLists, TodaySkeleton, TodayTextBox } from "./HomeTodayNews.style";
+import { SwiperSlide, Swiper } from "swiper/react";
+import 'swiper/css';
+import { Autoplay } from "swiper/modules";
+import { FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft } from "react-icons/fa";
+import { useMediaQuery } from "react-responsive";
 
+function HomeTodayNews({ todayArticles, todayArticleLoading, todayArticleError }) {
+  const swipeRef = useRef(null);
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
+  useEffect(() => {
+    if (todayArticleError) {
+      navigate('/error');
+    }
+  }, [todayArticleError, navigate]);
 
-function HomeTodayNews() {
-  const { data: todayArticleArray } = useFetchTodayArticle();
-  const todayArticles = todayArticleArray?.todayArticles || [];
+  if (todayArticleError) return null;
 
+  if (todayArticleLoading) {
+    return (
+      <TodayContainer>
+        <TodaySkeleton />
+      </TodayContainer>
+    )
+  }
 
   return (
-    <div style={{ backgroundColor: '#fff', padding: '16px', borderRadius: '4px' }}>
-      <HeaderDescrip>Today, 자동차 뉴스</HeaderDescrip>
-      <NewsCardContainer>
+    <TodayContainer>
+      <ArrowBox $direction={'right'} onClick={() => swipeRef.current?.slideNext()}>
+        <FaChevronRight size={22} color="#f2f2f2" />
+      </ArrowBox>
+      <ArrowBox style={!isMobile ? { left: '32px' } : { left: '16px' }} $direction={'left'} onClick={() => swipeRef.current?.slidePrev()}>
+        <FaChevronLeft size={22} color="#f2f2f2" />
+      </ArrowBox>
+      <TodayLists>
+        <TodayDescription>Today, 뉴스</TodayDescription>
         {
-          todayArticles.map((todayArticle) => (
-            <NewsCardItems key={todayArticle.articleId} $src={todayArticle.articleBanner}>
-              <article>
-                <NewsTextBox>
-                  <span className="article-category">{todayArticle.category.categoryName}</span>
-                  <h3 className="article-title">{todayArticle.articleTitle}</h3>
-                </NewsTextBox>
-                <span className="article-date">{formatDateOnly(todayArticle.createdAt)}</span>
-              </article>
-            </NewsCardItems>
-          ))
+          todayArticles?.length !== 0 &&
+          <Swiper
+            onSwiper={(swiper) => (swipeRef.current = swiper)}
+            modules={[Autoplay]}
+            loop={true}
+            slidesPerView={1}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+          >
+            {
+              todayArticles?.map((today, i) => (
+                <SwiperSlide
+                  key={today.articleId}
+                  onClick={() => navigate(`/news/${today.articleId}`)}
+                >
+                  <TodayItems>
+                    <TodayArticle $src={today.articleBanner}>
+                      <TodayTextBox>
+                        <span>{today.category.categoryName}</span>
+                        <h1>{today.articleTitle}</h1>
+                        <h2>{today.articleSubTitle}</h2>
+                      </TodayTextBox>
+                    </TodayArticle>
+                  </TodayItems>
+                </SwiperSlide>
+              ))
+            }
+          </Swiper>
         }
-      </NewsCardContainer>
-    </div>
+      </TodayLists>
+    </TodayContainer>
   )
 }
 

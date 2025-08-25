@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import AdminPageSideNav from "./AdminPageComponents/Common/SideNav/AdminPageSideNav";
 import ArticleManagement from "./AdminPageComponents/Common/Articlemanagement/ArticleManagement";
-import { useState } from "react";
+import { useSideNavState } from "../../../Hooks/Context/SideNavStateContext";
 
 
 const AdminPageMainContainer = styled.div`
 `;
 
 function AdminPage() {
-  const [isSearchBarActive, setIsSearchBarActive] = useState(false);
+  const { isSearchBarActive, setIsSearchBarActive } = useSideNavState();
 
   return (
     <AdminPageMainContainer>

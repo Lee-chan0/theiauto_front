@@ -11,7 +11,7 @@ export async function fetchTodayNewsArticle() {
 }
 
 export async function fetchMotorSportsArticle() {
-  const response = await generalAxiosInstance.get('/article/mortorsports');
+  const response = await generalAxiosInstance.get('/article/motorsports');
   return response.data;
 }
 
@@ -27,6 +27,11 @@ export async function fetchNewCarArticles() {
 
 export async function fetchMagazineArticle() {
   const response = await generalAxiosInstance.get('/article/magazine');
+  return response.data;
+}
+
+export async function fetchMagazineArticles() {
+  const response = await generalAxiosInstance.get(`/article/magazines`);
   return response.data;
 }
 
@@ -52,5 +57,25 @@ export async function fetchCategoryByArticles(categoryId, page) {
 
 export async function fetchCategoryBannerArticle(categoryId) {
   const response = await generalAxiosInstance.get(`/article/category/${categoryId}`);
+  return response.data;
+}
+
+export async function fetchArticle(articleId) {
+  const response = await generalAxiosInstance.get(`article/${articleId}`);
+  return response.data;
+}
+
+export async function fetchRelatedTags(articleId) {
+  const response = await generalAxiosInstance.get(`article/${articleId}/related`);
+  return response.data;
+}
+
+export async function fetchSearchArticles(keyword, page) {
+  const response = await generalAxiosInstance.get(`search?keyword=${keyword}&page=${page}&limit=15`);
+  return response.data;
+}
+
+export async function fetchRecentArticles() {
+  const response = await generalAxiosInstance.get(`/article/recent`);
   return response.data;
 }

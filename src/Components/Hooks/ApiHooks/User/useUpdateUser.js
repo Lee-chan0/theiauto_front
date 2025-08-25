@@ -17,6 +17,12 @@ export const useUpdateUser = () => {
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
+        showClass: {
+          popup: 'swal-clipboard-up-in'
+        },
+        hideClass: {
+          popup: 'swal-clipboard-up-out'
+        },
         customClass: {
           popup: 'success-popup'
         }

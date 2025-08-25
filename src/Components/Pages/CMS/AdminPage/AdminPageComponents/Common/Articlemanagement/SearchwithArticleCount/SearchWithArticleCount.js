@@ -28,7 +28,8 @@ const SearchDescrip = styled.span`
   color : ${({ theme }) => theme.neutral.gray600};
 `;
 
-function SearchWithArticleCount({ total: articleTotal, categoryName, query, needImportant, setIsSearchBarActive, isSearchBarActive }) {
+function SearchWithArticleCount({ total: articleTotal, categoryName, query,
+  needImportant, setIsSearchBarActive, isSearchBarActive, isBanner }) {
   const total = articleTotal || articleTotal === 0 ? articleTotal : '';
 
   function insertEveryThreeFromEnd(str, separator = ",") {
@@ -51,7 +52,10 @@ function SearchWithArticleCount({ total: articleTotal, categoryName, query, need
     <Container>
       {(!query && !needImportant) ?
         <ArticleCount>
-          {categoryName || '전체'} 총 기사 수 : {insertEveryThreeFromEnd(String(total))} 개
+          {
+            categoryName !== '전체' ? categoryName
+              : (isBanner === 'true' && categoryName === '전체') ? '배너' : '전체'
+          } 총 기사 수 : {insertEveryThreeFromEnd(String(total))} 개
         </ArticleCount>
         :
         !needImportant ?

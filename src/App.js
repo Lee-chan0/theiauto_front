@@ -8,9 +8,21 @@ import { ThemeProvider } from 'styled-components';
 import LoginpageAnimation from './Components/Pages/CMS/LoginPage/LoginpageAnimation';
 import AdminPage from './Components/Pages/CMS/AdminPage/AdminPage';
 import ArticleFormPage from './Components/Pages/CMS/AdminPage/AdminPageComponents/Common/CreateArticle/ArticleFormPage';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { SideNavStateContextProvider } from './Components/Hooks/Context/SideNavStateContext';
 import CategoryByArticlePage from './Components/Pages/CategoryByArticlePage';
+import NewsPage from './Components/Pages/NewsPage';
+import InstructionsForUsePage from './Components/Pages/InstructionsForUsePage/InstructionsForUsePage';
+import ScrollToTop from './Components/Features/ScrollToTop/ScrollToTop';
+import AdPage from './Components/Pages/CMS/AdPage/AdPage';
+import MagazineSubScribPage from './Components/Pages/MagazineSubScribPage';
+import NotFoundPage from './Components/Pages/NotFoundPage';
+import ErrorPage from './Components/Pages/ErrorPage';
+import { HelmetProvider } from 'react-helmet-async';
+import { ScrollAndStickyCheckContextProvier } from './Components/Hooks/Context/ScrollAndStickyCheckContext';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from 'react';
+import InstructionSubPage from './Components/Pages/InstructionsForUsePage/InstructionSubPage/InstructionSubPage';
 
 const queryClient = new QueryClient();
 
@@ -31,29 +43,53 @@ const theme = {
 }
 
 function App() {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      mirror: false,
+      once: true,
+      offset: -20,
+    });
+  }, []);
+
+
   return (
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <GlobalStyled />
-          <SideNavStateContextProvider>
-            <Routes>
-              <Route path='/' element={<Layout />}>
-                <Route index element={<Homepage />} />
-                <Route path='category/:categoryId_param' element={<CategoryByArticlePage />} />
-              </Route>
-              <Route path='theiautoCMS'>
-                <Route index element={<LoginpageAnimation />} />
-                <Route path='adminpage' element={<AdminPage />} />
-                <Route path='adminpage/create-article' element={<ArticleFormPage mode={'create'} key="create" />} />
-                <Route path='adminpage/update-article/:articleId' element={<ArticleFormPage mode={'update'} key="update" />} />
-              </Route>
-            </Routes>
-          </SideNavStateContextProvider>
-        </ThemeProvider>
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <GlobalStyled />
+            <SideNavStateContextProvider>
+              <ScrollAndStickyCheckContextProvier>
+                <ScrollToTop />
+                <Routes>
+                  <Route path='/' element={<Layout />}>
+                    <Route index element={<Homepage />} />
+                    <Route path='category/:categoryId_param' element={<CategoryByArticlePage />} />
+                    <Route path='news/:articleId_param' element={<NewsPage />} />
+                    <Route path='instructions' element={<InstructionsForUsePage />}>
+                      <Route path=':slug' element={<InstructionSubPage />} />
+                    </Route>
+                    <Route path='magazine/subscribe' element={<MagazineSubScribPage />} />
+                    <Route path='search' element={<CategoryByArticlePage mode={'search'} />} />
+                  </Route>
+                  <Route path='theiautoCMS'>
+                    <Route index element={<LoginpageAnimation />} />
+                    <Route path='adminpage' element={<AdminPage />} />
+                    <Route path='adminpage/create-article' element={<ArticleFormPage mode={'create'} key="create" />} />
+                    <Route path='adminpage/update-article/:articleId' element={<ArticleFormPage mode={'update'} key="update" />} />
+                    <Route path='adminpage/advertisement' element={<AdPage />} />
+                  </Route>
+                  <Route path='error' element={<ErrorPage />} />
+                  <Route path='*' element={<NotFoundPage />} />
+                </Routes>
+              </ScrollAndStickyCheckContextProvier>
+            </SideNavStateContextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   )
 }
 

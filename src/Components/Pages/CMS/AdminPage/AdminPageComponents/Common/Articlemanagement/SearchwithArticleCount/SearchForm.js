@@ -15,9 +15,10 @@ const SearchFormContainer = styled.form`
   flex-wrap: wrap;
   justify-content: center;
   padding : 24px 40px;
-  backdrop-filter: blur(5px);
-  border-radius: 4px;
-  border : 2px solid ${({ theme }) => theme.primary.red500};
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.neutral.gray900};
+  box-shadow: 0 0 10px 1px rgba(26, 26, 26, 0.5);
+  border : 3px solid ${({ theme }) => theme.primary.red700};
   opacity: ${({ $isActive }) => $isActive ? '1' : '0'};
   visibility: ${({ $isActive }) => $isActive ? 'visible' : 'hidden'};
   transition: opacity 0.3s, visibility 0.3s;
@@ -27,7 +28,7 @@ const SelectCategoryLists = styled.ul`
   width: 100%;
   list-style: none;
   display : grid;
-  gap : 8px 4px;
+  gap : 8px;
   grid-template-columns: repeat(8, 1fr);
   grid-auto-rows: 40px;
   padding: 0;
@@ -37,32 +38,33 @@ const SelectCategoryLists = styled.ul`
 
 const CategoryItem = styled.li`
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   display : flex;
   align-items: center;
   justify-content: center;
-  padding : 4px 4px;
+  padding : 4px 8px;
   border-radius: 3px;
   cursor: pointer;
-  box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px 0px rgba(255, 255, 255, 0.5)inset;
   transition : background-color 0.2s, color 0.2s;
   font-weight: 500;
-  background-color: ${({ $index, $activeIndex, theme }) => $index === $activeIndex ? theme.primary.red500 : 'transparent'};
-  color : ${({ $index, $activeIndex, theme }) => $index === $activeIndex ? theme.neutral.gray100 : theme.neutral.gray900};
+  background-color: ${({ $index, $activeIndex, theme }) => $index === $activeIndex ? theme.primary.red700 : 'transparent'};
+  color : ${({ theme }) => theme.neutral.gray100};
+
 
   &:hover {
-    background-color: ${({ theme }) => theme.primary.red500};
-    color : #fff;
+    background-color: ${({ theme }) => theme.primary.red700};
   }
 `;
 
 const SearchBarInput = styled.input`
   width: 100%;
   height: 40px;
-  border : 3px solid ${({ theme }) => theme.primary.red500};
+  border : 3px solid ${({ theme }) => theme.primary.red700};
   outline: none;
   border-radius: 9999px;
   padding : 0 56px 0 16px;
+  background-color: ${({ theme }) => theme.neutral.gray100};
 `;
 
 const SearchRangeDescrip = styled.span`
@@ -72,7 +74,7 @@ const SearchRangeDescrip = styled.span`
   top : -24px;
   font-weight: 300;
   font-size: 0.8rem;
-  color : ${({ theme }) => theme.neutral.gray600};
+  color : ${({ theme }) => theme.neutral.gray100};
   display : flex;
   align-items : center;
 
@@ -80,7 +82,8 @@ const SearchRangeDescrip = styled.span`
     cursor: pointer;
 
     &:hover {
-      color : #000;
+      color : #fff;
+      opacity: 0.8;
     }
   }
 `;
@@ -184,7 +187,7 @@ function SearchForm({ isActive, setIsSearchBarActive }) {
       </SelectCategoryLists>
       <div style={{ width: '100%', position: 'relative' }}>
         <SearchRangeDescrip>
-          현재 검색 범위 : <strong>{selectedCategoryName ? selectedCategoryName : '전체'}</strong>
+          현재 검색 범위 :&nbsp;<strong>{selectedCategoryName ? selectedCategoryName : '전체'}</strong>
           <ReloadBox
             onClick={handleClickReload}
             style={{ position: 'absolute', top: '0', right: '-20px' }}
@@ -200,7 +203,7 @@ function SearchForm({ isActive, setIsSearchBarActive }) {
         <BiSearchAlt2
           style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', cursor: "pointer" }}
           size={24}
-          color='black'
+          color='#1a1a1a'
           onClick={handleClickSearch}
         />
       </div>

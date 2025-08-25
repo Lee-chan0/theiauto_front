@@ -12,10 +12,11 @@ const Description = styled.span`
   font-size : 1.3rem;
 `;
 
-function ManagementHeader({ isCreate }) {
+function ManagementHeader({ isAd, isSubscriber }) {
+
   return (
     <HeaderContainer>
-      <Description>{isCreate ? '기사 작성' : '기사 관리'}</Description>
+      <Description>{isAd ? '광고 배너 관리' : isSubscriber ? '구독자 관리' : '기사 관리'}</Description>
     </HeaderContainer>
   )
 }

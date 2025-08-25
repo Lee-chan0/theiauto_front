@@ -1,7 +1,7 @@
-import styled, { keyframes } from "styled-components";
-import mainBanner from '../../../../Assets/12572931_SL-090119-22970-05-Photoroom.png';
+import styled, { css, keyframes } from "styled-components";
 import userIcon from '../../../../Assets/userIcon.svg';
 import passwordIcon from '../../../../Assets/passwordIcon.svg';
+import backImg from '../../../../Assets/road-6654573_1920.jpg';
 
 const rotate = keyframes`
   from {
@@ -20,23 +20,25 @@ const LoginFormContainer = styled.div`
   align-items: center;
 `;
 
-const BackGroundImgBox = styled.div`
+const BackColor = styled.div`
+  position: absolute;
   width: 100%;
   height: 100%;
-  position: absolute;
+  background-color: ${({ theme }) => theme.neutral.gray900};
   
-  background-image: url(${mainBanner});
+  opacity: ${({ $isTablet }) => !$isTablet ? '0.4' : '1'};
+  background-image: ${({ $isTablet }) => !$isTablet ? `url(${backImg})` : ''};
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 `;
 
-const BackGroundLogo = styled.img`
-  width: 180px;
-  height: 64px;
+const BackGroundImgBox = styled.div`
+  max-width: 1280px;
+  max-height: 720px;
+  width: 100%;
+  height: 100%;
   position: absolute;
-  right : 24px;
-  bottom : 16px;
 `;
 
 const HasValues = styled.span`
@@ -198,15 +200,10 @@ const LoginFormButton = styled.button`
   }
 `;
 
-const CopyRight = styled.span`
-  position : absolute;
-  bottom : 8px;
-  font-size : 0.8rem;
-  color : ${({ theme }) => theme.neutral.gray600};
-`;
+
 
 export {
-  LoginFormContainer, LoginFormBox, LoginPlaceHolder, HasValues, BackGroundLogo,
-  LoginFormBannerImage, LoginFormLabel, CopyRight, BackGroundImgBox,
-  LoginFormTextInput, LoginFormLayoutBox, LoginFormButton
+  LoginFormContainer, LoginFormBox, LoginPlaceHolder, HasValues,
+  LoginFormBannerImage, LoginFormLabel, BackGroundImgBox,
+  LoginFormTextInput, LoginFormLayoutBox, LoginFormButton, BackColor
 };

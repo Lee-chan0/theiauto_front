@@ -5,7 +5,7 @@ import CreateCategory from "./Createcategory/CreateCategory";
 import CreateContent from "./Createcontent/CreateContent";
 import CreateTag from "./Createtag/CreateTag";
 import CreateFile from "./Createfile/CreateFile";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useFetchArticle } from "../../../../../../Hooks/ApiHooks/Article/useFetchArticle";
@@ -15,6 +15,7 @@ import { useDeleteArticle } from "../../../../../../Hooks/ApiHooks/Article/useDe
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { CgSpinner } from "react-icons/cg";
+import { useSideNavState } from "../../../../../../Hooks/Context/SideNavStateContext";
 
 function change5MinDate() {
   const now = new Date();
@@ -31,6 +32,32 @@ const rotate = keyframes`
   }
 `;
 
+const LoadingContainer = styled.div`
+  position: fixed;
+  top : 0; left : 240px; right : 0; bottom : 0;
+  width: calc(100% - 240px);
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+    & > .spinner-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      color: #fff;
+      animation: ${rotate} 1s linear infinite;
+    }
+  }
+`;
+
 const CreateArticleContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -44,6 +71,7 @@ const LayoutContainer = styled.div`
   top : 0;
   z-index: -1;
   overflow-y: auto;
+
 
   & > .spinner-container {
     width: 100%;
@@ -117,19 +145,26 @@ function ArticleFormPage({ mode }) {
   const createMutation = useCreateArticle();
   const updateMutation = useUpdateArticle();
   const deleteMutation = useDeleteArticle();
+  const overflowBlock = useRef(null);
+  const { setIsSearchBarActive } = useSideNavState();
   const navigate = useNavigate();
 
   const handleDelete = (e) => {
     e.preventDefault();
 
     Swal.fire({
-      title: '정말 <span style="color: #e23b3f">삭제</span>하시겠습니까?',
-      html: '삭제하면 <b>복구할 수 없습니다.</b>',
-      icon: 'warning',
+      title: '정말 <span style="color: #d1232a">삭제</span> 하시겠습니까?',
+      html: '삭제하면<strong>복구할 수 없습니다.</strong>',
       showCancelButton: true,
       confirmButtonText: '삭제',
       cancelButtonText: '취소',
-      confirmButtonColor: '#e23b3f',
+      confirmButtonColor: '#d1232a',
+      showClass: {
+        popup: ''
+      },
+      hideClass: {
+        popup: ''
+      },
       customClass: {
         popup: 'delete-popup'
       }
@@ -144,7 +179,6 @@ function ArticleFormPage({ mode }) {
       }
     })
   }
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -189,24 +223,31 @@ function ArticleFormPage({ mode }) {
     });
 
     Swal.fire({
-      title: '이대로 게시하시겠습니까?',
+      title: '기사 발행',
       html: `
         <div class="values-parent">
-          <p><strong>제목</strong> ${articleValues.articleTitle}</p>
-          <p><strong>소제목</strong> ${articleValues.articleSubTitle}</p>
-          <p><strong>카테고리</strong> ${articleValues.categoryName}</p>
-          <p><strong>태그</strong> ${articleValues.tagName}</p>
-          <p><strong>예약 기사(${articleValues.articleStatus === 'publish' ?
-          '<span style="color : #e23b3f">OFF</span>' : '<span style="color : #4169e1">ON</span>'})</strong> 
-          ${articleValues.articleStatus === 'publish' ? '' : format(articleValues.publishTime, "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })}
-          </p>
+          <p><span>제목</span> ${articleValues.articleTitle}</p>
+          <p><span>소제목</span> ${articleValues.articleSubTitle}</p>
+          <p><span>카테고리</span> ${articleValues.categoryName}</p>
+          <p><span>태그</span> ${articleValues.tagName}</p>
+          <p><span>기사 발행 시간</span> 
+          ${articleValues.articleStatus === 'publish'
+          ?
+          format(Date.now(), "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
+          :
+          format(articleValues.publishTime, "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
+        }</p>
         </div>
       `,
-      icon: 'question',
       showCancelButton: true,
-      confirmButtonText: '업로드',
+      confirmButtonText: '완료',
       cancelButtonText: '취소',
-      confirmButtonColor: '#e23b3f',
+      showClass: {
+        popup: 'swal-slide-up-in'
+      },
+      hideClass: {
+        popup: 'swal-slide-up-out'
+      },
       customClass: {
         popup: 'create-popup'
       }
@@ -268,12 +309,66 @@ function ArticleFormPage({ mode }) {
     }
   }, [mode, needUpdateArticle]);
 
+  useEffect(() => {
+    if (!overflowBlock.current) return;
+
+    if (createMutation.isPending || deleteMutation.isPending
+      || updateMutation.isPending) {
+
+      overflowBlock.current.style.overflow = 'hidden';
+    } else {
+      overflowBlock.current.style.overflow = 'auto';
+    }
+
+  }, [createMutation.isPending, deleteMutation.isPending, updateMutation.isPending]);
+
+  if (createMutation.isPending || deleteMutation.isPending || updateMutation.isPending) {
+    return (
+      <CreateArticleContainer>
+        <AdminPageSideNav setIsSearchBarActive={setIsSearchBarActive} />
+        <LayoutContainer ref={overflowBlock}>
+          <LoadingContainer>
+            <div
+              className="spinner-container"
+              style={{ padding: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            >
+              <CgSpinner size={32} />
+            </div>
+          </LoadingContainer>
+          <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+          <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+          <CreateContent
+            articleValues={articleValues}
+            setArticleValues={setArticleValues}
+            setSavedContentImgs={setSavedContentImgs}
+            isReservation={isReservation}
+            setIsReservation={setIsReservation}
+            mode={mode}
+          />
+          <CreateTag articleValues={articleValues} setArticleValues={setArticleValues} />
+          <CreateFile articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} prevImageUrls={prevImageUrls} setPrevImageUrls={setPrevImageUrls} />
+          <div style={{ width: '100%', padding: '24px', paddingTop: '0' }}>
+            <SubmitBtn onClick={handleSubmit}>{mode === 'create' ? '업로드' : '수정'}</SubmitBtn>
+            {mode === 'update' &&
+              (
+                <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'row-reverse' }}>
+                  <SubmitBtn className="delete-btn" onClick={handleDelete}>삭제</SubmitBtn>
+                </div>
+              )
+            }
+          </div>
+        </LayoutContainer>
+      </CreateArticleContainer>
+    )
+  }
+
+
 
   if (isLoading) {
     return (
       <CreateArticleContainer>
-        <AdminPageSideNav />
-        <LayoutContainer>
+        <AdminPageSideNav setIsSearchBarActive={setIsSearchBarActive} />
+        <LayoutContainer ref={overflowBlock}>
           <div className="spinner-container">
             <CgSpinner size={32} />
           </div>
@@ -284,8 +379,8 @@ function ArticleFormPage({ mode }) {
 
   return (
     <CreateArticleContainer>
-      <AdminPageSideNav mode={mode} />
-      <LayoutContainer>
+      <AdminPageSideNav mode={mode} setIsSearchBarActive={setIsSearchBarActive} />
+      <LayoutContainer ref={overflowBlock}>
         <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
         <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
         <CreateContent

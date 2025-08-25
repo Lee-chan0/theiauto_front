@@ -3,8 +3,8 @@ import Loginpage from "./Loginpage";
 import { motion } from "framer-motion";
 import logoImage from "../../../../Assets/theiautoLogo.png";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
-// ✅ 애니메이션 컨테이너 (배경)
 const AnimationContainer = styled(motion.div)`
   position: fixed;
   width: 100%;
@@ -17,19 +17,17 @@ const AnimationContainer = styled(motion.div)`
   align-items: center;
 `;
 
-// ✅ 로고 이미지 박스 (중앙)
 const LogoImageBox = styled(motion.div)`
   position: relative;
   width: 10%;
   height: 10%;
   background-image: url(${logoImage});
-  background-size: contain;
+  background-size: 160px 64px;
   background-position: center;
   background-repeat: no-repeat;
 
 `;
 
-// ✅ 반짝이는 효과
 const ShineEffect = styled(motion.div)`
   position: absolute;
   top: 0%;
@@ -41,7 +39,6 @@ const ShineEffect = styled(motion.div)`
   pointer-events: none;
 `;
 
-// ✅ Loginpage 컨테이너 (Fade-in 효과 추가)
 const LoginpageContainer = styled(motion.div)`
   width: 100%;
   height: 100vh;
@@ -49,11 +46,14 @@ const LoginpageContainer = styled(motion.div)`
 
 function LoginpageAnimation() {
   const [isAnimating, setIsAnimating] = useState(true);
+  const isTablet = useMediaQuery({ maxWidth: 1279 });
 
   useEffect(() => {
     const timer = setTimeout(() => setIsAnimating(false), 4200);
     return () => clearTimeout(timer);
   }, []);
+
+  if (isTablet) return <Loginpage />
 
   return (
     <>

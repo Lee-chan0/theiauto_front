@@ -1,46 +1,78 @@
+import { useMediaQuery } from "react-responsive";
 import HomeMotorSports from "./HomeMotorSports/HomeMotorSports";
 import HomeTodayNews from "./HomeTodayNews/HomeTodayNews";
 import styled from "styled-components";
 
-
 const Container = styled.section`
   width: 100%;
-  margin-bottom : 40px;
+  transform: translateY(-40px);
+  overflow: hidden;
+
+  @media (max-width : 1279px) {
+    transform: translateY(-8px);
+  }
 `
 
 const InnerBox = styled.div`
-  max-width: 1280px;
   margin : 0 auto;
-  padding : 0 40px;
+  padding : 8px 24px;
+  max-width: 1280px;
+
+  @media (max-width : 767px) {
+    padding : 8px 16px;
+  }
 `;
 
 const NewsBox = styled.div`
   width: 100%;
-
+  height: 400px;
   display: flex;
-  justify-content: space-between;
+  gap : 16px;
 
-  & > .section-box1 {
-    flex : 0 0 69%;
+  & > * {
+    flex : 1;
+    overflow: hidden;
   }
 
-  & > .section-box2 {
-    flex : 0 0 30%;
+  @media (max-width : 767px) {
+    height: 160px;
   }
 `;
 
+function TodayAndSports({
+  todayArticles, todayArticleLoading, todayArticleError,
+  motorSportArticles, motorLoading, motorError
+}) {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
-function TodayAndSports() {
   return (
     <Container aria-label="오늘의 뉴스">
       <InnerBox>
         <NewsBox>
-          <div className="section-box1">
-            <HomeTodayNews />
-          </div>
-          <div className="section-box2">
-            <HomeMotorSports />
-          </div>
+          {
+            !isMobile &&
+            <HomeMotorSports
+              motorSportArticles={motorSportArticles}
+              motorLoading={motorLoading}
+              motorError={motorError}
+            />
+          }
+
+          <HomeTodayNews
+            todayArticles={todayArticles}
+            todayArticleLoading={todayArticleLoading}
+            todayArticleError={todayArticleError}
+          />
+
+          {
+            !isMobile &&
+            <HomeMotorSports
+              motorSportArticles={motorSportArticles}
+              motorLoading={motorLoading}
+              motorError={motorError}
+              type={'overseas'}
+            />
+          }
         </NewsBox>
       </InnerBox>
     </Container>

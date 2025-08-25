@@ -1,58 +1,66 @@
-import { useFetchDriveArticles } from "../../Hooks/ApiHooks/GeneralArticle/useFetchDriveArticles";
-import { CardContainer, DriveInnerBox, DriveTextBox, DriveWrapper } from "./DriveArticleCards.style";
-import logo from '../../../Assets/theiautoLogo.png';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import { HiPlus } from "react-icons/hi";
+import { DriveArticle, DriveDescription, DriveInnerBox, DriveItems, DriveLists, DriveSkeleton, DriveTextBox, DriveWrapper } from "./DriveArticleCards.style";
+import { useCategoryRedirect } from "../../Hooks/CommonHooks/useCategoryRedirect";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import GoToCategoryBtn from "../../Features/GoToCategoryBtn/GoToCategoryBtn";
+import { useMediaQuery } from "react-responsive";
 
-function DriveArticleCards() {
-  const { data: driveArticleArray } = useFetchDriveArticles();
-  const driveArticles = driveArticleArray?.driveArticles || [];
+function DriveArticleCards({
+  driveArticles,
+  driveLoading,
+  driveError
+}) {
+  const { goToCategory } = useCategoryRedirect(driveArticles);
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const sliceNum = isMobile ? 4 : 6;
+
+  useEffect(() => {
+    if (driveError) {
+      navigate('/error');
+    }
+  }, [driveError, navigate]);
+
+  if (driveError) return null;
+
+  if (driveLoading) {
+    return (
+      <DriveWrapper>
+        <DriveInnerBox>
+          <DriveSkeleton />
+        </DriveInnerBox>
+      </DriveWrapper>
+    )
+  }
 
   return (
     <DriveWrapper>
       <DriveInnerBox>
-        <CardContainer $src={logo}>
-          <span className="drive-section-title">
-            <div className="section-logo" />
-            시승기
-            <HiPlus style={{ position: 'absolute', right: '0' }} size={24} />
-          </span>
+        <DriveDescription>
+          <span>{!isMobile ? 'Test Drive Review [시승기]' : '시승기'}</span>
+          <GoToCategoryBtn onClick={goToCategory}>View More</GoToCategoryBtn>
+        </DriveDescription>
+        <DriveLists>
           {
-            driveArticles.length > 0 && (
-              <Swiper
-                loop={true}
-                spaceBetween={16}
-                slidesPerView={3}
-                autoplay={{
-                  delay: 3000,
-                  disableOnInteraction: false,
-                  pauseOnMouseEnter: true,
-                }}
-                modules={[Autoplay]}
-                className="slide-container"
+            driveArticles?.slice(0, sliceNum).map((drive, i) => (
+              <DriveItems key={drive.articleId}
+                data-aos='fade'
+                data-aos-delay={`${i * 100}`}
+                onClick={() => navigate(`/news/${drive.articleId}`)}
               >
-                {
-                  driveArticles.map((drive) => (
-                    <SwiperSlide key={drive.articleId}
-                    >
-                      <article>
-                        <img src={drive.articleBanner} alt="drive-image" className="slide-item-image" />
-                        <DriveTextBox className="drive-text-box">
-                          <span className="drive-category">시승기</span>
-                          <h2 className="drive-title">{drive.articleTitle}</h2>
-                        </DriveTextBox>
-                      </article>
-                    </SwiperSlide>
-                  ))
-                }
-              </Swiper>
-            )
+                <DriveArticle $src={drive.articleBanner}>
+                  <DriveTextBox>
+                    <span>시승기</span>
+                    <h1>{drive.articleTitle}</h1>
+                    <h2>{drive.articleSubTitle}</h2>
+                  </DriveTextBox>
+                </DriveArticle>
+              </DriveItems>
+            ))
           }
-        </CardContainer>
+        </DriveLists>
       </DriveInnerBox>
-    </DriveWrapper>
+    </DriveWrapper >
   )
 }
 

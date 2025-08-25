@@ -1,282 +1,275 @@
-import styled, { css } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useFetchTravelArticle } from '../../Hooks/ApiHooks/GeneralArticle/useFetchTravelArticles';
 import { useQuery } from "@tanstack/react-query";
 import { fetchMagazineArticle } from "../../../API/generalAPI/generalArticle.api";
+import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import GoToCategoryBtn from "../../Features/GoToCategoryBtn/GoToCategoryBtn";
 import { formatDateOnly } from "../../Hooks/Utils/formatDateOnly";
-import { motion } from "framer-motion";
-import { MdBookmarkAdd } from "react-icons/md";
-import logo from '../../../Assets/theiautoLogo.png';
-import { IoIosArrowDroprightCircle } from "react-icons/io";
-
 
 const MagazineWrapper = styled.section`
   width: 100%;
-  margin-bottom: 24px;
+  margin-top: 40px;
+
+  @media (max-width : 1279px) {
+    margin-top: 24px;
+  }
+
+  @media (max-width : 767px) {
+    margin-top: 116px;
+  }
 `;
 
 const MagazineInnerBox = styled.div`
-  max-width: 1280px;
   margin : 0 auto;
-  padding : 0 40px;
+  max-width: 1280px;
+  padding : 24px;
+
+  @media (max-width : 767px) {
+    padding : 0 16px;
+  }
 `;
 
-const LayoutBox = styled.div`
-  display: flex;
-  gap : 24px;
+const Description = styled.span`
+  padding : 16px;
+  display: block;
+  font-weight: 800;
+  font-size: 1.2rem;
+  background-color: ${({ theme }) => theme.neutral.gray0};
+  border-radius: 16px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  @media (max-width : 767px) {
+    font-size: 1rem;
+}
 `;
 
-const ContentBox = styled.div`
-  flex: 0 0 60%;
-  height: 240px;
-  background-color: ${({ theme }) => theme.neutral.gray900};
+const ContentGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+  padding-top : 0;
+
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+`;
+
+const ContentCard = styled.div`
   border-radius: 4px;
-
-  & > article {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding : 24px;
-    overflow: hidden;
-
-    display: flex;
-    gap: 24px;
-  }
-
-  &:hover {
-    & > article {
-      & > .magazine-banner {
-            transform: rotate(4deg);
-            cursor: pointer;
-          }
-      & > div {
-          & > .magazine-title {
-          text-decoration: underline;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-`;
-
-const MagazineImg = styled.img`
-  width: 160px;
-  height: 100%;
-  object-fit: contain;
-  will-change: transform;
-  transition: transform 0.4s;
-`;
-
-const TextStyle = css`
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-`;
-
-const MagazineTextBox = styled.div`
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  background-color: ${({ theme }) => theme.neutral.gray0};
   display: flex;
   flex-direction: column;
-  gap : 16px;
-  position: relative;
-
-  & > h1 {
-    font-size: 1.6rem;
-    color: ${({ theme }) => theme.neutral.gray100};
-    ${TextStyle};
-  }
-
-  & > h2 {
-    font-size: 1.2rem;
-    color: ${({ theme }) => theme.neutral.gray600};
-    font-weight: 400;
-    ${TextStyle};
-  }
-
-  & > span {
-    color: ${({ theme }) => theme.neutral.gray300};
-    position: absolute;
-    bottom : 0;
-  }
-`;
-
-const SubscribeBtn = styled(motion.button)`
-  position: absolute;
-  bottom : 24px;
-  right: 24px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-
-  width: 160px;
-  height: 40px;
-  border-radius: 8px;
-  border : 2px solid black;
-  will-change: transform;
-
-  background-color: ${({ theme }) => theme.primary.red700};
-  color : ${({ theme }) => theme.neutral.gray100};
-  font-weight: bold;
-
+  height: 100%;
   cursor: pointer;
-`;
-
-const TravelContentBox = styled.aside`
-  width: 100%;
-  height: 240px;
-  border-radius : 4px;
-  padding : 16px;
-  overflow: hidden;
-  background-color: ${({ theme }) => theme.neutral.gray0};
-
-  position: relative;
-
-  & > svg {
-    color : ${({ theme }) => theme.primary.red700};
-    position: absolute;
-    right : 16px;
-    top : 16px;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-
-const TravelLogo = styled.div`
-  width: 80px;
-  height: 32px;
-  background-image: url(${logo});
-  background-size: contain;
-  background-position: left;
-  background-repeat: no-repeat;
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
-const TravelDescription = styled.span`
-  width: 100%;
-  position: absolute;
-  left: 100%;
-  font-size: 1.2rem;
-  color : ${({ theme }) => theme.primary.red700};
-  font-weight: bold;
-
-  display: flex;
-  align-items: center;
-`;
-
-const TravelArticleBox = styled.article`
-  width: 100%;
-  height: 172px;
-  margin-top: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  cursor: pointer;
-
-  display: flex;
 
   &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+
     & > div {
-      & > .travel-news-title {
+      & > h3 {
         text-decoration: underline;
       }
     }
   }
 `;
 
-const TravelImg = styled.img`
-  width: 60%;
-  height: 100%;
+const CardImage = styled.img`
+  width: 100%;
+  height: 220px;
   object-fit: cover;
-  border-radius: 4px;
-  filter: brightness(90%);
+  display: block;
+
+  @media (max-width : 767px) {
+    height: 160px;
+  }
 `;
 
-const TravelTextBox = styled.div`
-  margin : 8px;
+const CardContent = styled.div`
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  flex-grow: 1;
   position: relative;
 
-  & > h1 {
-    font-size: 1.2rem;
-    color : ${({ theme }) => theme.neutral.gray900};
-    line-height: 1.2;
-    ${TextStyle};
-    -webkit-line-clamp: 3;
-  }
-
-  & > h2 {
-    font-size: .85rem;
-    color: ${({ theme }) => theme.primary.red700};
-    ${TextStyle};
-  }
-
   & > span {
-    font-size: .75rem;
-    color : ${({ theme }) => theme.neutral.gray300};
     position: absolute;
-    right : 0; bottom : 0;
+    bottom : 16px; left : 16px;
+    font-size: .8rem;
+    color : ${({ theme }) => theme.neutral.gray600};
+    
+    @media (max-width : 767px) {
+      bottom : 16px; left : 8px;
+      font-size: .7rem;
+    }
+  }
+
+  @media (max-width : 767px) {
+    padding : 8px;
   }
 `;
 
+const CardTitle = styled.h3`
+  font-size: 1.4rem;
+  font-weight: bold;
+  color : ${({ theme }) => theme.neutral.gray900};
+  margin-bottom: 12px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width : 1279px) {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 767px) {
+    font-size: 1rem;
+  }
+`;
+
+const CardDescription = styled.p`
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+
+  @media (max-width : 1279px) {
+    font-size: .95rem;
+  }
+
+  @media (max-width: 767px) {
+    font-size: .8rem;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+`;
+
+const shimmer = keyframes`
+  0% {
+    background-position: -150% 0;
+  }
+  100% {
+    background-position: 150% 0;
+  }
+`;
+
+const MagazineSkeleton = styled.div`
+  width: 100%;
+  height: 480px;
+  border-radius: 16px;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #555555 0%,
+    #666666 50%,
+    #555555 100%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 2s linear infinite alternate;
+`;
 
 function MagazineAndTravelSection() {
-  const { data: magazineData } = useQuery({
+  const { data: magazineData, isLoading: isMagazineLoading, isError: isMagazineError } = useQuery({
     queryKey: ['magazine-news'],
     queryFn: fetchMagazineArticle
   });
-  const magazineArticle = magazineData?.magazineArticle || {};
-  const { data: travelData } = useFetchTravelArticle();
-  const travelArticles = travelData?.travelArticles || {};
+  const magazineArticle = useMemo(() => magazineData?.magazineArticle || {}, [magazineData]);
+
+  const { data: travelData, isLoading: isTravelLoading, isError: isTravelError } = useFetchTravelArticle();
+  const travelArticles = useMemo(() => travelData?.travelArticles || {}, [travelData]);
+
+  const navigate = useNavigate();
+
+  const handleBtnClick = (e, categoryId) => {
+    e.stopPropagation();
+    navigate(`/category/${categoryId}`);
+  }
+
+  useEffect(() => {
+    if (isMagazineError || isTravelError) {
+      navigate('/error');
+    }
+  }, [isMagazineError, isTravelError, navigate]);
+
+  if (isMagazineError || isTravelError) return null;
+
+  if (!magazineArticle?.articleId && !travelArticles?.articleId) return null;
+
+  if (isMagazineLoading || isTravelLoading) {
+    return (
+      <MagazineWrapper>
+        <MagazineInnerBox>
+          <MagazineSkeleton />
+        </MagazineInnerBox>
+      </MagazineWrapper>
+    )
+  }
 
   return (
     <MagazineWrapper>
       <MagazineInnerBox>
-        <LayoutBox>
-          <TravelContentBox>
-            <TravelLogo>
-              <TravelDescription>
-                여행기
-              </TravelDescription>
-            </TravelLogo>
-            <IoIosArrowDroprightCircle size={24} />
-            <TravelArticleBox>
-              <TravelImg src={travelArticles?.articleBanner} alt="travel-news-banner" />
-              <TravelTextBox>
-                <h1 className="travel-news-title">{travelArticles?.articleTitle}</h1>
-                <h2>{travelArticles?.articleSubTitle}</h2>
-                <span>{travelArticles?.createdAt && formatDateOnly(travelArticles?.createdAt)}</span>
-              </TravelTextBox>
-            </TravelArticleBox>
-          </TravelContentBox>
-          <ContentBox>
-            <article>
-              <MagazineImg className="magazine-banner" src={magazineArticle?.articleBanner} alt="magazine-banner" />
-              <MagazineTextBox>
-                <h1 className="magazine-title">{magazineArticle?.articleTitle}</h1>
-                <h2 className="magazine-subTitle">{magazineArticle?.articleSubTitle}</h2>
-                <span className="magazine-date">{magazineArticle?.createdAt && formatDateOnly(magazineArticle?.createdAt)}</span>
-              </MagazineTextBox>
-              <SubscribeBtn
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 500, damping: 10 }}
-              >
-                <MdBookmarkAdd size={20} />
-                구독하기
-              </SubscribeBtn>
-            </article>
-          </ContentBox>
-        </LayoutBox>
+        <Description>theiauto 월간지 & 여행기</Description>
+        <div style={{ width: '100%', height: '100%', backgroundColor: '#ffffff', borderRadius: '16px', padding: '12px', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
+          <ContentGrid>
+            {/* 월간지 섹션 */}
+            {magazineArticle?.articleId && (
+              <div data-aos='fade-right'>
+                <ContentCard onClick={() => navigate(`/news/${magazineArticle.articleId}`)}>
+                  <CardImage src={magazineArticle.articleBanner} alt={magazineArticle.articleTitle} />
+                  <CardContent>
+                    <CardTitle>{magazineArticle.articleTitle}</CardTitle>
+                    <CardDescription>{magazineArticle.articleSubTitle}</CardDescription>
+                    <span>{magazineArticle.createdAt && formatDateOnly(magazineArticle.createdAt)}</span>
+                    <ButtonWrapper>
+                      <GoToCategoryBtn onClick={(e) => handleBtnClick(e, magazineArticle.category.categoryId)} />
+                    </ButtonWrapper>
+                  </CardContent>
+                </ContentCard>
+              </div>
+            )}
+
+            {/* 여행기 섹션 */}
+            {travelArticles?.articleId && (
+              <div data-aos='fade-left'>
+                <ContentCard onClick={() => navigate(`/news/${travelArticles.articleId}`)}>
+                  <CardImage src={travelArticles.articleBanner} alt={travelArticles.articleTitle} />
+                  <CardContent>
+                    <CardTitle>{travelArticles.articleTitle}</CardTitle>
+                    <CardDescription>{travelArticles.articleSubTitle}</CardDescription>
+                    <span>{travelArticles.createdAt && formatDateOnly(travelArticles.createdAt)}</span>
+                    <ButtonWrapper>
+                      <GoToCategoryBtn onClick={(e) => handleBtnClick(e, travelArticles.category.categoryId)} />
+                    </ButtonWrapper>
+                  </CardContent>
+                </ContentCard>
+              </div>
+            )}
+          </ContentGrid>
+        </div>
       </MagazineInnerBox>
     </MagazineWrapper>
-  )
+  );
 }
 
 export default MagazineAndTravelSection;

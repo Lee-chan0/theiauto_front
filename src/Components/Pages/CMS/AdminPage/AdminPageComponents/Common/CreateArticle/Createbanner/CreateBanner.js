@@ -4,6 +4,10 @@ import {
   SubTitleInput, BannerContainerWrap
 } from "./createBannerStyle";
 import { BiImageAdd } from "react-icons/bi";
+import Swal from "sweetalert2";
+
+const allowedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+const maxFileSize = 25 * 1024 * 1024;
 
 function CreateBanner({ articleValues, setArticleValues, mode }) {
   const [previewImg, setPreviewImg] = useState(null);
@@ -24,6 +28,49 @@ function CreateBanner({ articleValues, setArticleValues, mode }) {
   const handleChangeBannerImg = (e) => {
     const bannerFile = e.target.files[0];
     if (!bannerFile) return;
+
+    if (!allowedType.includes(bannerFile.type)) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        width: 'fit-content',
+        icon: 'error',
+        timer: 2000,
+        title: `이미지 파일만 업로드 가능합니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: ''
+        },
+        hideClass: {
+          popup: ''
+        },
+        customClass: {
+          popup: 'description-popup'
+        }
+      });
+      return;
+    } else if (maxFileSize < bannerFile.size) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        width: 'fit-content',
+        icon: 'error',
+        timer: 2000,
+        title: `이미지 크기는 최대 25MB 입니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: ''
+        },
+        hideClass: {
+          popup: ''
+        },
+        customClass: {
+          popup: 'description-popup'
+        }
+      });
+      return;
+    }
+
     const nextPreview = URL.createObjectURL(bannerFile);
 
     if (previewImg) URL.revokeObjectURL(previewImg);

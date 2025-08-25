@@ -35,6 +35,11 @@ export async function fetchImportantArticle(page) {
   return response.data;
 }
 
+export async function fetchBannerArticles() {
+  const response = await axiosInstance.get(`/article/banner`);
+  return response.data;
+}
+
 export async function fetchSearchArticle(page, categoryId, searchQuery) {
   const response = await axiosInstance.get(`/search/article?page=${page}&limit=15`, {
     params: {

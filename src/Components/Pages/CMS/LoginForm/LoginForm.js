@@ -1,17 +1,18 @@
 import {
-  LoginFormContainer, LoginFormBox, CopyRight,
+  LoginFormContainer, LoginFormBox,
   LoginFormBannerImage, LoginFormLabel, LoginPlaceHolder,
   LoginFormTextInput, LoginFormLayoutBox, LoginFormButton, HasValues,
   BackGroundImgBox,
-  BackGroundLogo
+  BackColor
 } from './LoginForm.style';
 import logo from '../../../../Assets/theiautoLogoWhite.png';
-import logoBlack from '../../../../Assets/theiautoLogo.png';
 import { useState } from 'react';
 import { useLogin } from '../../../Hooks/ApiHooks/User/useLogin';
 import { CgSpinner } from "react-icons/cg";
+import { useMediaQuery } from 'react-responsive';
 
 function LoginForm() {
+  const isTablet = useMediaQuery({ maxWidth: 1279 });
   const loginMutation = useLogin();
   const [hasValues, setHasValues] = useState(true);
   const [isActiveInput, setIsActiveInput] = useState({
@@ -56,6 +57,10 @@ function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     if (loginValues.password.trim() === "" || loginValues.loginId.trim() === "") {
       setHasValues(false);
       return;
@@ -77,11 +82,8 @@ function LoginForm() {
 
   return (
     <LoginFormContainer>
-      <BackGroundImgBox>
-        <BackGroundLogo src={logoBlack} alt="logo" />
-      </BackGroundImgBox>
-      <CopyRight>Designed By Freepik</CopyRight>
-      <LoginFormBox onSubmit={handleSubmit} onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}>
+      <BackColor $isTablet={isTablet} />
+      <LoginFormBox onSubmit={handleSubmit}>
         <LoginFormBannerImage>
           <img src={logo} alt="logo" />
           <span>관리자 로그인</span>

@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { CreateFileContainer, CreateFileForm, CreateFileDesc, CreateFileImgBox, FileAlert } from './CreateFile.style';
 import { BiImageAdd } from "react-icons/bi";
+import Swal from 'sweetalert2';
+
+
+const allowedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+const maxFileSize = 25 * 1024 * 1024;
+
 
 function CreateFile({ articleValues, setArticleValues, mode, prevImageUrls, setPrevImageUrls }) {
   const [previewImg, setPreviewImg] = useState([]);
@@ -12,6 +18,48 @@ function CreateFile({ articleValues, setArticleValues, mode, prevImageUrls, setP
     const file = e.target.files[0];
 
     if (!file) return;
+
+    if (!allowedType.includes(file.type)) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        width: 'fit-content',
+        icon: 'error',
+        timer: 2000,
+        title: `이미지 파일만 업로드 가능합니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: ''
+        },
+        hideClass: {
+          popup: ''
+        },
+        customClass: {
+          popup: 'description-popup'
+        }
+      });
+      return;
+    } else if (maxFileSize < file.size) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        width: 'fit-content',
+        icon: 'error',
+        timer: 2000,
+        title: `이미지 크기는 최대 25MB 입니다.`,
+        showConfirmButton: false,
+        showClass: {
+          popup: ''
+        },
+        hideClass: {
+          popup: ''
+        },
+        customClass: {
+          popup: 'description-popup'
+        }
+      });
+      return;
+    }
 
     const nextFile = URL.createObjectURL(file);
 

@@ -11,6 +11,13 @@ const GlobalStyledComponent = createGlobalStyle`
     margin : 0;
     font-size: 16px;
     background-color: ${({ isCms, theme }) => isCms ? '#ffffff' : theme.neutral.gray100};
+    overflow-x: hidden;
+
+    @media (max-width : 1279px) {
+      font-size: 15px;
+    }
+
+    
   }
 
   ul {
@@ -20,6 +27,10 @@ const GlobalStyledComponent = createGlobalStyle`
   }
 
   h1, h2, h3, h4, h5, h6 {
+    margin : 0;
+  }
+
+  p {
     margin : 0;
   }
 
@@ -59,6 +70,7 @@ const GlobalStyledComponent = createGlobalStyle`
     }
   }
 
+
   .ql-editor {
     img {
       width: 100%;
@@ -82,38 +94,168 @@ const GlobalStyledComponent = createGlobalStyle`
     box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.5);
   }
 
+  @keyframes slideUpIn {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUpOut {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes clipBoardSlideUp {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes clipBoardSlideUpOut {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  }
+
+  .swal-slide-up-in {
+    animation: slideUpIn 0.4s ease-out;
+  }
+
+  .swal-slide-up-out {
+    animation: slideUpOut 0.3s ease-in forwards;
+  }
+
+  .swal-clipboard-up-in {
+    animation: clipBoardSlideUp 0.4s ease-out;
+  }
+
+  .swal-clipboard-up-out {
+    animation: clipBoardSlideUpOut 0.3s ease-in forwards;
+  }
+
   .delete-popup {
-    width: 500px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color : #fff;
-    font-size: 13px;
+    width: 400px;
+
+    & > .swal2-html-container {
+      width: 100%;
+      height: 32px;
+      font-size: .9rem;
+      display: flex !important;
+      align-items: center;
+
+      & > * {
+        margin-left : 4px;
+      }
+    }
+
+    & > * {
+      padding : 0;
+    }
+
+    background-color: ${({ theme }) => theme.neutral.gray900};
+    color : ${({ theme }) => theme.neutral.gray100};
+    font-size: .75rem;
+    border-radius: 4px;
+    padding : 16px;
+    display: flex;
+    flex-direction: column;
+    gap : 12px;
+    box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.5);
+
+    & > .swal2-actions {
+      margin : 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      & > button {
+        width: 100%;
+      }
+    }
   }
 
   .create-popup {
-    width: 500px;
-    font-size : 13px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 400px;
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    padding : 0 80px;
+
+    & > .swal2-actions {
+      margin : 16px 0;
+      display: flex;
+      gap : 8px;
+
+      & > .swal2-confirm {
+        border-radius: 99px;
+        font-size: .85rem;
+        background-color: #000;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      & > .swal2-cancel {
+        border-radius: 99px;
+        font-size: .85rem;
+        background-color: ${({ theme }) => theme.neutral.gray300};
+      }
+    }
+
+    & > .swal2-title {
+      text-align: left;
+      font-weight: bold;
+      margin : 8px;
+      margin-left: 0;
+      color : ${({ theme }) => theme.neutral.gray900};
+    }
 
     & > .swal2-html-container {
       & > .values-parent {
+
         display: flex;
         flex-direction: column;
-        border-radius: 4px;
-        gap : 8px;
 
         & > p {
-          margin : 4px 0;
+          border-bottom: 2px solid ${({ theme }) => theme.neutral.gray300};
           text-align: left;
           font-weight: 500;
-          line-height: 1.7;
-          font-size: .9rem;
+          font-size: .95rem;
+          padding : 16px 0;
+          display: flex;
+          gap : 24px;
+          justify-content: space-between;
+          color : ${({ theme }) => theme.neutral.gray900};
 
-          & > strong {
-            background-color: rgba(0, 0, 0, 0.8);
-            padding : 4px 8px;
-            color : #fff;
-            display: block;
-            margin-bottom: 4px;
+          & > span {
+            flex-basis: 120px;
+            font-weight: 700;
+            font-size: .95rem;
+            color : ${({ theme }) => theme.neutral.gray900};
           }
         }
       }
@@ -121,19 +263,40 @@ const GlobalStyledComponent = createGlobalStyle`
   }
   
   .description-popup {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
+    background-color: ${({ theme }) => theme.neutral.gray900};
+    color: ${({ theme }) => theme.neutral.gray100};
     font-size: 0.9rem;
-    padding: 8px 16px;
+    padding: 6px 16px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 
     display : flex !important;
     align-items: center;
 
+    & > .swal2-icon {
+      width: 32px;
+      height: 32px;
+      
+      & > .swal2-x-mark{
+        & > * {
+
+          &:nth-child(1) {
+            display: none;
+          }
+          &:nth-child(2) {
+            position: relative;
+            left : 50%;
+            top : 50%;
+            transform: rotate(0deg);
+            transform : translate(-50%, -50%);
+          }
+          
+        }
+      }
+    }
+
     & > .swal2-title {
       margin: 0;
       margin-left: 8px;
-
     }
   }
 
@@ -145,7 +308,31 @@ const GlobalStyledComponent = createGlobalStyle`
     box-shadow: 0 0 8px 5px rgba(0, 0, 0, 0.2);
   }
 
-  
+  .clipboard-container {
+    z-index: 9999 !important;
+  }
+
+  .success-clipboard {
+    background-color: ${({ theme }) => theme.neutral.gray0};
+    color: ${({ theme }) => theme.neutral.gray900};
+    font-size: 0.9rem;
+    padding : 8px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+    border-radius: 2px;
+  }
+
+  .search-container {
+    z-index: 9999 !important;
+    margin-top : 24px;
+  }
+
+  .search-error {
+    background-color: ${({ theme }) => theme.neutral.gray900};
+    color: ${({ theme }) => theme.neutral.gray100};
+    font-size: 0.9rem;
+    padding : 8px 12px;
+    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.5);
+  }
 `;
 
 export default function GlobalStyle() {

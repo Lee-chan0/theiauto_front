@@ -1,125 +1,202 @@
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 const DriveWrapper = styled.section`
   width: 100%;
-  margin-bottom: 40px;
-`;
 
-const DriveInnerBox = styled.div`
-  max-width: 1280px;
-  margin : 0 auto;
-  padding : 0 40px;
-`;
-
-const CardContainer = styled.div`
-  padding : 16px;
-  background-color: ${({ theme }) => theme.neutral.gray0};
-  border-radius: 4px;
-
-  & > .drive-section-title {
-    position: relative;
-    font-size: 1.4rem;
-    color: ${({ theme }) => theme.primary.red700};
-    font-weight: bold;
-
-    display: flex;
-    align-items: center;
-
-    & > svg {
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-    & > .section-logo {
-      width: 80px;
-      height: 40px;
-      margin-right: 1px;
-      background-image: url(${({ $src }) => $src});
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
+  @media (max-width : 1279px) {
+    margin-bottom: 24px;
   }
 
+  @media (max-width : 767px) {
+    margin-bottom : 16px;
+  }
+`;
 
-  & > .slide-container {
-    
-    .swiper-wrapper {
-      margin-top : 8px;
+const textStyle = css`
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+const DriveInnerBox = styled.div`
+  width: 100%;
+  height: 560px;
+  margin : 0 auto;
+  max-width: 1280px;
+  padding : 24px;
+  padding-top : 0px;
+
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width : 767px) {
+    padding : 0 16px;
+  }
+`;
+
+const DriveDescription = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${({ theme }) => theme.neutral.gray0};
+  padding : 16px 8px;
+  padding-bottom: 8px;
+  border-radius: 16px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  @media (max-width : 767px) {
+    padding : 8px;
+  }
+
+  & > span {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-left: 8px;
+
+    @media (max-width : 767px) {
+      font-size: 1rem;
     }
+  }
+`;
 
-    .swiper-slide {
-      position: relative;
-      cursor: pointer;
-      overflow: hidden;
-      border-radius: 4px;
+const DriveLists = styled.ul`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows : repeat(2, 1fr);
+  gap : 8px;
+  padding : 16px;
+  background-color: ${({ theme }) => theme.neutral.gray0};
+  border-radius: 16px;
+  border-top-left-radius: 0;
+  border-top-RIGHT-radius: 0;
 
-      &:hover {
-        .slide-item-image {
-          transform: scale(1.02);
+  @media (max-width : 767px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+
+    padding : 8px;
+  }
+`;
+
+const DriveItems = styled.li`
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover {
+    & > article {
+      & > div {
+        & > h1 {
+          text-decoration: underline;
         }
-
-        & > article {
-          & > .drive-text-box {
-            & > h2 {
-              text-decoration: underline;
-            }
-          }
-        }
-      }
-
-      &::after {
-        position: absolute;
-        left: 0; bottom : 0; top : 0; right : 0;
-        border-radius: 4px;
-        content: "";
-        width: 100%;
-        height: 100%;
-        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.6) 10%, transparent 100%);
-      }
-
-      .slide-item-image {
-        will-change: transform;
-        transition: transform 0.7s;
-        border-radius: 4px;
-        object-fit: cover;
-        width: 100%;
-        height: 240px;
       }
     }
+  }
+`;
+
+const DriveArticle = styled.article`
+  width: 100%;
+  height: 100%;
+  background-image: url(${({ $src }) => $src ? $src : ''});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: background-size .8s;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left : 0; bottom : 0;
+    background-image: linear-gradient(to top, rgba(26, 26, 26, 0.75) 40%, transparent 100%);
+    width: 100%;
+    height: 100%;
   }
 `;
 
 const DriveTextBox = styled.div`
-  margin: 16px;
   position: absolute;
   bottom : 0;
-  left : 0;
+  padding : 8px;
   z-index: 1;
   display: flex;
   flex-direction: column;
   gap : 8px;
+  margin: 4px;
 
-  & > .drive-title {
-    color : ${({ theme }) => theme.neutral.gray100};
-    font-size: 1.1rem;
-
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  @media (max-width : 767px) {
+    gap : 4px;
+    margin : 0;
   }
 
-  & > .drive-category {
+  & > span {
+    font-size: .9rem;
+    font-weight: 900;
     color : ${({ theme }) => theme.primary.red700};
-    font-weight: bold;
-    font-size: .85rem;
+
+    @media (max-width : 767px) {
+      font-size: .83rem;
+    }
+  }
+
+  & > h1 {
+    font-size: .95rem;
+    line-height: 1.3;
+    color : ${({ theme }) => theme.neutral.gray100};
+    ${textStyle};
+
+    @media (max-width : 767px) {
+      font-size: .83rem;
+    }
+  }
+
+  & > h2 {
+    font-size: .8rem;
+    line-height: 1.3;
+    color : ${({ theme }) => theme.neutral.gray600};
+    ${textStyle};
+
+    @media (max-width : 1279px) {
+      -webkit-line-clamp: 1;
+    }
+
+    @media (max-width : 767px) {
+      display: none;
+    }
   }
 `;
 
 
-export { DriveInnerBox, DriveWrapper, CardContainer, DriveTextBox };
+const shimmer = keyframes`
+  0% {
+    background-position: -150% 0;
+  }
+  100% {
+    background-position: 150% 0;
+  }
+`;
+
+const DriveSkeleton = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #555555 0%,
+    #666666 50%,
+    #555555 100%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 2s linear infinite alternate;
+`;
+
+
+export { DriveInnerBox, DriveWrapper, DriveLists, DriveItems, DriveArticle, DriveTextBox, DriveDescription, DriveSkeleton };

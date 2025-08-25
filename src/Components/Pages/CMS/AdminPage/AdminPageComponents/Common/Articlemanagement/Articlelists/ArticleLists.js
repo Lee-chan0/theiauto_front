@@ -59,7 +59,7 @@ function ArticleLists({ data: categoryByArticles, setSearchString, searchString,
               </ArticleListItem>
               <ArticleListItem className='author'>{name} {rank}</ArticleListItem>
               <ArticleListItem className='date'>{formatDateOnly(createdAt)}</ArticleListItem>
-              <ArticleListItem className='confirm'><BsFillPatchCheckFill size={16} /></ArticleListItem>
+              <ArticleListItem className='confirm' onClick={() => window.open(`/news/${articleId}`, '_blank')}><BsFillPatchCheckFill size={16} /></ArticleListItem>
             </ArticleListContainer>
           )
         })

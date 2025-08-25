@@ -1,104 +1,169 @@
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 const ServiceWrapper = styled.section`
   width: 100%;
-  margin-bottom : 40px;
+
+  @media (max-width : 767px) {
+    margin-top : 24px;
+  }
 `;
 
 const ServiceInnerBox = styled.div`
-  max-width: 1280px;
   margin : 0 auto;
-  padding : 0 40px;
+  padding : 24px;
+  max-width: 1280px;
+
+  @media (max-width : 767px) {
+    padding : 0 16px;
+    max-width: 100%;
+  }
 `;
 
-const ServiceContentBox = styled.div`
-  padding : 16px;
-  background-color: ${({ theme }) => theme.neutral.gray0};
-  border-radius: 4px;
-`;
-
-const ServiceHeaderDescrip = styled.span`
-  font-size: 1.4rem;
-  font-weight: bold;
-  color : ${({ theme }) => theme.primary.red700};
-
+const ServiceDescription = styled.div`
+  width: 100%;
+  position: relative;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  padding : 16px;
 
-  & > svg {
-    cursor: pointer;
+  & > span {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color : ${({ theme }) => theme.neutral.gray900};
+    margin-bottom: 8px;
 
-    &:hover {
-      opacity: 0.8;
+    @media (max-width : 767px) {
+      font-size: 1rem;
     }
   }
 `;
 
-const ServiceNewsLists = styled.ul`
-  margin-top : 16px;
-  display : grid;
+const ServiceLists = styled.ul`
+  padding : 8px;
+  padding-top : 0;
+  width: 100%;
+  display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 180px);
-  gap: 16px;
+  grid-template-rows: repeat(2, 1fr);
+  gap : 16px;
+
+  @media (max-width : 1279px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width : 767px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
 `;
 
-const ServiceNewsItem = styled.li`
+const shimmer = keyframes`
+  0% {
+    background-position: -150% 0;
+  }
+  100% {
+    background-position: 150% 0;
+  }
+`;
+
+const ServiceSkeleton = styled.div`
   width: 100%;
-  height: 180px;
-  border-radius: 4px;
+  height: 480px;
+  border-radius: 16px;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #555555 0%,
+    #666666 50%,
+    #555555 100%
+  );
+  background-size: 200% 100%;
+  animation: ${shimmer} 2s linear infinite alternate;
+
+  @media (max-width : 767px) {
+    height: 400px;
+  }
+`;
+
+const ServiceItems = styled.li`
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  transition: box-shadow 0.5s, transform 0.5s;
+  
+
   cursor: pointer;
 
   &:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+    transform: translateY(-5px);
+
     & > article {
-      & > .news-text-box {
-        h2 {
+      & > div {
+        & > h1 {
           text-decoration: underline;
         }
       }
     }
   }
-  
-  & > article {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+`;
 
-    & > img {
-      height: 120px;
-      object-fit: cover;
-      width: 100%;
+const ServiceArticle = styled.article`
+  width: 100%;
+  height: 100%;
+
+  & > img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    @media (max-width : 767px) {
+      height: 96px;
     }
   }
 `;
 
-const ServiceTextBox = styled.div`
-  margin: 4px 8px;
-  position: relative;
-  height: 60px;
+const ServiceTitleBox = styled.div`
+  width: 100%;
+  padding : 8px;
 
-  position: relative;
-  
-  & > h2 {
-    font-size: .9rem;
+  & > h1 {
+    font-size: .95rem;
+    margin : 4px 0;
+    color : ${({ theme }) => theme.neutral.gray900};
     line-height: 1.2;
-
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    overflow: hidden;
     text-overflow: ellipsis;
+    overflow: hidden;
+
+    @media (max-width : 1279px) {
+      font-size: .9rem;
+    }
+
+    @media (max-width : 767px) {
+      font-size: .75rem;
+    }
   }
 
   & > span {
-    font-size: .8rem;
-    color : ${({ theme }) => theme.neutral.gray300};
-    position: absolute;
-    right: 0; bottom : 0;
+    display: block;
+    font-size: .85rem;
+    color : ${({ theme }) => theme.neutral.gray600};
+    text-align: right;
+
+    @media (max-width : 767px) {
+      font-size: .7rem;
+    }
   }
 `;
 
-
-export { ServiceInnerBox, ServiceWrapper, ServiceHeaderDescrip, ServiceContentBox, ServiceNewsItem, ServiceNewsLists, ServiceTextBox };
+export { ServiceInnerBox, ServiceWrapper, ServiceDescription, ServiceItems, ServiceLists, ServiceArticle, ServiceTitleBox, ServiceSkeleton };

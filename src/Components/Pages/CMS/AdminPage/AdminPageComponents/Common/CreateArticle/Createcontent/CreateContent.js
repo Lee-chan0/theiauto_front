@@ -4,7 +4,10 @@ import 'react-quill/dist/quill.snow.css';
 import { EditorContainer, NeedReservation, ReservationDescrip } from "./Createcontent.style";
 import { createContentImage } from "../../../../../../../../API/article.api";
 import CreateSchedule from "../Createschedule/CreateSchedule";
+import Swal from "sweetalert2";
 
+const allowedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+const maxFileSize = 25 * 1024 * 1024;
 
 function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, mode, isReservation, setIsReservation }) {
   const quillRef = useRef(null);
@@ -20,6 +23,48 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
     input.onchange = async () => {
       const file = input.files[0];
       if (!file) return;
+
+      if (!allowedType.includes(file.type)) {
+        Swal.fire({
+          toast: true,
+          position: 'top',
+          width: 'fit-content',
+          icon: 'error',
+          timer: 2000,
+          title: `이미지 파일만 업로드 가능합니다.`,
+          showConfirmButton: false,
+          showClass: {
+            popup: ''
+          },
+          hideClass: {
+            popup: ''
+          },
+          customClass: {
+            popup: 'description-popup'
+          }
+        });
+        return;
+      } else if (maxFileSize < file.size) {
+        Swal.fire({
+          toast: true,
+          position: 'top',
+          width: 'fit-content',
+          icon: 'error',
+          timer: 2000,
+          title: `이미지 크기는 최대 25MB 입니다.`,
+          showConfirmButton: false,
+          showClass: {
+            popup: ''
+          },
+          hideClass: {
+            popup: ''
+          },
+          customClass: {
+            popup: 'description-popup'
+          }
+        });
+        return;
+      }
 
       const formData = new FormData();
       formData.append('file', file);

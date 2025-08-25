@@ -13,8 +13,8 @@ const SideNavMenuTitleBox = styled.div`
 
   span {
     display: block;
-    font-size : 0.8rem;
-    margin-bottom : 8px;
+    font-size : 0.75rem;
+    margin-bottom : 6px;
     color : ${({ theme }) => theme.neutral.gray100};
     cursor: pointer;
     transition : color 0.3s;
@@ -28,7 +28,7 @@ const SideNavMenuTitleBox = styled.div`
 const SideNavMenuTitle = styled.h2`
   color : ${({ theme }) => theme.primary.red500};
   font-weight: 400;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   margin: 0;
   border-bottom: 2px solid ${({ theme }) => theme.primary.red500};
   padding-bottom: 8px;
@@ -95,38 +95,86 @@ const SubCategoryItemsBox = styled(motion.div)`
   width: fit-content;
   left: 100%;
   margin-left: 24px;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
   display: flex;
   flex-direction: column;
   gap : 4px;
   padding : 4px;
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
-  box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 2px 0 10px 2px rgba(26, 26, 26, 0.5);
+  background-color: ${({ theme }) => theme.neutral.gray900};
 `;
 
 const SubCategoryItems = styled(motion.div)`
   color : ${({ theme }) => theme.neutral.gray900};
   text-align: center;
-  font-weight: bold;
   font-size : .85rem;
   white-space: nowrap;
   padding : 8px 8px;
-  color : ${({ theme }) => theme.neutral.gray900};
+  color : ${({ theme }) => theme.neutral.gray100};
   border-radius: 4px;
   display : flex;
   align-items: center;
   transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    color : ${({ theme }) => theme.neutral.gray0};
+    color : ${({ theme }) => theme.primary.red700};  
     background-color:${({ theme }) => theme.neutral.gray900};
   }
 `;
 
+const OptionDropBox = styled(motion.div)`
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  font-size: .75rem;
+  color: ${({ theme }) => theme.neutral.gray100};
+  transition: color 0.3s;
+  display: flex;
+  justify-content: space-between;
+
+  & > svg {
+    transition: transform 0.3s;
+    transform: ${({ $isOptionActive }) => $isOptionActive ? 'rotate(180deg)' : 'rotate(0deg)'};
+  }
+
+  &:hover {
+    color : ${({ theme }) => theme.primary.red500};
+  }
+
+  & > .informations-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    left : 100%; top : 0;
+    width: 50%;
+    margin-left: 24px;
+    background-color: ${({ theme }) => theme.neutral.gray900};
+    color : ${({ theme }) => theme.neutral.gray100};
+    padding : 8px;
+    gap : 8px;
+    border-top-right-radius : 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: 2px 0 10px 2px rgba(26, 26, 26, 0.5);
+
+    opacity: ${({ $isOptionActive }) => $isOptionActive ? '1' : '0'};
+    visibility: ${({ $isOptionActive }) => $isOptionActive ? 'visible' : 'hidden'};
+    transition: opacity 0.3s, visibility 0.3s;
+
+    & > .describe-user-info {
+      margin: 0;
+    }
+  
+    & > .advertisement-info {
+      margin : 0;
+    }
+  }
+
+`;
+
 export {
-  SideNavMenuContainer, SideNavMenuTitleBox,
+  SideNavMenuContainer, SideNavMenuTitleBox, OptionDropBox,
   SideNavMenuTitle, SideNavMenuItems, SideNavMenuLists,
   SubCategoryItems, SubCategoryItemsBox, childVariants,
   containerVariants
