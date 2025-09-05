@@ -218,6 +218,8 @@ const GlobalStyledComponent = createGlobalStyle`
   .create-popup {
     position: fixed;
     bottom: 0;
+    left : 0;
+    right: 0;
     width: 100%;
     height: 400px;
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.2);
