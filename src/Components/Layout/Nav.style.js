@@ -30,7 +30,6 @@ const MoveNavItem = styled.li`
   align-items: center;
 
   & > a {
-
     & > svg {
       &:hover {
         opacity: 0.6;
@@ -92,39 +91,101 @@ const ClickChildItem = styled.li`
   }
 `;
 
+const TranslateContainer = styled.div`
+  position: absolute;
+  right: 64px;
+  top : 50%;
+  transform: translateY(-50%);
+
+& > svg {
+  cursor: pointer;
+  color: ${({ $focusOut, $isHome, $isCategoryPage }) =>
+    $isHome || $isCategoryPage
+      ? $focusOut
+        ? '#f2f2f2'
+        : '#1a1a1a'
+      : '#f2f2f2'};
+
+    @media (max-width : 767px) {
+      color : #f2f2f2;
+    }
+}
+
+  & > .translate-list {
+    opacity: ${({ $translateActive }) => $translateActive ? '1' : '0'};
+    visibility: ${({ $translateActive }) => $translateActive ? 'visible' : 'hidden'};
+    pointer-events: ${({ $translateActive }) => $translateActive ? 'auto' : 'none'};
+    transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+    position: absolute;
+    left : 50%;
+    top : 125%;
+    transform: ${({ $translateActive }) =>
+    $translateActive ? 'translateX(-50%) translateY(5%)' : 'translateX(-50%) translateY(-5%)'};
+    border-radius: 4px;
+    overflow: hidden;
+    border : 1px solid rgba(0, 0, 0, 0.15);
+
+    & > li {
+      border-bottom : 1px solid rgba(0, 0, 0, 0.15);
+      padding : 8px 24px;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      background-color: ${({ theme }) => theme.neutral.gray0};
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: ${({ theme }) => theme.neutral.gray300};
+      }
+
+      &:nth-last-child(1) {
+        border-bottom: none;
+      }
+    }
+  }
+`;
+
 const NavContainer = styled.header`
   width: 100%;
   position: sticky;
-  left : 0; right : 0;
+  left: 0;
+  right: 0;
   transition: background-color 0.3s, top 0.3s;
   z-index: 9999;
 
-  ${({ $isHome, $isCategoryPage, $isMobile }) =>
-    (($isHome || $isCategoryPage) && !$isMobile) ?
-      css`
-        top : ${({ $scrollDirectionUp }) => ($scrollDirectionUp) ? '-80px' : '0px'};
-
-        background-color: ${({ $isClickNavigation, $focusOut, theme }) =>
-          ($isClickNavigation) ? 'rgba(242, 242, 242, 0.85)' : ($focusOut) && theme.neutral.gray900};
-
-        &:hover {
-          background-color: ${({ theme, $focusOut }) => !$focusOut ? 'rgba(242, 242, 242, 0.85)' : theme.neutral.gray900};
-  }
-      `
-      :
-      css`
-        top : ${({ $scrollDirectionUp }) => ($scrollDirectionUp) ? '-80px' : '0px'};
-        background-color: ${({ theme }) => theme.neutral.gray900};
-      `
-  }
-
+  ${({ $isMobile }) => !$isMobile && css`
+    top: ${({ $scrollDirectionUp }) => ($scrollDirectionUp) ? '-80px' : '0px'};
+  
+    background-color: ${({ $isNewsPage, $isInstructionsPage, $isMagazinePage, $isSearchPage, $isHome, $isCategoryPage, $focusOut, $isClickNavigation, theme }) => {
+      if ($isNewsPage || $isInstructionsPage || $isMagazinePage || $isSearchPage) {
+        return theme.neutral.gray900;
+      }
+      if ($isClickNavigation) {
+        return 'rgba(242, 242, 242, 0.85)';
+      }
+      if (($isHome || $isCategoryPage) && $focusOut) {
+        return theme.neutral.gray900;
+      }
+      return 'transparent';
+    }};
+  
+    &:hover {
+      ${({ $isNewsPage, $isInstructionsPage, $isMagazinePage, $isSearchPage, $isHome, $isCategoryPage, $focusOut, theme }) => {
+      if ($isNewsPage || $isInstructionsPage || $isMagazinePage || $isSearchPage || $focusOut) {
+        return `background-color: ${theme.neutral.gray900}`;
+      }
+      if ($isHome || $isCategoryPage) {
+        return 'background-color: rgba(242, 242, 242, 0.85)';
+      }
+    }}
+    }
+  `}
 
   @media (max-width : 767px) {
-    position: sticky;
-    left : 0; right : 0;
-    top : ${({ $scrollDirectionUp }) => $scrollDirectionUp ? '-48px' : '0px'};
     background-color: ${({ theme }) => theme.neutral.gray900};
-    transition : top 0.3s;
+    /* position: ${({ $isNewsPage }) => $isNewsPage ? 'sticky' : 'fixed'};
+    top: 0; */
   }
 `;
 
@@ -159,8 +220,8 @@ const NavInnerBox = styled.div`
 
       opacity: ${({ $isActive }) => $isActive ? '1' : '0'};
       visibility: ${({ $isActive }) => $isActive ? 'visible' : 'hidden'};
-   
-     &::placeholder {
+    
+      &::placeholder {
         color : ${({ theme }) => theme.neutral.gray300};
         font-size: .75rem;
       } 
@@ -179,6 +240,15 @@ const NavInnerBox = styled.div`
     margin: 16px 0;
     cursor: pointer;
   }
+  
+  & > .mobile-logo-box {
+    width: 100%;
+    
+    & > .main-logo {
+      width: 80px;
+      height: 20px;
+    }
+  }
 
   @media (max-width: 1279px) {
     max-width: 100%;
@@ -194,10 +264,12 @@ const NavInnerBox = styled.div`
     max-width: 100%;
     padding : 0 16px;
     height: 48px;
-
+    
+    justify-content: center;
+    gap: 0;
+    
     & > .main-logo {
-      width: 80px;
-      height: 20px;
+      display: none; 
     }
 
     & > .ads-container {
@@ -267,35 +339,43 @@ const MobileMenu = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
+  // 스크롤에 따른 움직임 로직 추가
+  transition: transform 0.3s;
+  transform: translateY(${({ $scrollDirectionUp }) => ($scrollDirectionUp) ? '100%' : '0'});
+  
+  @media (max-width : 767px) {
+    display: flex;
+  }
 `;
 
 const HomeMenu = styled.div`
-    flex : 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  flex : 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    & > span {
-      color : ${({ theme }) => theme.neutral.gray100};
-      font-size: 0.5rem;
-    }
+  & > span {
+    color : ${({ theme }) => theme.neutral.gray100};
+    font-size: 0.5rem;
+  }
 `;
 
 const MenuBox = styled.div`
-    flex : 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+  flex : 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 
-    & > span {
-      color : ${({ theme }) => theme.neutral.gray100};
-      font-size: 0.5rem;
-    }
+  & > span {
+    color : ${({ theme }) => theme.neutral.gray100};
+    font-size: 0.5rem;
+  }
 `;
 
 const Menulist = styled.ul`
@@ -344,18 +424,18 @@ const ChildList = styled(motion.ul)`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap : 8px;
+  gap : 4px;
 `;
 
 const ChildItem = styled(motion.li)`
   background-color: ${({ theme }) => theme.neutral.gray900};
   color : ${({ theme }) => theme.neutral.gray100};
   width: fit-content;
-  padding : 8px;
-  border-radius: 4px;
+  padding : 8px 24px;
+  border-radius: 2px;
   font-size: .85rem;
   font-weight: bold;
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
 `;
 
 const MenuCircle = styled.div`
@@ -433,5 +513,6 @@ const CircleClickItem = styled(motion.li)`
 export {
   NavContainer, NavInnerBox, NavigationContainer, MoveNavLists, MoveNavItem,
   ClickNavigation, ClickNavigationMenus, ClickNavigationItem, ClickInnerBox, ClickChildItem, ClickChildList,
-  MobileMenu, MenuCircle, CircleClickItem, CircleClickNav, HomeMenu, MenuBox, Menulist, MenuItem, ChildItem, ChildList
+  MobileMenu, MenuCircle, CircleClickItem, CircleClickNav, HomeMenu, MenuBox, Menulist, MenuItem, ChildItem, ChildList,
+  TranslateContainer
 };

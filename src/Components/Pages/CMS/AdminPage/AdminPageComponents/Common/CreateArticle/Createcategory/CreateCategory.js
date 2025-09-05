@@ -8,8 +8,10 @@ import {
 function CreateCategory({ articleValues, setArticleValues, mode }) {
   const [clickCategoryName, setClickCategoryName] = useState("");
   const [parentCategories, setParentCategories] = useState([]);
+  const [parentBoxNum, setParentBoxNum] = useState(null);
   const { data: categories } = useFetchCategories();
   const categoriesArray = useMemo(() => categories?.categories || [], [categories]);
+
 
   const handleCheck = (e) => {
     setArticleValues((prev) => ({
@@ -18,10 +20,12 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
     }))
   }
 
-  const handleChangeCategory = useCallback((e, name) => {
+  const handleChangeCategory = useCallback((e, name, parentCategoryId) => {
     const categoryId = e.target.id;
 
     setClickCategoryName(name);
+
+    setParentBoxNum(+parentCategoryId);
 
     setArticleValues((prev) => ({
       ...prev,
@@ -40,15 +44,17 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
       <span className='category-title'>카테고리</span>
       {
         parentCategories.map(({ categoryName, categoryId }) => (
-          <CreateCategoryParent key={categoryId}>
+          <CreateCategoryParent
+            key={categoryId}
+            $isActive={categoryId === parentBoxNum}
+          >
             <h6>{categoryName}</h6>
             <CreateChildContainer>
               {
                 categoriesArray?.filter((item) => item.parentCategoryId === categoryId).map((i) => (
-
                   <CreateCategoryChild
                     key={i.categoryId}
-                    htmlFor={i.categoryName}
+                    htmlFor={i.categoryId}
                     $activeCategoryName={i.categoryName}
                     $categoryName={clickCategoryName}
                   >
@@ -57,7 +63,7 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
                       name="category"
                       id={i.categoryId}
                       checked={i.categoryId === articleValues.categoryId}
-                      onChange={(e) => handleChangeCategory(e, i.categoryName)}
+                      onChange={(e) => handleChangeCategory(e, i.categoryName, categoryId)}
                     />
                   </CreateCategoryChild>
                 ))

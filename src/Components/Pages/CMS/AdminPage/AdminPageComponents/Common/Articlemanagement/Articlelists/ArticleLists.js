@@ -7,10 +7,14 @@ import { useNavigate } from 'react-router-dom';
 import { useUpdateImportant } from '../../../../../../../Hooks/ApiHooks/Article/useUpdateImportant';
 import { formatDateOnly } from '../../../../../../../Hooks/Utils/formatDateOnly';
 import { CgSpinner } from "react-icons/cg";
+import { useMediaQuery } from 'react-responsive';
+import { useSideNavState } from '../../../../../../../Hooks/Context/SideNavStateContext';
 
 function ArticleLists({ data: categoryByArticles, setSearchString, searchString, isLoading }) {
   const importantMutation = useUpdateImportant();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const { setMobileMenuActive } = useSideNavState();
 
   const fetchedArticles = categoryByArticles?.filteredArticles || [];
   const { totalPage } = categoryByArticles || 0;
@@ -20,7 +24,9 @@ function ArticleLists({ data: categoryByArticles, setSearchString, searchString,
     importantMutation.mutate({ isImportant: !isImportant, articleId });
   }
 
-  const articleForm = ['중요', '카테고리', '제목', '글쓴이', '날짜', '확인'];
+  const articleForm = isMobile
+    ? ['제목', '날짜']
+    : ['번호', '중요', '카테고리', '제목', '글쓴이', '날짜', '확인'];
 
   if (isLoading) {
     return (
@@ -48,18 +54,31 @@ function ArticleLists({ data: categoryByArticles, setSearchString, searchString,
 
           return (
             <ArticleListContainer className='article-list' key={articleId}>
-              <ArticleListItem className='is-important' onClick={(e) => clickStar(e, isImportant, articleId)}>
-                {isImportant ? <BiSolidStar color='yellowgreen' size={14} /> : <BiStar color='yellowgreen' size={14} />}
-              </ArticleListItem>
-              <ArticleListItem className='category-name'>{categoryName}</ArticleListItem>
+              {!isMobile && <ArticleListItem className='article-number'>{articleId}</ArticleListItem>}
+              {
+                !isMobile &&
+                <ArticleListItem className='is-important' onClick={(e) => clickStar(e, isImportant, articleId)}>
+                  {isImportant ? <BiSolidStar color='#d1232a' size={14} /> : <BiStar color='#d1232a' size={14} />}
+                </ArticleListItem>
+              }
+              {!isMobile && <ArticleListItem className='category-name'>{categoryName}</ArticleListItem>}
               <ArticleListItem
                 className='article-title'
-                onClick={() => navigate(`/theiautoCMS/adminpage/update-article/${articleId}`)}>
+                onClick={() => {
+                  setMobileMenuActive(false);
+                  navigate(`/theiautoCMS/adminpage/update-article/${articleId}`);
+                }}>
                 {articleTitle}
               </ArticleListItem>
-              <ArticleListItem className='author'>{name} {rank}</ArticleListItem>
+              {!isMobile && <ArticleListItem className='author'>{name} {rank}</ArticleListItem>}
               <ArticleListItem className='date'>{formatDateOnly(createdAt)}</ArticleListItem>
-              <ArticleListItem className='confirm' onClick={() => window.open(`/news/${articleId}`, '_blank')}><BsFillPatchCheckFill size={16} /></ArticleListItem>
+              {!isMobile &&
+                <ArticleListItem
+                  className='confirm'
+                  onClick={() => window.open(`/news/${articleId}`, '_blank')}
+                >
+                  <BsFillPatchCheckFill size={16} />
+                </ArticleListItem>}
             </ArticleListContainer>
           )
         })

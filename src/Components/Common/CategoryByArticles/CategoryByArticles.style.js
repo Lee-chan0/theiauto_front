@@ -5,14 +5,14 @@ const MainContainer = styled.section`
   margin : 40px 0;
   ${({ $isSearch }) => !$isSearch && 'transform: translateY(-80px)'};
 
-
   @media (max-width : 1279px) {
     margin : 24px 0;
   }
 
   @media (max-width : 767px) {
     margin : 16px 0;
-    transform: translateY(0);
+    transform: ${({ $isLoading }) => !$isLoading ? 'translateY(0px)' : 'translateY(-80px)'};
+    margin-bottom : 64px;
   }
 `;
 
@@ -289,7 +289,7 @@ const TagBox = styled.div`
 `;
 
 const TagItems = styled.div`
-  background-color: ${({ theme }) => theme.neutral.gray600};
+  background-color: #8C929B;
   padding : 4px;
   display: flex;
   align-items: center;
@@ -304,9 +304,6 @@ const TagItems = styled.div`
     @media (max-width : 1279px) {
       font-size: 0.75rem;
     }
-  }
-
-  & > .news-tag {
   }
 `;
 

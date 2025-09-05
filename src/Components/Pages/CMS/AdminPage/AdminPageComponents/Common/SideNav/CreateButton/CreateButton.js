@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { BiSolidPlusSquare } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
+import { useSideNavState } from "../../../../../../../Hooks/Context/SideNavStateContext";
 
 const Container = styled.div`
   position : absolute;
@@ -36,10 +37,12 @@ const CreateBtn = styled.button`
 
 function CreateButton() {
   const navigate = useNavigate();
+  const { setMobileMenuActive } = useSideNavState();
 
   const handleClickCreate = useCallback(() => {
+    setMobileMenuActive(false);
     navigate('/theiautoCMS/adminpage/create-article');
-  }, [navigate]);
+  }, [navigate, setMobileMenuActive]);
 
   return (
     <Container>

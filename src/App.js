@@ -1,5 +1,5 @@
 import 'normalize.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import GlobalStyled from './Components/GlobalStyle/GlobalStyled';
 import Layout from './Components/Layout/Layout';
@@ -23,6 +23,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { useEffect } from 'react';
 import InstructionSubPage from './Components/Pages/InstructionsForUsePage/InstructionSubPage/InstructionSubPage';
+import GoogleTranslateLoader from './Components/Features/GoogleTranslateLoader/GoogleTranslateLoader';
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <RouteAwareHead />
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
             <GlobalStyled />
@@ -91,6 +93,23 @@ function App() {
       </BrowserRouter>
     </HelmetProvider>
   )
+}
+
+function RouteAwareHead() {
+  const { pathname } = useLocation();
+  const isCMS = pathname.startsWith('/theiautoCMS');
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('cms-mode', isCMS);
+    if (isCMS) {
+      document.body.style.top = '0';
+      document.querySelectorAll(
+        '.goog-te-banner-frame, .goog-te-menu-frame, #goog-gt-tt, .goog-te-spinner-pos'
+      ).forEach((el) => el?.remove?.());
+    }
+  }, [isCMS]);
+
+  return isCMS ? null : <GoogleTranslateLoader />;
 }
 
 export default App;

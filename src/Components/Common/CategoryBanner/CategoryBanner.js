@@ -46,7 +46,7 @@ const MainContainer = styled.section`
 
   @media (max-width : 767px) {
     height: 70vh;
-    transform: translateY(0);
+    transform: translateY(0px);
   }
 `;
 
@@ -171,7 +171,6 @@ function CategoryBanner({ categoryId }) {
   });
   const bannerData = bannerArticle?.categoryBannerArticle || {};
   const [isHover, setIsHover] = useState(false);
-  const [childCategories, setChildCategories] = useState([]);
   const { bannerHeightRef, setOverScroll } = useScrollStickyState();
 
   useEffect(() => {
@@ -181,13 +180,6 @@ function CategoryBanner({ categoryId }) {
     const target = bannerHeightRef.current;
     setOverScroll(target.getBoundingClientRect().height);
   }, [categoryLoading, bannerLoading, bannerHeightRef, setOverScroll]);
-
-  useEffect(() => {
-    if (categories?.length === 0) return;
-
-    const filterChild = categories.filter((child) => child.parentCategoryId);
-    setChildCategories(filterChild);
-  }, [categories]);
 
   useEffect(() => {
     if (isError) {

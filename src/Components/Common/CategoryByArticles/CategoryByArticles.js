@@ -216,7 +216,7 @@ function CategoryByArticles({ categoryId, categoryInfo, mode, keyword, isMobile,
     const emptyArray = Array.from({ length: 15 });
 
     return (
-      <MainContainer>
+      <MainContainer $isLoading={isLoading}>
         <MainInnerBox>
           <SkeletonLayout $mode={mode === 'search'}>
             <ListSkeleton>

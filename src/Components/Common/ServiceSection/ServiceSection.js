@@ -36,7 +36,7 @@ function ServiceSection({ serviceArticles, isLoading, isError }) {
       <ServiceInnerBox>
         <div style={{ width: '100%', height: '100%', backgroundColor: '#fff', borderRadius: '16px', padding: '8px' }}>
           <ServiceDescription>
-            <span>부품 & 서비스</span>
+            <span>업체소개</span>
             <GoToCategoryBtn onClick={goToCategory} />
           </ServiceDescription>
           <ServiceLists>

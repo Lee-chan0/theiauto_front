@@ -9,7 +9,7 @@ import { formatDateOnly } from "../../Hooks/Utils/formatDateOnly";
 
 const MagazineWrapper = styled.section`
   width: 100%;
-  margin-top: 40px;
+  margin-top: 56px;
 
   @media (max-width : 1279px) {
     margin-top: 24px;

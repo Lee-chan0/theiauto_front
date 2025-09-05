@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import styled, { css, keyframes } from "styled-components";
 import { fetchHomeAd, patchClickCount } from '../../../API/generalAPI/generalAdvertisement.api';
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import RollingAd from './RollingAd';
 import { useNavigate } from "react-router-dom";
 import { FaCar } from "react-icons/fa"; // 자동차 아이콘 추가
@@ -16,11 +16,10 @@ const flashEffect = keyframes`
 
 const moveRoadLine = keyframes`
   from { background-position: 0 0; }
-  to { background-position: 0 200%; } /* 세로로 움직이도록 조정 */
+  to { background-position: 0 200%; } 
 `;
 
-// --- 기존 스타일 유지 ---
-const AdWrapper = styled.div`
+const AdWrapper = styled.section`
   width: 100%;
   transform: translateY(-56px);
   overflow: hidden;
@@ -34,29 +33,20 @@ const AdInnerBox = styled.div`
   flex-direction: column;
   align-items: center;
   gap : 16px;
-  padding : 16px 0;
+  padding : 8px 24px;
   font-size: 1.1rem;
-`;
-
-const AdDescription = styled.div`
-  text-align: center;
-  letter-spacing: 2px;
-  font-weight: 500;
-  color : ${({ theme }) => theme.neutral.gray600};
 `;
 
 const AdsContainerWrapper = styled.div`
   width: 100%;
-  padding: 0 16px;
+  padding : 0 16px;
 `;
 
 const AdsRow = styled.ul`
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(218px, 1fr));
-  gap: 20px;
-  justify-content: center;
-  max-width: 1280px;
-  margin: 0 auto;
+  gap: 16px;
 `;
 
 // --- AdsItems와 CategoryPageItems에 공통적으로 적용될 스타일 (재사용성을 위해) ---
@@ -313,7 +303,6 @@ function HomeAd({ mode, isSearch }) {
       ?
       <AdWrapper>
         <AdInnerBox>
-          <AdDescription>Advertisements</AdDescription>
           <AdsContainerWrapper>
             <AdsRow>
               {bannerLocations.map((location, idx) =>

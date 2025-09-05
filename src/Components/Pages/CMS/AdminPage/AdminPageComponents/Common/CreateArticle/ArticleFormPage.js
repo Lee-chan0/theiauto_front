@@ -16,6 +16,9 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { CgSpinner } from "react-icons/cg";
 import { useSideNavState } from "../../../../../../Hooks/Context/SideNavStateContext";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUsersInfo } from "../../../../../../../API/user.api";
+import { useMediaQuery } from "react-responsive";
 
 function change5MinDate() {
   const now = new Date();
@@ -42,6 +45,11 @@ const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width : 767px) {
+    width: 100%;
+    background-color: transparent;
+  }
 
     & > .spinner-container {
     width: 100%;
@@ -71,6 +79,11 @@ const LayoutContainer = styled.div`
   top : 0;
   z-index: -1;
   overflow-y: auto;
+
+  @media (max-width : 767px) {
+    width: 100%;
+    position: static;
+  }
 
 
   & > .spinner-container {
@@ -109,6 +122,10 @@ const SubmitBtn = styled.button`
     transform: scale(1.005);
     box-shadow: 0 5px 3px 1px rgba(0, 0, 0, 0.2);
   }
+
+  @media (max-width : 767px) {
+    font-size: .9rem;
+  }
 `;
 
 const FILED_LABEL = {
@@ -117,7 +134,8 @@ const FILED_LABEL = {
   articleContent: '내용',
   articleBanner: '대표 이미지',
   categoryId: '카테고리 선택',
-  tagName: '태그'
+  tagName: '태그',
+  adminId: '작성자'
 }
 
 const INITIAL_ARTICLE_VALUES = {
@@ -131,6 +149,7 @@ const INITIAL_ARTICLE_VALUES = {
   tagName: [],
   articleStatus: 'publish',
   publishTime: change5MinDate(),
+  adminId: '',
   isBanner: false
 };
 
@@ -140,6 +159,12 @@ function ArticleFormPage({ mode }) {
   const [prevImageUrls, setPrevImageUrls] = useState([]); // 삭제되면 object storage에서 삭제하는 로직
   const [savedContentImgs, setSavedContentImgs] = useState([]);
   const { articleId } = useParams();
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const { data: usersInfo } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => fetchUsersInfo()
+  })
+  const usersData = usersInfo?.usersInfo || [];
   const { data: findArticle, isLoading } = useFetchArticle(articleId);
   const needUpdateArticle = useMemo(() => findArticle?.findArticle || [], [findArticle]);
   const createMutation = useCreateArticle();
@@ -148,16 +173,16 @@ function ArticleFormPage({ mode }) {
   const overflowBlock = useRef(null);
   const { setIsSearchBarActive } = useSideNavState();
   const navigate = useNavigate();
-
   const handleDelete = (e) => {
     e.preventDefault();
 
     Swal.fire({
-      title: '정말 <span style="color: #d1232a">삭제</span> 하시겠습니까?',
-      html: '삭제하면<strong>복구할 수 없습니다.</strong>',
+      title: '<span style="color : red;">!</span>',
+      html: '<span>지워진 기사는 <span>복구할 수 없습니다.</span><br>기사를 삭제하시겠습니까?</span>',
       showCancelButton: true,
       confirmButtonText: '삭제',
       cancelButtonText: '취소',
+      cancelButtonColor: '#ffffff',
       confirmButtonColor: '#d1232a',
       showClass: {
         popup: ''
@@ -203,8 +228,14 @@ function ArticleFormPage({ mode }) {
             width: 'fit-content',
             icon: 'error',
             timer: 2000,
-            title: `${FILED_LABEL[item]}은/는 필수 입력란입니다.`,
+            title: `${FILED_LABEL[item]}은(는) 필수 입력란입니다.`,
             showConfirmButton: false,
+            showClass: {
+              popup: 'swal-clipboard-up-in'
+            },
+            hideClass: {
+              popup: 'swal-clipboard-up-out'
+            },
             customClass: {
               popup: 'description-popup'
             }
@@ -294,6 +325,7 @@ function ArticleFormPage({ mode }) {
         articleTitle: needUpdateArticle?.articleTitle,
         articleSubTitle: needUpdateArticle?.articleSubTitle,
         articleContent: needUpdateArticle?.articleContent,
+        adminId: needUpdateArticle?.AdminId,
         articleBanner: needUpdateArticle?.articleBanner,
         articleImageUrl: articleImages,
         categoryId: needUpdateArticle?.CategoryId,
@@ -324,7 +356,7 @@ function ArticleFormPage({ mode }) {
 
   if (createMutation.isPending || deleteMutation.isPending || updateMutation.isPending) {
     return (
-      <CreateArticleContainer>
+      <CreateArticleContainer >
         <AdminPageSideNav setIsSearchBarActive={setIsSearchBarActive} />
         <LayoutContainer ref={overflowBlock}>
           <LoadingContainer>
@@ -335,7 +367,7 @@ function ArticleFormPage({ mode }) {
               <CgSpinner size={32} />
             </div>
           </LoadingContainer>
-          <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+          <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} usersData={usersData} />
           <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
           <CreateContent
             articleValues={articleValues}
@@ -381,7 +413,7 @@ function ArticleFormPage({ mode }) {
     <CreateArticleContainer>
       <AdminPageSideNav mode={mode} setIsSearchBarActive={setIsSearchBarActive} />
       <LayoutContainer ref={overflowBlock}>
-        <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+        <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} usersData={usersData} />
         <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
         <CreateContent
           articleValues={articleValues}
@@ -393,7 +425,7 @@ function ArticleFormPage({ mode }) {
         />
         <CreateTag articleValues={articleValues} setArticleValues={setArticleValues} />
         <CreateFile articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} prevImageUrls={prevImageUrls} setPrevImageUrls={setPrevImageUrls} />
-        <div style={{ width: '100%', padding: '24px', paddingTop: '0' }}>
+        <div style={isMobile ? { width: '100%', padding: '8px', paddingTop: '0' } : { width: '100%', padding: '24px', paddingTop: '0' }}>
           <SubmitBtn onClick={handleSubmit}>{mode === 'create' ? '업로드' : '수정'}</SubmitBtn>
           {mode === 'update' &&
             (

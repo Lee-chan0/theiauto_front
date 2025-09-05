@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CreateFileContainer, CreateFileForm, CreateFileDesc, CreateFileImgBox, FileAlert } from './CreateFile.style';
 import { BiImageAdd } from "react-icons/bi";
 import Swal from 'sweetalert2';
+import { useMediaQuery } from 'react-responsive';
 
 
 const allowedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
@@ -11,6 +12,7 @@ const maxFileSize = 25 * 1024 * 1024;
 function CreateFile({ articleValues, setArticleValues, mode, prevImageUrls, setPrevImageUrls }) {
   const [previewImg, setPreviewImg] = useState([]);
   const oneRun = useRef(false);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const handleChangeFiles = (e, index) => {
     if (previewImg.length === 30) return alert('이미지는 *30*장 까지 가능합니다');
@@ -154,7 +156,7 @@ function CreateFile({ articleValues, setArticleValues, mode, prevImageUrls, setP
       <CreateFileForm htmlFor='image-uploader'>
         <input type='file' accept='image/*' id='image-uploader' style={{ display: 'none' }} onChange={(e) => handleChangeFiles(e)} />
         <CreateFileImgBox style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <BiImageAdd size={40} color='gray' />
+          <BiImageAdd size={isMobile ? 32 : 40} color='gray' />
         </CreateFileImgBox>
         <CreateFileDesc id='select'>사진 선택</CreateFileDesc>
       </CreateFileForm>

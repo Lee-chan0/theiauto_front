@@ -5,6 +5,7 @@ import { EditorContainer, NeedReservation, ReservationDescrip } from "./Createco
 import { createContentImage } from "../../../../../../../../API/article.api";
 import CreateSchedule from "../Createschedule/CreateSchedule";
 import Swal from "sweetalert2";
+import { useMediaQuery } from "react-responsive";
 
 const allowedType = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
 const maxFileSize = 25 * 1024 * 1024;
@@ -12,6 +13,7 @@ const maxFileSize = 25 * 1024 * 1024;
 function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, mode, isReservation, setIsReservation }) {
   const quillRef = useRef(null);
   const contentOneRun = useRef(false);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const imageHandler = useCallback(() => {
 
@@ -89,21 +91,22 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
 
   const modules = useMemo(() => ({
     toolbar: {
-      container: [
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['image']
-      ],
-      handlers: {
-        image: imageHandler
-      }
+      container: isMobile
+        ? [['image']] // 모바일: 이미지만
+        : [
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['image']
+        ],
+      handlers: { image: imageHandler }
     }
-  }), [imageHandler]);
+  }), [imageHandler, isMobile]);
 
-  const formats = useMemo(() => ([
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet', 'image'
-  ]), []);
+  const formats = useMemo(() => (
+    isMobile
+      ? ['image'] // 모바일: 이미지 포맷만 허용
+      : ['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'image']
+  ), [isMobile]);
 
   const handleChange = (content) => {
     setArticleValues((prev) => ({
@@ -142,6 +145,7 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
           articleValues={articleValues}
         />}
       <ReactQuill
+        key={isMobile ? 'mobile' : 'desktop'}
         ref={quillRef}
         value={articleValues.articleContent}
         modules={modules}

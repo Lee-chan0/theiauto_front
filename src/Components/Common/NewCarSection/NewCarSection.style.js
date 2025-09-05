@@ -2,6 +2,9 @@ import styled, { css } from "styled-components";
 
 const NewCarWrapper = styled.section`
   width: 100%;
+
+  @media (max-width : 767px) {
+  }
 `;
 
 const NewCarInnerBox = styled.div`

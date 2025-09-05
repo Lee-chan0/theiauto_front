@@ -26,6 +26,7 @@ const BtnBox = styled.div`
 
     @media (max-width : 767px) {
       padding : 4px 8px;
+      
     }
 
     & > span {
@@ -34,7 +35,7 @@ const BtnBox = styled.div`
       color : ${({ $isHover }) => $isHover ? '#f2f2f2' : '#1a1a1a'};
 
       @media (max-width : 767px) {
-        font-size: .75rem;
+        font-size: .6rem;
       }
     }
 
@@ -65,7 +66,7 @@ function GoToCategoryBtn({ onClick }) {
     <BtnBox $isHover={isHover}>
       <button onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} onClick={(e) => onClick(e)}>
         <span>View More</span>
-        <MdOutlineArrowRightAlt size={isMobile ? 20 : 24} color={isHover ? '#f2f2f2' : '#1a1a1a'} /></button>
+        <MdOutlineArrowRightAlt size={isMobile ? 16 : 24} color={isHover ? '#f2f2f2' : '#1a1a1a'} /></button>
     </BtnBox>
   )
 }

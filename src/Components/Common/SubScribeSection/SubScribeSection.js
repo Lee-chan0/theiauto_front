@@ -43,6 +43,10 @@ const HeroSection = styled.div`
     font-size: 2.4rem;
     font-weight: bold;
     color: ${({ theme }) => theme.neutral.gray900};
+
+    @media (max-width : 767px) {
+      font-size: 1.7rem;
+    }
   }
 
   & > p {
@@ -50,6 +54,10 @@ const HeroSection = styled.div`
     font-size: 1.1rem;
     color: ${({ theme }) => theme.neutral.gray600};
     line-height: 1.6;
+
+    @media (max-width : 767px) {
+      font-size: .9rem;
+    }
   }
 
   & > button {
@@ -77,7 +85,7 @@ const BenefitSection = styled.div`
   gap: 24px;
 
   @media (max-width : 767px) {
-    
+    gap : 16px;
   }
 `;
 
@@ -112,6 +120,10 @@ const PreviewSection = styled.div`
     font-size: 1.6rem;
     font-weight: bold;
     color: ${({ theme }) => theme.neutral.gray900};
+
+    @media (max-width : 767px) {
+      font-size: 1.3rem;
+    }
   }
 `;
 
@@ -146,26 +158,6 @@ const PreviewContentItems = styled.li`
   }
 `;
 
-const PreviewBtn = styled.span`
-  position: absolute;
-  width: 80%;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom : 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  pointer-events: none;
-  text-align: center;
-  transition: color 0.5s, background-color .5s;
-  padding : 4px 8px;
-  border-radius: 8px;
-  text-shadow: 2px 2px 4px;
-  background-color: transparent;
-
-  color: ${({ $isHover, theme, $index, $hoverIndex }) =>
-    ($isHover && $index === $hoverIndex) ? theme.neutral.gray900 : `transparent`};
-`;
-
 const PreviewRecentDescrip = styled.span`
   position: absolute;
   left : -2px;
@@ -190,12 +182,18 @@ const CTASection = styled.div`
     font-weight: bold;
     color: ${({ theme }) => theme.neutral.gray900};
     margin-bottom: 16px;
+
+    @media (max-width : 767px) {
+      font-size: 1.3rem;
+    }
   }
 
   & > p {
     font-size: 1rem;
     color: ${({ theme }) => theme.neutral.gray700};
     margin-bottom: 24px;
+
+    font-size: .9rem;
   }
 `;
 
@@ -211,6 +209,10 @@ const CTADescrip = styled.span`
     font-weight: bold;
     color : ${({ theme }) => theme.neutral.gray600};
   }
+
+  @media (max-width : 767px) {
+    font-size: .75rem;
+  }
 `;
 
 function SubScribeSection({ IsInstruction }) {
@@ -222,7 +224,6 @@ function SubScribeSection({ IsInstruction }) {
   const navigate = useNavigate();
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const [isHover, setIsHover] = useState(false);
-  const [hoverIndex, setHoverIndex] = useState(0);
 
   useEffect(() => {
     if (isError) {
@@ -277,11 +278,9 @@ function SubScribeSection({ IsInstruction }) {
                       onClick={() => navigate(`/news/${m.articleId}`)}
                       onMouseEnter={() => {
                         setIsHover(true);
-                        setHoverIndex(i);
                       }}
                       onMouseLeave={() => {
                         setIsHover(false);
-                        setHoverIndex(null);
                       }}
                       $isHover={isHover}
                     >
@@ -289,11 +288,6 @@ function SubScribeSection({ IsInstruction }) {
                         <PreviewRecentDescrip $isHover={isHover}>최신</PreviewRecentDescrip>
                       }
                       <img src={m.articleBanner} alt={`magazine-${m.articleId}`} />
-                      <PreviewBtn $isHover={isHover} $index={i} $hoverIndex={hoverIndex}>
-                        {
-                          m.articleTitle
-                        }
-                      </PreviewBtn>
                     </PreviewContentItems>
                   ))
                   :
@@ -303,11 +297,9 @@ function SubScribeSection({ IsInstruction }) {
                       onClick={() => navigate(`/news/${m.articleId}`)}
                       onMouseEnter={() => {
                         setIsHover(true);
-                        setHoverIndex(i);
                       }}
                       onMouseLeave={() => {
                         setIsHover(false);
-                        setHoverIndex(null);
                       }}
                       $isHover={isHover}
                     >
@@ -315,11 +307,6 @@ function SubScribeSection({ IsInstruction }) {
                         <PreviewRecentDescrip $isHover={isHover}>최신</PreviewRecentDescrip>
                       }
                       <img src={m.articleBanner} alt={`magazine-${m.articleId}`} />
-                      <PreviewBtn $isHover={isHover} $index={i} $hoverIndex={hoverIndex}>
-                        {
-                          m.articleTitle
-                        }
-                      </PreviewBtn>
                     </PreviewContentItems>
                   ))
               }

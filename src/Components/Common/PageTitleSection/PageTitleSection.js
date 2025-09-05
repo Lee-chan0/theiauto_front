@@ -9,8 +9,8 @@ const MainContainer = styled.section`
   
   @media (max-width : 767px) {
     transform: translateY(0px);
-    top : 0;
-  }
+    top : 40px;
+}
 `;
 
 const Background = styled.div`

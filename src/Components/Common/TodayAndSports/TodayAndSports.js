@@ -9,6 +9,10 @@ const Container = styled.section`
   overflow: hidden;
 
   @media (max-width : 1279px) {
+    transform: translateY(-32px);
+  }
+
+  @media (max-width : 767px) {
     transform: translateY(-8px);
   }
 `
@@ -30,7 +34,6 @@ const NewsBox = styled.div`
   gap : 16px;
 
   & > * {
-    flex : 1;
     overflow: hidden;
   }
 
@@ -46,31 +49,20 @@ function TodayAndSports({
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   return (
-    <Container aria-label="오늘의 뉴스">
+    <Container>
       <InnerBox>
         <NewsBox>
-          {
-            !isMobile &&
-            <HomeMotorSports
-              motorSportArticles={motorSportArticles}
-              motorLoading={motorLoading}
-              motorError={motorError}
-            />
-          }
-
           <HomeTodayNews
             todayArticles={todayArticles}
             todayArticleLoading={todayArticleLoading}
             todayArticleError={todayArticleError}
           />
-
           {
             !isMobile &&
             <HomeMotorSports
               motorSportArticles={motorSportArticles}
               motorLoading={motorLoading}
               motorError={motorError}
-              type={'overseas'}
             />
           }
         </NewsBox>

@@ -41,9 +41,10 @@ const textStyle = css`
 const MainContainer = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: 16px;
+  border-radius: 4px;
   background-color: ${({ theme }) => theme.neutral.gray0};
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.1);
+  flex : 1;
 `;
 
 const DescriptionBox = styled.div`
@@ -155,24 +156,10 @@ const MotorTextBox = styled.div`
   }
 `;
 
-function HomeMotorSports({ motorSportArticles, motorLoading, motorError, type }) {
+function HomeMotorSports({ motorSportArticles, motorLoading, motorError }) {
   const navigate = useNavigate();
-  const [motorArticles, setMotorArticles] = useState([]);
-  const { goToCategory } = useCategoryRedirect(motorArticles);
+  const { goToCategory } = useCategoryRedirect(motorSportArticles);
   const [isHover, setIsHover] = useState(false);
-
-  useEffect(() => {
-    if (motorSportArticles?.length === 0) return;
-
-    if (type === 'overseas') {
-      const overseasArticles = motorSportArticles.filter((item) => item.category.categoryName === '모터스포츠[해외]');
-      setMotorArticles(overseasArticles);
-    } else {
-      const filterMotorArticles = motorSportArticles.filter((item) => item.category.categoryName === '모터스포츠[국내]');
-      setMotorArticles(filterMotorArticles);
-    }
-
-  }, [motorSportArticles, type]);
 
   useEffect(() => {
     if (motorError) {
@@ -194,7 +181,7 @@ function HomeMotorSports({ motorSportArticles, motorLoading, motorError, type })
   return (
     <MainContainer>
       <DescriptionBox>
-        <span>{type === 'overseas' ? '모터스포츠[해외]' : '모터스포츠[국내]'}</span>
+        <span>{'모터스포츠'}</span>
         <ViewMoreBox
           onClick={() => goToCategory()}
           onMouseEnter={() => setIsHover(true)}
@@ -207,17 +194,17 @@ function HomeMotorSports({ motorSportArticles, motorLoading, motorError, type })
       <MotorContentBox>
         <MotorLists>
           {
-            motorArticles.map((motor, i) => (
+            motorSportArticles?.map((motor, i) => (
               <MotorItems
-                key={motor.articleId}
-                onClick={() => navigate(`/news/${motor.articleId}`)}
-                data-aos={type === 'overseas' ? 'fade-left' : 'fade-right'}
+                key={motor?.articleId}
+                onClick={() => navigate(`/news/${motor?.articleId}`)}
+                data-aos={'fade-right'}
                 data-aos-delay={`${i * 100}`}
               >
                 <MotorArticle>
-                  <img src={motor.articleBanner} alt={`motor-sport-image-${i}`} />
+                  <img src={motor?.articleBanner} alt={`motor-sport-image-${i}`} />
                   <MotorTextBox>
-                    <h1>{motor.articleTitle}</h1>
+                    <h1>{motor?.articleTitle}</h1>
                     <span>{motor?.createdAt && formatDateOnly(motor?.createdAt)}</span>
                   </MotorTextBox>
                 </MotorArticle>

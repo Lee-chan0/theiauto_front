@@ -14,3 +14,8 @@ export async function updateUserInfo(formData) {
   const response = await axiosInstance.patch(`/adminInfo`, formData);
   return response.data;
 }
+
+export async function fetchUsersInfo() {
+  const response = await axiosInstance.get(`/usersInfo`);
+  return response.data;
+}

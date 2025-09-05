@@ -9,6 +9,15 @@ const CreateFileContainer = styled.div`
   margin-bottom : 40px;
 
   position: relative;
+
+  @media (max-width : 767px) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+
+    margin-bottom: 24px;
+
+    padding : 0 8px;
+  }
 `;
 
 const CreateFileForm = styled.label`
@@ -27,6 +36,11 @@ const CreateFileImgBox = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-color: ${({ theme }) => theme.neutral.gray300};
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+
+  @media (max-width : 767px) {
+    height: 88px;
+  }
 
   svg {
     opacity: 1;
@@ -42,17 +56,25 @@ const CreateFileImgBox = styled.div`
 const CreateFileDesc = styled.span`
   width: 100%;
   font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: 500;
   padding : 4px 8px;
-  background-color: ${({ theme }) => theme.primary.red100};
+  background-color: ${({ theme }) => theme.neutral.gray100};
   text-align: center;
   border-radius: 2px;
   transition : background-color 0.3s, color 0.3s;
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+
   cursor: pointer;
 
   &:hover {
       background-color: ${({ theme, id }) => id === 'select' ? theme.primary.red300 : theme.primary.red700};
       color: ${({ theme, id }) => theme.neutral.gray0};
+  }
+
+  @media (max-width : 767px) {
+    font-size: .7rem;
+    padding : 4px;
+    white-space: nowrap;
   }
 `;
 
@@ -63,6 +85,11 @@ const FileAlert = styled.span`
   color : ${({ theme }) => theme.neutral.gray300};
   margin-bottom : 8px;
   left: 24px;
+
+  @media (max-width : 767px) {
+    left : 8px;
+    font-size: .6rem;
+  }
 `;
 
 export { CreateFileContainer, CreateFileForm, CreateFileDesc, CreateFileImgBox, FileAlert };

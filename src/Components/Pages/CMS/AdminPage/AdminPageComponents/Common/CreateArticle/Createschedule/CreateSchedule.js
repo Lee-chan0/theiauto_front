@@ -3,8 +3,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from 'date-fns/locale'
 import { addDays, isToday } from "date-fns";
-import { CgCloseR } from "react-icons/cg";
 import React from "react";
+import { IoIosArrowForward } from "react-icons/io";
+import { useMediaQuery } from "react-responsive";
 
 const ScheduleContainer = styled.div`
   position: absolute;
@@ -18,13 +19,20 @@ const ScheduleContainer = styled.div`
     .react-datepicker__input-container {
       input {
         font-size: .85rem;
+        font-weight: bold;
         border : none;
         height: 24px;
-        border-radius: 4px;
+        border-radius: 2px;
         padding : 0 8px;
         cursor: pointer;
-        background-color: ${({ theme }) => theme.neutral.gray900};
+        background-color: ${({ theme }) => theme.primary.red300};
         color : ${({ theme }) => theme.neutral.gray0};
+        outline: none;
+
+        @media (max-width : 767px) {
+          font-size: .6rem;
+        }
+          
       }
     }
   }
@@ -39,11 +47,17 @@ const ScheduleContainer = styled.div`
 const IsScheduleActive = styled.span`
   font-size: 0.85rem;
   color : ${({ theme }) => theme.neutral.gray0};
-  background-color: ${({ theme }) => theme.neutral.gray900};
+  background-color: ${({ theme }) => theme.primary.red500};
   padding : 4px 8px;
   font-weight: bold;
   margin-right: 8px;
-  border-radius: 4px;
+  border-radius: 2px;
+
+  @media (max-width : 767px) {
+    font-size: .6rem;
+    padding : 6px 8px;
+    margin-right: 4px;
+  }
 `;
 
 const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
@@ -58,14 +72,15 @@ const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
 
 function CreateSchedule({ setIsReservation, articleValues, setArticleValues }) {
   const isTodaySelected = isToday(articleValues.publishTime);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   return (
     <ScheduleContainer>
-      <CgCloseR size={24} style={{ marginRight: '4px', cursor: 'pointer' }} onClick={() => {
+      <IoIosArrowForward size={isMobile ? 20 : 24} color="#e23b3f" style={{ marginRight: '4px', cursor: 'pointer' }} onClick={() => {
         setIsReservation(false)
         setArticleValues((prev) => ({ ...prev, articleStatus: 'publish' }))
       }} />
-      <IsScheduleActive>예약 시간</IsScheduleActive>
+      {!isMobile && <IsScheduleActive>예약 시간</IsScheduleActive>}
       <DatePicker
         locale={ko}
         selected={articleValues.publishTime}

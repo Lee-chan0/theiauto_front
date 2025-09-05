@@ -21,6 +21,8 @@ const ArrowBox = styled.div`
   }
 
   @media (max-width : 767px) {
+    width: 28px;
+    height: 28px;
     right : 16px;
   }
 `;
@@ -45,6 +47,7 @@ const TodayContainer = styled.div`
   height: 100%;
   padding : 0 16px;
   position: relative;
+  flex : 2;
 
   @media (max-width : 767px) {
     padding : 0;
@@ -110,12 +113,12 @@ const textStyle = css`
 
 const TodayTextBox = styled.div`
   position: absolute;
-  bottom : 12px;
+  bottom : 4px;
   z-index: 1;
   display: flex;
   flex-direction: column;
   gap : 12px;
-  margin : 8px;
+  margin : 16px;
 
   @media (max-width : 1279px) {
     margin : 8px 12px;

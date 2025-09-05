@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { BiRefresh } from "react-icons/bi";
+import { useMediaQuery } from "react-responsive";
 
 const SearchFormContainer = styled.form`
   position: absolute;
@@ -22,6 +23,14 @@ const SearchFormContainer = styled.form`
   opacity: ${({ $isActive }) => $isActive ? '1' : '0'};
   visibility: ${({ $isActive }) => $isActive ? 'visible' : 'hidden'};
   transition: opacity 0.3s, visibility 0.3s;
+
+  @media (max-width : 767px) {
+    background-color: transparent;
+    border : none;
+    box-shadow: none;
+    padding : 0;
+    top : 16px;
+  }
 `;
 
 const SelectCategoryLists = styled.ul`
@@ -65,6 +74,11 @@ const SearchBarInput = styled.input`
   border-radius: 9999px;
   padding : 0 56px 0 16px;
   background-color: ${({ theme }) => theme.neutral.gray100};
+
+  @media (max-width : 767px) {
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.5);
+    border : 2px solid black;
+  }
 `;
 
 const SearchRangeDescrip = styled.span`
@@ -106,6 +120,7 @@ function SearchForm({ isActive, setIsSearchBarActive }) {
   const [childCategory, setChildCategory] = useState([]);
   const { data: categories } = useFetchCategories();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const handleKeyCheck = (e) => {
 
@@ -171,7 +186,7 @@ function SearchForm({ isActive, setIsSearchBarActive }) {
 
   return (
     <SearchFormContainer $isActive={isActive} onKeyDown={handleKeyCheck}>
-      <SelectCategoryLists>
+      {!isMobile && <SelectCategoryLists>
         {
           childCategory.map((child) => (
             <CategoryItem
@@ -184,9 +199,9 @@ function SearchForm({ isActive, setIsSearchBarActive }) {
             </CategoryItem>
           ))
         }
-      </SelectCategoryLists>
+      </SelectCategoryLists>}
       <div style={{ width: '100%', position: 'relative' }}>
-        <SearchRangeDescrip>
+        {!isMobile && <SearchRangeDescrip>
           현재 검색 범위 :&nbsp;<strong>{selectedCategoryName ? selectedCategoryName : '전체'}</strong>
           <ReloadBox
             onClick={handleClickReload}
@@ -195,7 +210,7 @@ function SearchForm({ isActive, setIsSearchBarActive }) {
           >
             <BiRefresh size={16} />
           </ReloadBox>
-        </SearchRangeDescrip>
+        </SearchRangeDescrip>}
         <SearchBarInput
           type="text"
           value={searchValues.searchQuery}

@@ -9,6 +9,7 @@ import { BiArrowFromLeft } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useSideNavState } from "../../../../../../../Hooks/Context/SideNavStateContext";
 import { motion } from "framer-motion";
+import { useMediaQuery } from "react-responsive";
 
 function SideNavMenu({ setIsSearchBarActive }) {
   const { data: categories } = useFetchCategories();
@@ -17,9 +18,10 @@ function SideNavMenu({ setIsSearchBarActive }) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [isHover, setIsHover] = useState(false);
   const categoriesArray = useMemo(() => categories?.categories || [], [categories]);
-  const { setNeedImportant } = useSideNavState();
+  const { setNeedImportant, setMobileMenuActive } = useSideNavState();
   const navigate = useNavigate();
   const [isOptionActive, setIsOptionActive] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   const handleMouseClick = useCallback((categoryId, index) => {
     setActiveIndex(index);
@@ -33,18 +35,21 @@ function SideNavMenu({ setIsSearchBarActive }) {
   const handleClickCategory = (categoryId) => {
     setNeedImportant(false);
     setIsSearchBarActive(false);
+    setMobileMenuActive(false);
     navigate(`/theiautoCMS/adminpage?category=${categoryId}&page=1`);
   }
 
   const handleClickImportantArticle = () => {
     setNeedImportant(true);
     setIsSearchBarActive(false);
+    setMobileMenuActive(false);
     navigate('/theiautoCMS/adminpage?query=&category=none&page=1&isImportant=true');
   }
 
   const handleClickBannerArticle = () => {
     setNeedImportant(false);
     setIsSearchBarActive(false);
+    setMobileMenuActive(false);
     navigate('/theiautoCMS/adminpage?query=&category=none&page=1&isBanner=true');
   }
 
@@ -92,21 +97,26 @@ function SideNavMenu({ setIsSearchBarActive }) {
             ))
           }
         </SideNavMenuLists>
-        <SideNavMenuTitle style={{ marginTop: '16px' }}>옵션</SideNavMenuTitle>
-        <span onClick={handleClickImportantArticle}>중요한 기사</span>
-        <span onClick={handleClickBannerArticle}>배너 기사</span>
-        <OptionDropBox onClick={() => setIsOptionActive((prev) => !prev)} $isOptionActive={isOptionActive}>
-          관리
-          <BiArrowFromLeft size={16} />
-          <motion.div className="informations-box"
-            variants={containerVariants}
-            initial="hidden"
-            animate={isOptionActive ? "visible" : "hidden"}
-            onMouseLeave={() => setIsOptionActive(false)}
-          >
-            <motion.span className="advertisement-info" variants={childVariants} onClick={() => navigate('/theiautoCMS/adminpage/advertisement')}>광고 관리</motion.span>
-          </motion.div>
-        </OptionDropBox>
+        {
+          !isMobile &&
+          <>
+            <SideNavMenuTitle style={{ marginTop: '16px' }}>옵션</SideNavMenuTitle>
+            <span onClick={handleClickImportantArticle}>중요한 기사</span>
+            <span onClick={handleClickBannerArticle}>배너 기사</span>
+            <OptionDropBox onClick={() => setIsOptionActive((prev) => !prev)} $isOptionActive={isOptionActive}>
+              관리
+              <BiArrowFromLeft size={16} />
+              <motion.div className="informations-box"
+                variants={containerVariants}
+                initial="hidden"
+                animate={isOptionActive ? "visible" : "hidden"}
+                onMouseLeave={() => setIsOptionActive(false)}
+              >
+                <motion.span className="advertisement-info" variants={childVariants} onClick={() => navigate('/theiautoCMS/adminpage/advertisement')}>광고 관리</motion.span>
+              </motion.div>
+            </OptionDropBox>
+          </>
+        }
       </SideNavMenuTitleBox>
     </SideNavMenuContainer>
   )

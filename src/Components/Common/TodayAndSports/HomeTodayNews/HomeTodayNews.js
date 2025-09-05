@@ -32,10 +32,10 @@ function HomeTodayNews({ todayArticles, todayArticleLoading, todayArticleError }
   return (
     <TodayContainer>
       <ArrowBox $direction={'right'} onClick={() => swipeRef.current?.slideNext()}>
-        <FaChevronRight size={22} color="#f2f2f2" />
+        <FaChevronRight size={!isMobile ? 22 : 16} color="#f2f2f2" />
       </ArrowBox>
       <ArrowBox style={!isMobile ? { left: '32px' } : { left: '16px' }} $direction={'left'} onClick={() => swipeRef.current?.slidePrev()}>
-        <FaChevronLeft size={22} color="#f2f2f2" />
+        <FaChevronLeft size={!isMobile ? 22 : 16} color="#f2f2f2" />
       </ArrowBox>
       <TodayLists>
         <TodayDescription>Today, 뉴스</TodayDescription>

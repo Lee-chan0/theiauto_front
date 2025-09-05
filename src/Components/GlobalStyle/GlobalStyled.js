@@ -47,11 +47,11 @@ const GlobalStyledComponent = createGlobalStyle`
   .quill .ql-toolbar {
     width: fit-content;
     border : none;
-    background-color:${({ theme }) => theme.neutral.gray600};
-    border-radius: 6px;
+    background-color:${({ theme }) => theme.neutral.gray300};
+    border-radius: 4px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    box-shadow: 0 -2px 5px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px -2px 3px 1px rgba(0, 0, 0, 0.2);
 
     display: flex;
     gap : 16px;
@@ -59,12 +59,15 @@ const GlobalStyledComponent = createGlobalStyle`
     position: absolute;
     top : -40px;
     left : 16px;
+
+    @media (max-width : 767px) {
+      padding : 8px 0;
+    }
   }
 
   .quill .ql-toolbar .ql-formats {
     margin : 0;
     width: fit-content;
-    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
     background-color: ${({ theme }) => theme.neutral.gray0};
     border-radius: 6px;
     position: relative;
@@ -82,7 +85,11 @@ const GlobalStyledComponent = createGlobalStyle`
       object-fit: contain;
       object-position: left;
       height: 320px;
-    }
+
+      @media (max-width : 767px) {
+        height: auto;
+      }
+    } 
   }
 
   .quill .ql-container {
@@ -92,6 +99,10 @@ const GlobalStyledComponent = createGlobalStyle`
     height: 500px;
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.2);
     font-size: 0.95rem;
+
+    @media (max-width : 767px) {
+      font-size: .75rem;
+    }
   }
 
   .react-datepicker {
@@ -160,12 +171,12 @@ const GlobalStyledComponent = createGlobalStyle`
   }
 
   .delete-popup {
-    width: 400px;
+    width: 320px;
+    border-radius: 0 !important;
 
     & > .swal2-html-container {
       width: 100%;
-      height: 32px;
-      font-size: .9rem;
+      font-size: 0.8rem;
       display: flex !important;
       align-items: center;
 
@@ -178,24 +189,28 @@ const GlobalStyledComponent = createGlobalStyle`
       padding : 0;
     }
 
-    background-color: ${({ theme }) => theme.neutral.gray900};
-    color : ${({ theme }) => theme.neutral.gray100};
+    background-color: ${({ theme }) => theme.neutral.gray0};
+    color : ${({ theme }) => theme.neutral.gray900};
     font-size: .75rem;
     border-radius: 4px;
     padding : 16px;
     display: flex;
     flex-direction: column;
     gap : 12px;
-    box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.5);
 
     & > .swal2-actions {
       margin : 0;
       width: 100%;
-      display: flex;
-      flex-direction: column;
+      display: flex !important;
+
+      & > .swal2-cancel {
+        background-color: ${({ theme }) => theme.neutral.gray300} !important;
+      }
 
       & > button {
         width: 100%;
+        flex : 1;
+        border-radius: 0 !important;
       }
     }
   }
@@ -209,6 +224,11 @@ const GlobalStyledComponent = createGlobalStyle`
     border-radius: 0;
     padding : 0 80px;
 
+    @media (max-width : 767px) {
+      padding : 0px;
+      
+    }
+
     & > .swal2-actions {
       margin : 16px 0;
       display: flex;
@@ -219,6 +239,10 @@ const GlobalStyledComponent = createGlobalStyle`
         font-size: .85rem;
         background-color: #000;
 
+        @media (max-width : 767px) {
+          font-size: .7rem;
+        }
+
         &:hover {
           background-color: rgba(0, 0, 0, 0.8);
         }
@@ -228,6 +252,10 @@ const GlobalStyledComponent = createGlobalStyle`
         border-radius: 99px;
         font-size: .85rem;
         background-color: ${({ theme }) => theme.neutral.gray300};
+
+        @media (max-width : 767px) {
+          font-size: .7rem;
+        }
       }
     }
 
@@ -237,6 +265,13 @@ const GlobalStyledComponent = createGlobalStyle`
       margin : 8px;
       margin-left: 0;
       color : ${({ theme }) => theme.neutral.gray900};
+
+      @media (max-width : 767px) {
+        font-size: 1rem;
+        text-align: center;
+        margin: 0;
+        font-weight: 900;
+      }
     }
 
     & > .swal2-html-container {
@@ -256,11 +291,19 @@ const GlobalStyledComponent = createGlobalStyle`
           justify-content: space-between;
           color : ${({ theme }) => theme.neutral.gray900};
 
+          @media (max-width : 767px) {
+            font-size: .7rem;
+          }
+
           & > span {
             flex-basis: 120px;
             font-weight: 700;
             font-size: .95rem;
             color : ${({ theme }) => theme.neutral.gray900};
+
+            @media (max-width : 767px) {
+              font-size: .7rem;
+            }
           }
         }
       }
@@ -268,10 +311,11 @@ const GlobalStyledComponent = createGlobalStyle`
   }
   
   .description-popup {
-    background-color: ${({ theme }) => theme.neutral.gray900};
-    color: ${({ theme }) => theme.neutral.gray100};
-    font-size: 0.9rem;
+    background-color: ${({ theme }) => theme.neutral.gray100};
+    color: ${({ theme }) => theme.neutral.gray900};
+    font-size: 0.8rem;
     padding: 6px 16px;
+    border-radius: 1px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 
     display : flex !important;

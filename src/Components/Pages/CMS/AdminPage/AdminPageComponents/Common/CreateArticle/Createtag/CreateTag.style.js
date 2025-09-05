@@ -5,6 +5,10 @@ const TagContainer = styled.div`
   margin : 40px 0;
   padding : 0 24px;
   position: relative;
+
+  @media (max-width : 767px) {
+    padding : 0 8px;
+  }
 `;
 
 const TagDescriptionContainer = styled.span`
@@ -16,6 +20,11 @@ const TagDescriptionContainer = styled.span`
   border-radius: 4px;
   position: absolute;
   top : -40px;
+
+  @media (max-width : 767px) {
+    font-size: .75rem;
+    margin-top: 8px;
+  }
 `;
 
 const TagInput = styled.input`
@@ -24,6 +33,10 @@ const TagInput = styled.input`
   font-size: 0.9rem;
   border : none;
   outline: none;
+
+  @media (max-width : 767px) {
+    font-size: .75rem;
+  }
 `;
 
 const TagLayOutBox = styled.div`
@@ -49,6 +62,11 @@ const HashTagIcon = styled.div`
   border : none;
   outline : none;
   border-radius : 3px;
+
+  @media (max-width : 767px) {
+    font-size : .75rem;
+    font-weight : 500;
+  }
 `;
 
 export { TagContainer, TagInput, TagLayOutBox, HashTagIcon, TagDescriptionContainer };

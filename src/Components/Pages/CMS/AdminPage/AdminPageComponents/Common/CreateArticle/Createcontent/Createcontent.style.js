@@ -5,15 +5,19 @@ const EditorContainer = styled.div`
   padding : 24px;
   padding-top : 8px;
   position: relative;
+
+  @media (max-width : 767px) {
+    padding: 8px;
+  }
 `;
 
 const NeedReservation = styled.div`
   width: fit-content;
   height: 30px;
   padding : 4px 8px;
-  background-color: ${({ theme }) => theme.neutral.gray900};
+  background-color: ${({ theme }) => theme.primary.red300};
   color : ${({ theme }) => theme.neutral.gray0};
-  border-radius: 3px;
+  border-radius: 2px;
   display : flex;
   align-items: center;
   justify-content: center;
@@ -28,11 +32,21 @@ const NeedReservation = styled.div`
     background-color: ${({ theme }) => theme.primary.red700};
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
   }
+
+  @media (max-width : 767px) {
+    padding : 8px;
+    height: auto;
+    
+  }
 `;
 
 const ReservationDescrip = styled.span`
   font-size: 0.85rem;
   font-weight: bold;
+
+  @media (max-width : 767px) {
+    font-size: .65rem;
+  }
 `;
 
 export { EditorContainer, NeedReservation, ReservationDescrip };

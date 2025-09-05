@@ -1,3 +1,4 @@
+// Nav.jsx
 import { useLocation, useNavigate } from 'react-router-dom';
 import logoWhite from '../../Assets/theiautoLogoWhite.png';
 import logoBlack from '../../Assets/theiautoLogoB_NoS.png';
@@ -12,7 +13,9 @@ import {
   ClickChildItem,
   MoveNavLists,
   MoveNavItem,
+  TranslateContainer,
 } from './Nav.style';
+import { RiTranslateAi } from "react-icons/ri";
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { fetchNavAd, patchClickCount } from '../../API/generalAPI/generalAdvertisement.api';
 import useCarousel from '../Hooks/CommonHooks/useCarousel';
@@ -22,7 +25,7 @@ import { SiNaver } from "react-icons/si";
 import { FaFacebookSquare } from "react-icons/fa";
 import { useMediaQuery } from 'react-responsive';
 import { BiSearchAlt2 } from "react-icons/bi";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFetchCategories } from '../Hooks/ApiHooks/Category/useFetchCategories';
 import { FaPlus } from "react-icons/fa";
 import { AiOutlineHome } from "react-icons/ai";
@@ -31,19 +34,16 @@ import { BiCategory } from "react-icons/bi";
 import NavMenuBar from './NavMenuBar';
 import { useScrollStickyState } from '../Hooks/Context/ScrollAndStickyCheckContext';
 
+// 'staggerChildren'을 제거하고 부모 컴포넌트가 전체 애니메이션을 담당하도록 수정
 const categoryListVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0, x: 15 },
   visible: {
     opacity: 1,
+    x: 0,
     transition: {
-      staggerChildren: 0.2,
+      duration: 0.5, // 부드럽게 나타나는 시간 설정
     }
   }
-}
-
-const categoryItemVariants = {
-  hidden: { opacity: 0, x: 15 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
 };
 
 const listVariants = {
@@ -54,7 +54,7 @@ const listVariants = {
       staggerChildren: 0.3,
     }
   }
-}
+};
 
 const itemVariants = {
   hidden: (i) => {
@@ -87,6 +87,13 @@ const itemVariants = {
   }
 };
 
+// CHANGED: label + code를 함께 관리 (index key, 하드코딩 제거)
+const translateItem = [
+  { label: '한국어', code: 'ko' },
+  { label: 'English', code: 'en' },
+  { label: '日本語', code: 'ja' },
+];
+
 function Nav() {
   const { data: adArray } = useQuery({
     queryKey: ['advertisement-nav'],
@@ -97,10 +104,21 @@ function Nav() {
   const updateClickMutation = useMutation({
     mutationFn: patchClickCount
   });
+
   const location = useLocation();
-  const isHome = location.pathname === '/' ? true : false;
-  const isCategoryPage = location.pathname.includes('/category/');
   const navigate = useNavigate();
+
+  const isPage = useMemo(() => {
+    const { pathname } = location;
+    return {
+      isHome: pathname === '/',
+      isCategoryPage: pathname.includes('/category/'),
+      isNewsPage: pathname.includes('/news/'),
+      isInstructionsPage: pathname.includes('/instructions'),
+      isMagazinePage: pathname.includes('/magazine/subscribe'),
+      isSearchPage: pathname.includes('/search'),
+    };
+  }, [location]);
   const { data: categoryArray } = useFetchCategories();
   const categories = useMemo(() => categoryArray?.categories || [], [categoryArray]);
   const [parentCategories, setParentCategories] = useState([]);
@@ -117,47 +135,62 @@ function Nav() {
   const { scrollDirectionUp, focusOut } = useScrollStickyState();
   const adLists = adArray?.ads || [];
   const currentAd = useCarousel(adLists.length > 1 ? adLists : [], 3000);
+  const [translateActive, setTranslateActive] = useState(false);
+  const translateRef = useRef(null);
 
   const handleClickMobileMenu = () => {
     setIsActiveMobileMenu((prev) => !prev);
     setActiveParentCategoryId(null);
     setIsCircleClick(false);
-  }
+  };
 
   const handleClickParent = (categoryId) => {
     setActiveParentCategoryId(categoryId);
-  }
+  };
 
   useEffect(() => {
     if (categories.length === 0) return;
-
     const filterParent = categories.filter((category) => !category.parentCategoryId);
     setParentCategories(filterParent);
-
   }, [categories]);
 
   useEffect(() => {
     if (categories.length === 0) return;
-
     const filterChild = categories.filter((child) => child.parentCategoryId);
     setChildCategories(filterChild);
   }, [categories]);
 
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (translateRef.current && !translateRef.current.contains(e.target)) {
+        setTranslateActive(false);
+      }
+    }
+
+    function handleScroll() {
+      setTranslateActive(false);
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const handleClickCount = (adId) => {
     updateClickMutation.mutate(adId);
-  }
+  };
 
   const handleChange = (e) => {
-    const target = e.target.value;
-
-    setSearchText(target);
-  }
+    setSearchText(e.target.value);
+  };
 
   const handleBtnClick = (e) => {
     e.preventDefault();
-
     setIsActive(true);
-
     if (isActive) {
       if (searchText.trim() === "") {
         setIsActive(false);
@@ -167,11 +200,10 @@ function Nav() {
         setSearchText("");
       }
     }
-  }
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-
       if (searchText.trim() === "") {
         setIsActive(false);
       } else {
@@ -180,23 +212,97 @@ function Nav() {
         setSearchText("");
       }
     }
-  }
+  };
+
+  const getLogoSrc = () => {
+    if (isMobile) {
+      return logoWhite;
+    }
+
+    if (isPage.isNewsPage || isPage.isInstructionsPage || isPage.isMagazinePage || isPage.isSearchPage) {
+      return logoWhite;
+    }
+
+    if ((isPage.isHome || isPage.isCategoryPage) && !focusOut) {
+      return logoBlack;
+    }
+
+    return logoWhite;
+  };
+
+  const getTranslateSelect = () => {
+    return (
+      document.querySelector('#google_translate_element select') ||
+      document.querySelector('.goog-te-combo')
+    );
+  };
+
+  const setCookie = (name, value, domain) => {
+    let cookie = `${name}=${value}; path=/;`;
+    const days = 7;
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    cookie += ` expires=${expires};`;
+    if (domain && domain.indexOf('.') !== -1) {
+      cookie += ` domain=.${domain};`;
+    }
+    document.cookie = cookie;
+  };
+
+  const changeLanguage = (targetCode) => {
+    const select = getTranslateSelect();
+    if (select) {
+      select.value = targetCode;
+      select.dispatchEvent(new Event('change'));
+      return;
+    }
+    const v = `/ko/${targetCode}`;
+    setCookie('googtrans', v);
+    setCookie('googtrans', v, window.location.hostname);
+    window.location.reload();
+  };
 
   return (
     <>
       <NavContainer
-        $isHome={isHome}
-        $isCategoryPage={isCategoryPage}
+        $isHome={isPage.isHome}
+        $isCategoryPage={isPage.isCategoryPage}
+        $isNewsPage={isPage.isNewsPage}
+        $isInstructionsPage={isPage.isInstructionsPage}
+        $isMagazinePage={isPage.isMagazinePage}
+        $isSearchPage={isPage.isSearchPage}
         $isClickNavigation={isClickNavigation}
         $scrollDirectionUp={scrollDirectionUp}
         $focusOut={focusOut}
         $isMobile={isMobile}
       >
         {
+          isMobile &&
+          <TranslateContainer
+            ref={translateRef}
+            $translateActive={translateActive}
+            $focusOut={focusOut}
+            $isHome={isPage.isHome}
+            $isCategoryPage={isPage.isCategoryPage}
+          >
+            <RiTranslateAi size={!isMobile ? 24 : 20} onClick={() => {
+              setTranslateActive((prev) => !prev);
+            }} />
+            <ul className='translate-list'>
+              {
+                translateItem.map(({ label, code }) => (
+                  <li key={code} onClick={() => changeLanguage(code)}>
+                    <span>{label}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </TranslateContainer>
+        }
+        {
           !isMobile &&
           <ClickNavigation
-            $isHome={isHome}
-            $isCategoryPage={isCategoryPage}
+            $isHome={isPage.isHome}
+            $isCategoryPage={isPage.isCategoryPage}
             $scrollDirectionUp={scrollDirectionUp}
             $isClickNavigation={isClickNavigation}
             $focusOut={focusOut}
@@ -229,8 +335,8 @@ function Nav() {
                   parentCategories.map((parent) => (
                     <ClickNavigationItem
                       key={parent.categoryId}
-                      $isHome={isHome}
-                      $isCategoryPage={isCategoryPage}
+                      $isHome={isPage.isHome}
+                      $isCategoryPage={isPage.isCategoryPage}
                       $focusOut={focusOut}
                     >
                       {parent.categoryName}
@@ -259,123 +365,28 @@ function Nav() {
         <NavInnerBox $isActive={isActive}>
           {
             isMobile &&
-            <MobileMenu onClick={() => {
-              setActiveParentCategoryId(null);
-            }}>
-              <HomeMenu onClick={() => {
-                setIsActiveMobileMenu(false);
-                setActiveParentCategoryId(null);
-                setIsCircleClick(false);
-                navigate('/');
-              }}>
-                <AiOutlineHome color='#f2f2f2' size={24} />
-                <span>HOME</span>
-              </HomeMenu>
-              <MenuCircle $isCircleClick={isCircleClick} onClick={() => {
-                setIsCircleClick((prev) => !prev);
-                setIsActiveMobileMenu(false);
-                setActiveParentCategoryId(null);
-              }}>
-                <FaPlus />
-                <CircleClickNav
-                  $isCircleClick={isCircleClick}
-                  variants={listVariants}
-                  initial="hidden"
-                  animate={isCircleClick ? 'visible' : 'hidden'}
-                >
-                  <CircleClickItem
-                    custom={0}
-                    $isCircleClick={isCircleClick}
-                    variants={itemVariants}
-                  >
-                    <a href='https://blog.naver.com/theiauto' target='_blank' rel='noreferrer'>
-                      <SiNaver color='#1a1a1a' />
-                    </a>
-                  </CircleClickItem>
-                  <CircleClickItem
-                    custom={1}
-                    $isCircleClick={isCircleClick}
-                    variants={itemVariants}
-                  >
-                    <a href='https://motor01.tistory.com' target='_blank' rel='noreferrer'>
-                      <SiTistory color='#1a1a1a' />
-                    </a>
-                  </CircleClickItem>
-                  <CircleClickItem
-                    custom={2}
-                    $isCircleClick={isCircleClick}
-                    variants={itemVariants}
-                  >
-                    <a href='https://www.youtube.com/@theiauto/shorts' target='_blank' rel='noreferrer'>
-                      <FaYoutube color='#1a1a1a' size={22} />
-                    </a>
-                  </CircleClickItem>
-                  <CircleClickItem
-                    custom={3}
-                    $isCircleClick={isCircleClick}
-                    variants={itemVariants}
-                  >
-                    <a href='https://www.facebook.com/?locale=ko_KR' target='_blank' rel='noreferrer'>
-                      <FaFacebookSquare color='#1a1a1a' size={20} />
-                    </a>
-                  </CircleClickItem>
-                </CircleClickNav>
-              </MenuCircle>
-              <MenuBox onClick={handleClickMobileMenu} >
-                <Menulist $isActiveMobileMenu={isActiveMobileMenu}>
-                  {hasParentCategories && parentCategories.map((parent) => (
-                    <MenuItem
-                      key={parent.categoryId}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleClickParent(parent.categoryId);
-                      }}
-                      $parentCategoryId={parent.categoryId}
-                      $activeParentCategoryId={activeParentCategoryId}
-                    >
-                      <IoIosArrowBack />
-                      {parent.categoryName}
-                    </MenuItem>
-                  ))}
-
-                  <ChildList
-                    key={activeParentCategoryId || 'none'}
-                    $activeParentCategoryId={activeParentCategoryId}
-                    variants={categoryListVariants}
-                    initial="hidden"
-                    animate={hasParentCategories && selectedParent?.categoryId === activeParentCategoryId ? 'visible' : 'hidden'}
-                  >
-                    {hasParentCategories && hasChildItems && activeParentCategoryId &&
-                      childItems.map((child) => (
-                        <ChildItem
-                          variants={categoryItemVariants}
-                          key={child.categoryId}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setActiveParentCategoryId(null);
-                            setIsActiveMobileMenu(false);
-                            navigate(`/category/${child.categoryId}`)
-                          }}
-                        >
-                          {child.categoryName}
-                        </ChildItem>
-                      ))
-                    }
-                  </ChildList>
-                </Menulist>
-                <BiCategory color='#f2f2f2' size={24} />
-                <span>MENU</span>
-              </MenuBox>
-            </MobileMenu>
+            <div className='mobile-logo-box'>
+              <img
+                src={getLogoSrc()}
+                alt='logo'
+                className='main-logo'
+                onClick={() => {
+                  navigate('/');
+                  setActiveParentCategoryId(null);
+                }} />
+            </div>
           }
-          <img
-            src={isMobile ? logoWhite : ((isHome || isCategoryPage) && !focusOut) ? logoBlack : logoWhite}
-            alt='logo'
-            className='main-logo'
-            onClick={() => {
-              navigate('/');
-              setActiveParentCategoryId(null);
-            }} />
+          {
+            !isMobile &&
+            <img
+              src={getLogoSrc()}
+              alt='logo'
+              className='main-logo'
+              onClick={() => {
+                navigate('/');
+                setActiveParentCategoryId(null);
+              }} />
+          }
           {
             !isMobile &&
             <NavMenuBar
@@ -388,9 +399,13 @@ function Nav() {
               adLists={adLists}
               currentAd={currentAd}
               handleClickAd={handleClickCount}
+              translateActive={translateActive}
+              setTranslateActive={setTranslateActive}
+              focusOut={focusOut}
+              isHome={isPage.isHome}
+              isCategoryPage={isPage.isCategoryPage}
             />
           }
-
           {
             isMobile &&
             <div className='menu-handler' style={{ position: 'relative' }}>
@@ -410,10 +425,120 @@ function Nav() {
             </div>
           }
         </NavInnerBox>
-      </NavContainer >
+      </NavContainer>
+      {
+        isMobile &&
+        <MobileMenu
+          $scrollDirectionUp={scrollDirectionUp}
+          onClick={() => {
+            setActiveParentCategoryId(null);
+          }}>
+          <HomeMenu onClick={() => {
+            setIsActiveMobileMenu(false);
+            setActiveParentCategoryId(null);
+            setIsCircleClick(false);
+            navigate('/');
+          }}>
+            <AiOutlineHome color='#f2f2f2' size={24} />
+            <span>HOME</span>
+          </HomeMenu>
+          <MenuCircle $isCircleClick={isCircleClick} onClick={() => {
+            setIsCircleClick((prev) => !prev);
+            setIsActiveMobileMenu(false);
+            setActiveParentCategoryId(null);
+          }}>
+            <FaPlus />
+            <CircleClickNav
+              $isCircleClick={isCircleClick}
+              variants={listVariants}
+              initial="hidden"
+              animate={isCircleClick ? 'visible' : 'hidden'}
+            >
+              <CircleClickItem
+                custom={0}
+                $isCircleClick={isCircleClick}
+                variants={itemVariants}
+              >
+                <a href='https://blog.naver.com/theiauto' target='_blank' rel='noreferrer'>
+                  <SiNaver color='#1a1a1a' />
+                </a>
+              </CircleClickItem>
+              <CircleClickItem
+                custom={1}
+                $isCircleClick={isCircleClick}
+                variants={itemVariants}
+              >
+                <a href='https://motor01.tistory.com' target='_blank' rel='noreferrer'>
+                  <SiTistory color='#1a1a1a' />
+                </a>
+              </CircleClickItem>
+              <CircleClickItem
+                custom={2}
+                $isCircleClick={isCircleClick}
+                variants={itemVariants}
+              >
+                <a href='https://www.youtube.com/@theiauto/shorts' target='_blank' rel='noreferrer'>
+                  <FaYoutube color='#1a1a1a' size={22} />
+                </a>
+              </CircleClickItem>
+              <CircleClickItem
+                custom={3}
+                $isCircleClick={isCircleClick}
+                variants={itemVariants}
+              >
+                <a href='https://www.facebook.com/?locale=ko_KR' target='_blank' rel='noreferrer'>
+                  <FaFacebookSquare color='#1a1a1a' size={20} />
+                </a>
+              </CircleClickItem>
+            </CircleClickNav>
+          </MenuCircle>
+          <MenuBox onClick={handleClickMobileMenu} >
+            <Menulist $isActiveMobileMenu={isActiveMobileMenu}>
+              {hasParentCategories && parentCategories.map((parent) => (
+                <MenuItem
+                  key={parent.categoryId}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClickParent(parent.categoryId);
+                  }}
+                  $parentCategoryId={parent.categoryId}
+                  $activeParentCategoryId={activeParentCategoryId}
+                >
+                  <IoIosArrowBack />
+                  {parent.categoryName}
+                </MenuItem>
+              ))}
+
+              <ChildList
+                key={activeParentCategoryId || 'none'}
+                $activeParentCategoryId={activeParentCategoryId}
+                variants={categoryListVariants}
+                initial="hidden"
+                animate={hasParentCategories && selectedParent?.categoryId === activeParentCategoryId ? 'visible' : 'hidden'}
+              >
+                {hasParentCategories && hasChildItems && activeParentCategoryId &&
+                  childItems.map((child) => (
+                    <ChildItem
+                      key={child.categoryId}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveParentCategoryId(null);
+                        setIsActiveMobileMenu(false);
+                        navigate(`/category/${child.categoryId}`);
+                      }}
+                    >
+                      {child.categoryName}
+                    </ChildItem>
+                  ))}
+              </ChildList>
+            </Menulist>
+            <BiCategory color='#f2f2f2' size={24} />
+            <span>MENU</span>
+          </MenuBox>
+        </MobileMenu>
+      }
     </>
   );
-
 }
 
 export default Nav;

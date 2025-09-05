@@ -12,38 +12,41 @@ import { useMediaQuery } from "react-responsive";
 
 const MagazineFixContentContainer = styled.div`
   position: fixed;
-  top : 50%;
-  right : -80px;
-  transform: translate(-50%, -50%);
-  width: 320px;
+  bottom : 0;
+  left : 50%;
+  transform: translateX(-50%);
+  width: 767px;
+  height: 120px;
   overflow: hidden;
-  border : 1px solid ${({ theme }) => theme.neutral.gray100};
   z-index: 10000;
-  background-color: ${({ theme }) => theme.neutral.gray900};
+  background: 
+    linear-gradient(rgba(26,26,26,0.7), rgba(26,26,26,0.7)),
+    url(${({ $src }) => $src || ""});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
+  box-shadow: 0 4px 10px 5px rgba(0, 0, 0, 0.5);
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
 
   & > .content-box {
-    margin : 8px;
-    margin-bottom : 0;
+    margin : 0 8px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-
-    & > img {
-      display: block;
-      width: 100%;
-      height: 360px;
-    }
+    gap: 16px;
 
     & > .btn-handler {
       display: flex;
-      flex-direction: column;
       gap : 4px;
     }
 
     & > h1 {
-      font-size: 1rem;
+      font-size: 1.5rem;
+      font-weight: 300;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
       color : ${({ theme }) => theme.neutral.gray100};
       text-align: center;
     }
@@ -52,12 +55,12 @@ const MagazineFixContentContainer = styled.div`
 
 const MagazineCloseBox = styled.div`
   width: 100%;
-  border-bottom : 1px solid ${({ theme }) => theme.neutral.gray100};
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: row-reverse;
+  position: relative;
 
   & > .logo-container {
     width: 80px;
@@ -70,6 +73,8 @@ const MagazineCloseBox = styled.div`
   }
 
   & > svg {
+    position: absolute;
+    left : 4px;
     cursor: pointer;
     color : ${({ theme }) => theme.neutral.gray100};
 
@@ -80,21 +85,25 @@ const MagazineCloseBox = styled.div`
 `;
 
 const DescriptionBox = styled.div`
+
   & > label {
       display: flex;
       align-items: center;
       flex-direction: row-reverse;
       gap: 4px;
       margin : 4px 8px;
+
     & > span {
       font-size: .85rem;
+      font-weight: 300;
       color : ${({ theme }) => theme.neutral.gray100};
       margin-bottom: 2px;
-    }
+      cursor: pointer;
+      text-decoration: underline;
 
-    & > input {
-      width: 15px;
-      height: 15px;
+      &:hover {
+        opacity: .8;
+      }
     }
   }
 `;
@@ -104,17 +113,17 @@ const SubscribeBtn = styled(motion.button)`
   align-items: center;
   justify-content: center;
   gap: 4px;
+  border : 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
 
   width: 100%;
   height: 32px;
-  border-radius: 8px;
+  border-radius: 4px;
   will-change: transform;
 
-  background-color: ${({ theme }) => theme.primary.red700};
+  background-color: transparent;
   color : ${({ theme }) => theme.neutral.gray100};
-  font-weight: bold;
-  font-size: .95rem;
-
+  font-size: .85rem;
   cursor: pointer;
 `;
 
@@ -126,7 +135,6 @@ function MagazineFixContent() {
   const magazineData = magazineAd?.ad || "";
   const [isVisible, setIsVisible] = useState(true);
   const navigate = useNavigate();
-  const isTablet = useMediaQuery({ maxWidth: 1279 });
   const isMobile = useMediaQuery({ maxWidth: 767 });
 
   useEffect(() => {
@@ -147,40 +155,35 @@ function MagazineFixContent() {
     setIsVisible(false);
   }
 
-  if (!isVisible || isTablet || isMobile || isLoading || isError) return null;
+  if (!isVisible || isMobile || isLoading || isError) return null;
 
   return (
-    <MagazineFixContentContainer>
+    <MagazineFixContentContainer $src={magazineData?.advertisementImageUrl}>
       <MagazineCloseBox>
         <IoClose size={28} title="닫기" onClick={handleClose} />
+        <DescriptionBox>
+          <label>
+            <span onClick={handleDissmissToday}>오늘 하루 그만보기</span>
+          </label>
+        </DescriptionBox>
       </MagazineCloseBox>
       <div className="content-box">
         <h1>{magazineData?.advertisementTitle}</h1>
-        <img src={magazineData?.advertisementImageUrl} alt="magazine-ad" />
         <div className="btn-handler">
           <SubscribeBtn
             onClick={() => navigate(`/magazine/subscribe`)}
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 500, damping: 10 }}
           >
-            <MdBookmarkAdd size={18} />
+            <MdBookmarkAdd size={16} />
             구독안내
           </SubscribeBtn>
-          <SubscribeBtn whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 500, damping: 10 }}
+          <SubscribeBtn
             onClick={() => navigate(`/category/24`)}
           >
-            <MdOutlineLibraryBooks size={18} />
+            <MdOutlineLibraryBooks size={16} />
             살펴보기
           </SubscribeBtn>
         </div>
       </div>
-      <DescriptionBox>
-        <label>
-          <input type="checkbox" onChange={handleDissmissToday} />
-          <span>오늘 하루 그만보기</span>
-        </label>
-      </DescriptionBox>
     </MagazineFixContentContainer>
 
   )

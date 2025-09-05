@@ -9,6 +9,11 @@ const ManagementContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   z-index: -1;
+
+  @media (max-width : 767px) {
+    width: 100%;
+    position: static;
+  }
 `;
 
 export { ManagementContainer };

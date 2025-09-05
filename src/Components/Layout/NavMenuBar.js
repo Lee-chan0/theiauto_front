@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { BiSearchAlt2 } from "react-icons/bi";
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useScrollStickyState } from "../Hooks/Context/ScrollAndStickyCheckContext";
+import { RiTranslateAi } from "react-icons/ri";
 import { useMediaQuery } from "react-responsive";
 
 const MainContainer = styled.div`
@@ -24,7 +25,7 @@ const ContentContainer = styled.div`
     display: flex;
     justify-content: center;
 
-    @media (max-width : 1024px) {
+    @media (max-width : 1180px) {
       display: none;
     }
 
@@ -55,7 +56,6 @@ const BoxItem = styled.li`
     display: flex;
     align-items: center;
     font-weight: ${({ $isClickNavigation, $item }) => ($isClickNavigation && $item === '메뉴') && 'bold'};
-    display: ${({ $layoutHelper, $item }) => ($layoutHelper && $item === '회사소개') && 'none'};
 
     @media (max-width : 1279px) {
       font-size: .9rem;
@@ -88,15 +88,148 @@ const SearchInput = styled.input`
   transition: box-shadow 0.3s, transform 0.3s;
 `;
 
+const TranslateContainer = styled.div`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right : -64px;
+  top : 50%;
+  transform: translateY(-50%);
+
+  @media (max-width : 1320px) {
+    left : -40px;
+  }
+
+  @media (max-width : 1279px) {
+    left : -40px;
+  }
+
+  @media (max-width : 1060px) {
+    left : -40px;
+  }
+
+  @media (max-width : 767px) {
+    width: 20px;
+    height: 20px;
+  }
+
+  & > svg {
+    cursor: pointer;
+    color: ${({ $focusOut, $isHome, $isCategoryPage }) =>
+    $isHome || $isCategoryPage
+      ? $focusOut
+        ? '#f2f2f2'
+        : '#1a1a1a'
+      : '#f2f2f2'};
+
+      @media (max-width : 767px) {
+        color : #f2f2f2;
+      }
+  }
+
+  & > .translate-list {
+    opacity: ${({ $translateActive }) => $translateActive ? '1' : '0'};
+    visibility: ${({ $translateActive }) => $translateActive ? 'visible' : 'hidden'};
+    pointer-events: ${({ $translateActive }) => $translateActive ? 'auto' : 'none'};
+    transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+    position: absolute;
+    left : 50%;
+    top : 125%;
+    transform: ${({ $translateActive }) =>
+    $translateActive ? 'translateX(-50%) translateY(5%)' : 'translateX(-50%) translateY(-5%)'};
+    border-radius: 4px;
+    overflow: hidden;
+    border : 1px solid rgba(0, 0, 0, 0.15);
+
+    & > li {
+      border-bottom : 1px solid rgba(0, 0, 0, 0.15);
+      padding : 8px 24px;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      background-color: ${({ theme }) => theme.neutral.gray0};
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: ${({ theme }) => theme.neutral.gray300};
+      }
+
+      &:nth-last-child(1) {
+        border-bottom: none;
+      }
+    }
+  }
+`;
+
 const menuItems = ['안내', '메뉴'];
 
-function NavMenuBar({ isClickNavigation, setIsClickNavigation, searchText, onChange, onKeyDown, adLists, currentAd, handleClickAd }) {
+const translateItem = [
+  { label: '한국어', code: 'ko' },
+  { label: 'English', code: 'en' },
+  { label: '日本語', code: 'ja' },
+];
+
+function NavMenuBar({ isClickNavigation, setIsClickNavigation,
+  searchText, onChange, onKeyDown, adLists, currentAd, handleClickAd,
+  translateActive, setTranslateActive, isHome, isCategoryPage
+}) {
   const [isSearch, setIsSearch] = useState(false);
-  const location = useLocation();
-  const isHome = location.pathname === '/' ? true : false;
   const { focusOut } = useScrollStickyState();
+  const isMobile = useMediaQuery({ maxWidth: 767 });
   const navigate = useNavigate();
-  const layoutHelper = useMediaQuery({ maxWidth: 1130 });
+  const translateRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (translateRef.current && !translateRef.current.contains(e.target)) {
+        setTranslateActive(false);
+      }
+    }
+
+    function handleScroll() {
+      setTranslateActive(false);
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [setTranslateActive]);
+
+  const getTranslateSelect = () => {
+    return (
+      document.querySelector('#google_translate_element select') ||
+      document.querySelector('.goog-te-combo')
+    );
+  };
+
+  const setCookie = (name, value, domain) => {
+    let cookie = `${name}=${value}; path=/;`;
+    const days = 7;
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    cookie += ` expires=${expires};`;
+    if (domain && domain.indexOf('.') !== -1) {
+      cookie += ` domain=.${domain};`;
+    }
+    document.cookie = cookie;
+  };
+
+  const changeLanguage = (targetCode) => {
+    const select = getTranslateSelect();
+    if (select) {
+      select.value = targetCode;
+      select.dispatchEvent(new Event('change'));
+      return;
+    }
+    const v = `/ko/${targetCode}`;
+    setCookie('googtrans', v);
+    setCookie('googtrans', v, window.location.hostname);
+    window.location.reload();
+  };
 
   return (
     <MainContainer>
@@ -108,7 +241,6 @@ function NavMenuBar({ isClickNavigation, setIsClickNavigation, searchText, onCha
                 $isClickNavigation={isClickNavigation}
                 $isHome={isHome}
                 $item={item}
-                $layoutHelper={layoutHelper}
                 $focusOut={focusOut}
                 key={i}
                 onClick={() => {
@@ -144,6 +276,26 @@ function NavMenuBar({ isClickNavigation, setIsClickNavigation, searchText, onCha
           </div>
         }
         <SearchContainer>
+          <TranslateContainer
+            ref={translateRef}
+            $translateActive={translateActive}
+            $focusOut={focusOut}
+            $isHome={isHome}
+            $isCategoryPage={isCategoryPage}
+          >
+            <RiTranslateAi size={!isMobile ? 24 : 20} onClick={() => {
+              setTranslateActive((prev) => !prev);
+            }} />
+            <ul className='translate-list'>
+              {
+                translateItem.map(({ label, code }) => (
+                  <li key={code} onClick={() => changeLanguage(code)}>
+                    <span>{label}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </TranslateContainer>
           <SearchInput
             type="text"
             placeholder='어떤 기사를 찾고 계신가요?'

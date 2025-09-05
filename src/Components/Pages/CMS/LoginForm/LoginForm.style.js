@@ -60,6 +60,10 @@ const LoginFormBox = styled.form`
   border : 1px solid rgba(255, 255, 255, 0.2);
   transition : height 0.3s;
 
+  
+  @media (max-width : 767px) {
+    width: 95%;
+  }
 `;
 
 const LoginFormBannerImage = styled.div`
@@ -74,12 +78,21 @@ const LoginFormBannerImage = styled.div`
     width: 30%;
     height: 65%;
     opacity: 0.8;
+
+    @media (max-width : 767px) {
+      width: 24%;
+      height: 45%;
+    }
   }
 
   span {
     color : ${({ theme }) => theme.neutral.gray0};
     font-size : .9rem;
     font-weight: 100;
+
+    @media (max-width : 767px) {
+      font-size: .75rem;
+    }
   }
 `;
 
@@ -117,6 +130,10 @@ const LoginFormTextInput = styled.input`
   background-size : 20px;
   background-position : 95% 50%;
   background-repeat : no-repeat;
+
+  @media (max-width : 767px) {
+    font-size : .75rem;
+  }
 `;
 
 const LoginPlaceHolder = styled.div`
@@ -139,6 +156,81 @@ const LoginPlaceHolder = styled.div`
     }
   }};
   
+  @media (max-width : 767px) {
+    font-size : .7rem;
+    margin-left: 10px;
+    
+    left : ${({ $isActive, $isId }) => {
+    if ($isActive && $isId) {
+      return '17%';
+    } else if ($isActive) {
+      return '8%';
+    } else {
+      return '8%';
+    }
+  }};
+  }
+
+  @media (max-width : 470px) {
+    font-size : .7rem;
+    margin-left: 10px;
+    
+    left : ${({ $isActive, $isId }) => {
+    if ($isActive && $isId) {
+      return '17%';
+    } else if ($isActive) {
+      return '6%';
+    } else {
+      return '7%';
+    }
+  }};
+  }
+
+
+  @media (max-width : 400px) {
+    font-size : .7rem;
+    margin-left: 10px;
+    
+    left : ${({ $isActive, $isId }) => {
+    if ($isActive && $isId) {
+      return '17%';
+    } else if ($isActive) {
+      return '4%';
+    } else {
+      return '8%';
+    }
+  }};
+  }
+
+  @media (max-width : 360px) {
+    font-size : .7rem;
+    margin-left: 10px;
+    
+    left : ${({ $isActive, $isId }) => {
+    if ($isActive && $isId) {
+      return '17%';
+    } else if ($isActive) {
+      return '3%';
+    } else {
+      return '8%';
+    }
+  }};
+  }
+
+  @media (max-width : 330px) {
+    font-size : .7rem;
+    margin-left: 10px;
+    
+    left : ${({ $isActive, $isId }) => {
+    if ($isActive && $isId) {
+      return '17%';
+    } else if ($isActive) {
+      return '2%';
+    } else {
+      return '8%';
+    }
+  }};
+  }
 `;
 
 const LoginFormButton = styled.button`

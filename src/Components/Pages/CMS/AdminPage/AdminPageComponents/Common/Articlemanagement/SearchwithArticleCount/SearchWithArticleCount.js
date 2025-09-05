@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { BsFilterRight } from "react-icons/bs";
 import SearchForm from "./SearchForm";
+import { useMediaQuery } from "react-responsive";
+import { BiSearchAlt2 } from "react-icons/bi";
 
 const Container = styled.div`
   width: 100%;
@@ -11,9 +13,15 @@ const Container = styled.div`
   position: relative;
 
   & > .search-bar {
+
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  @media (max-width : 767px) {
+    padding : 0 16px;
+    margin-top: 16px;
   }
 `;
 
@@ -21,16 +29,25 @@ const ArticleCount = styled.span`
   font-size : 0.9rem;
   font-weight: 500;
   color : ${({ theme }) => theme.neutral.gray600};
+
+  @media (max-width : 767px) {
+    font-size: .75rem;
+  }
 `;
 
 const SearchDescrip = styled.span`
   font-size: 0.9rem;
   color : ${({ theme }) => theme.neutral.gray600};
+
+  @media (max-width : 767px) {
+    font-size: .75rem;
+  }
 `;
 
 function SearchWithArticleCount({ total: articleTotal, categoryName, query,
   needImportant, setIsSearchBarActive, isSearchBarActive, isBanner }) {
   const total = articleTotal || articleTotal === 0 ? articleTotal : '';
+  const isMobile = useMediaQuery({ maxWidth: 767 });
 
   function insertEveryThreeFromEnd(str, separator = ",") {
     const arr = str.split("").reverse();
@@ -72,8 +89,13 @@ function SearchWithArticleCount({ total: articleTotal, categoryName, query,
         style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
         onClick={handleClickSearchBar}
       >
-        <BsFilterRight size={19} color="#666666" />
-        <SearchDescrip>검색 필터</SearchDescrip>
+        {
+          !isMobile ?
+            <BsFilterRight size={19} color="#666666" />
+            :
+            <BiSearchAlt2 size={17} color="#666666" />
+        }
+        {!isMobile && <SearchDescrip>{'검색 필터'}</SearchDescrip>}
       </div>
       <SearchForm
         setIsSearchBarActive={setIsSearchBarActive}

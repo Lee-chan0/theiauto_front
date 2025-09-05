@@ -10,6 +10,12 @@ const UserProfileContainer = styled.div`
   gap : 12px;
 
   position: relative;
+
+  @media (max-width : 767px) {
+    gap : 8px;
+    margin-top: 16px;
+    margin-bottom: 12px;
+  }
 `;
 
 const UserProfileImgBox = styled.div`
@@ -55,11 +61,19 @@ const UserProfileName = styled.span`
   color : ${({ theme }) => theme.neutral.gray100};
   display : flex;
   align-items: center;
+
+  @media (max-width : 767px) {
+    font-size: .8rem;
+  }
 `;
 
 const UserProfileEmail = styled.span`
   font-size : 0.8rem;
   color : ${({ theme }) => theme.neutral.gray600};
+
+  @media (max-width : 767px) {
+    font-size: .7rem;
+  }
 `;
 
 export { UserProfileContainer, UserProfileImgBox, UserProfileName, UserProfileEmail, UserProfileImg, UserImageWrap };

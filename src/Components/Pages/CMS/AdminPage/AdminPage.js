@@ -3,12 +3,15 @@ import AdminPageSideNav from "./AdminPageComponents/Common/SideNav/AdminPageSide
 import ArticleManagement from "./AdminPageComponents/Common/Articlemanagement/ArticleManagement";
 import { useSideNavState } from "../../../Hooks/Context/SideNavStateContext";
 
-
 const AdminPageMainContainer = styled.div`
+  @media (max-width : 767px) {
+    position: relative;
+  }
 `;
 
 function AdminPage() {
   const { isSearchBarActive, setIsSearchBarActive } = useSideNavState();
+
 
   return (
     <AdminPageMainContainer>

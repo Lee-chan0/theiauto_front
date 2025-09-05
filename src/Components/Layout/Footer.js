@@ -37,7 +37,6 @@ const FooterInnerBox = styled.div`
   
   @media (max-width : 767px) {
     padding : 16px;
-    padding-bottom : 64px; 
     max-width: 100%;
     border-top: 6px solid ${({ theme }) => theme.primary.red700};
   }

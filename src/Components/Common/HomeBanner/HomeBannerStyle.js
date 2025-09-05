@@ -236,6 +236,7 @@ const BannerInnerBox = styled.div`
 
   @media (max-width : 767px) {
     padding : 16px;
+    padding-top: 0;
   }
 `;
 

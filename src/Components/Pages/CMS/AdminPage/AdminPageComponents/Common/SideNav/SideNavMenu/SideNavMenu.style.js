@@ -23,6 +23,7 @@ const SideNavMenuTitleBox = styled.div`
       color : ${({ theme }) => theme.primary.red500};
     }
   }
+
 `;
 
 const SideNavMenuTitle = styled.h2`
@@ -33,6 +34,11 @@ const SideNavMenuTitle = styled.h2`
   border-bottom: 2px solid ${({ theme }) => theme.primary.red500};
   padding-bottom: 8px;
   margin-bottom : 8px;
+
+  @media (max-width : 767px) {
+    font-size: .84rem;
+    font-weight: 500;
+  }
 `;
 
 const SideNavMenuLists = styled.ul`
@@ -42,7 +48,10 @@ const SideNavMenuLists = styled.ul`
   display : flex;
   flex-direction: column;
   gap : 8px;
-  
+
+  @media (max-width : 767px) {
+    gap : 16px;
+  }
 `;
 
 const SideNavMenuItems = styled.li`

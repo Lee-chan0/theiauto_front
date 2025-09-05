@@ -42,7 +42,7 @@ const BorderLine = styled.div`
   }
 
   @media (max-width : 767px) {
-    bottom : 80px;
+    bottom : 64px;
     right : 16px;
   }
 `;

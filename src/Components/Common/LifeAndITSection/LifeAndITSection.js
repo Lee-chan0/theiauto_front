@@ -1,7 +1,5 @@
-import styled, { css, keyframes } from "styled-components";
-import { useFetchBrandITArticles } from "../../Hooks/ApiHooks/GeneralArticle/useFetchBrandITArticles";
+import styled, { keyframes } from "styled-components";
 import { formatDateOnly } from "../../Hooks/Utils/formatDateOnly";
-import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { useCategoryRedirect } from "../../Hooks/CommonHooks/useCategoryRedirect";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -12,7 +10,7 @@ const LifeItContainer = styled.section`
   width: 100%;
 
   @media (max-width : 767px) {
-    margin-bottom : 16px;
+    margin-bottom : 64px;
     margin-top: 24px;
   }
 `;
@@ -137,6 +135,7 @@ const Article = styled.article`
 
   & > img {
     width: 160px;
+    flex-shrink: 0;
     height: 100%;
     object-fit: cover;
     display: block;
@@ -149,7 +148,7 @@ const Article = styled.article`
 `;
 
 const TextBox = styled.div`
-  width: 100%;
+  flex : 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -269,7 +268,7 @@ function LifeAndITSection({ ITArticles, lifeArticles, isLoading, isError }) {
         </ContentBox>
         <ContentBox>
           <Descriptions>
-            <span>라이프 & 브랜드</span>
+            <span>라이프 & 컬쳐</span>
             <GoToCategoryBtn onClick={goToLifeArticles} />
           </Descriptions>
           <ListsStyle>
