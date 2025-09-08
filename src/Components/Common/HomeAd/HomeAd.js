@@ -40,6 +40,7 @@ const AdInnerBox = styled.div`
 const AdsContainerWrapper = styled.div`
   width: 100%;
   padding : 0 16px;
+  padding-right: 0;
 `;
 
 const AdsRow = styled.ul`
@@ -49,7 +50,6 @@ const AdsRow = styled.ul`
   gap: 16px;
 `;
 
-// --- AdsItems와 CategoryPageItems에 공통적으로 적용될 스타일 (재사용성을 위해) ---
 const BaseAdItemStyles = css`
   width: 100%;
   height: 220px;
@@ -66,6 +66,8 @@ const BaseAdItemStyles = css`
   color: #666;
   will-change: transform;
   transition: transform 0.7s;
+  box-shadow: ${({ $isTemp }) => !$isTemp ? '0 0 5px 1px rgba(0, 0, 0, 0.5)' : 'none'};
+  border : none;
   
   &:hover {
     transform: translateY(-4px);
@@ -76,7 +78,7 @@ const BaseAdItemStyles = css`
     padding: 10px;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column; /* 아이콘과 텍스트를 세로로 정렬 */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -123,11 +125,10 @@ const CategoryPageAds = styled.ul`
 const CategoryPageItems = styled.li`
   ${BaseAdItemStyles}
   &:hover {
-    transform: translateY(-8px); /* CategoryPageItems는 더 많이 떠오르도록 */
+    transform: translateY(-8px);
   }
 `;
 
-// --- 광고 문의 플레이스홀더를 위한 새 스타일 컴포넌트 ---
 const StyledAdInquiry = styled.div`
   width: 100%;
   height: 100%;
@@ -135,16 +136,15 @@ const StyledAdInquiry = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(45deg, #f5f5f5, #e0e0e0); /* 은은한 그라데이션 */
+  background: linear-gradient(45deg, #f5f5f5, #e0e0e0);
   color: ${({ theme }) => theme.neutral.gray700};
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   position: relative;
   overflow: hidden; /* 차선이 밖으로 나가지 않도록 */
-  border: 1px dashed ${({ theme }) => theme.neutral.gray400}; /* 점선 테두리 */
+  border: 1px dashed ${({ theme }) => theme.neutral.gray400};
   
-  /* 배경 깜빡임 효과 */
   animation: ${flashEffect} 3s infinite alternate;
 
   &:hover {
@@ -155,11 +155,10 @@ const StyledAdInquiry = styled.div`
         color: ${({ theme }) => theme.primary.red500};
     }
     .ad-inquiry-text {
-        letter-spacing: 0.5px; /* 호버 시 텍스트 간격 조정 */
+        letter-spacing: 0.5px;
     }
   }
 
-  /* 도로 차선 효과 */
   &::before {
     content: '';
     position: absolute;
@@ -212,6 +211,19 @@ const StyledAdInquiry = styled.div`
       font-size: 0.8rem;
       color: ${({ theme }) => theme.neutral.gray600};
   }
+`;
+
+const Badge = styled.span`
+position: absolute;
+top: 8px;
+left: 8px;
+z-index: 2;
+font-size: 11px;
+padding: 2px 6px;
+border-radius: 4px;
+background: #111827;
+color: #fff;
+letter-spacing: 0.2px;
 `;
 
 
@@ -268,7 +280,7 @@ function HomeAd({ mode, isSearch }) {
 
     if (ads.length === 0) {
       return (
-        <ItemComponent key={idx} style={isTablet ? { display: 'none' } : {}}>
+        <ItemComponent key={idx} style={isTablet ? { display: 'none' } : {}} $isTemp={true}>
           <StyledAdInquiry onClick={() => navigate(`/instructions/ad-inquiry`)}>
             <div className="ad-inquiry-content">
               <FaCar className="ad-inquiry-icon" />
@@ -284,6 +296,7 @@ function HomeAd({ mode, isSearch }) {
       const ad = ads[0];
       return (
         <ItemComponent key={idx}>
+          <Badge>AD</Badge>
           <a href={ad.redirectUrl} target="_blank" rel="noreferrer" onClick={() => handleAdClick(ad.advertisementId)}>
             <img src={ad.advertisementImageUrl} alt={`ad-${ad.advertisementId}`} />
           </a>
@@ -293,6 +306,7 @@ function HomeAd({ mode, isSearch }) {
 
     return (
       <ItemComponent key={idx} >
+        <Badge>AD</Badge>
         <RollingAd ads={ads} onClick={handleAdClick} />
       </ItemComponent>
     );

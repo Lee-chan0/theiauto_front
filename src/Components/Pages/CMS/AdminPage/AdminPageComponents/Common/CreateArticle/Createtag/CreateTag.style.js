@@ -12,7 +12,7 @@ const TagContainer = styled.div`
 `;
 
 const TagDescriptionContainer = styled.span`
-  background-color: ${({ theme }) => theme.neutral.gray900};
+  background-color: #2d4dcc;
   padding : 4px 8px;
   color : ${({ theme }) => theme.neutral.gray100};
   font-weight: bold;

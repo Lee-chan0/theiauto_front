@@ -206,7 +206,38 @@ function CategoryBanner({ categoryId }) {
         $isHover={isHover}
       >
         <TextBox
-          onClick={() => navigate(`/news/${bannerData?.articleId}`)}
+          onClick={() => {
+            if (bannerData?.category?.categoryName === '동영상 리뷰') {
+              let url = null;
+
+              if (bannerData?.articleContent) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(bannerData.articleContent, "text/html");
+
+                const aTag = doc.querySelector("a[href]");
+                if (aTag) {
+                  url = aTag.getAttribute("href");
+                } else {
+                  const pTag = doc.querySelector("p");
+                  if (pTag) {
+                    const text = pTag.textContent.trim();
+                    const urlMatch = text.match(/https?:\/\/[^\s]+/);
+                    if (urlMatch) {
+                      url = urlMatch[0];
+                    }
+                  }
+                }
+              }
+
+              if (url) {
+                window.open(url, "_blank", "noopener,noreferrer");
+              } else {
+                console.warn("링크를 찾을 수 없습니다.", bannerData?.articleContent);
+              }
+            } else {
+              navigate(`/news/${bannerData?.articleId}`);
+            }
+          }}
           onMouseEnter={() => setIsHover(true)}
           onMouseLeave={() => setIsHover(false)}
         >

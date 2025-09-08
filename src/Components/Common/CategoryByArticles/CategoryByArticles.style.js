@@ -231,6 +231,7 @@ const TextBox = styled.div`
     margin : 4px;
     margin-left : 8px;
     min-width: 0;
+    justify-content: space-evenly;
   }
   
   & > .news-title {

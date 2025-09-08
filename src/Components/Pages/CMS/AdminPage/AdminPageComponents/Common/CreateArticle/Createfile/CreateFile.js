@@ -133,6 +133,8 @@ function CreateFile({ articleValues, setArticleValues, mode, prevImageUrls, setP
     }
   }, [mode]);
 
+  if (articleValues.categoryName === '동영상 리뷰') return null;
+
   return (
     <CreateFileContainer>
       <FileAlert>추가 이미지는 최대 *30장*까지 가능합니다.</FileAlert>

@@ -14,11 +14,11 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
 
 
   const handleCheck = (e) => {
-    setArticleValues((prev) => ({
+    setArticleValues(prev => ({
       ...prev,
-      isBanner: e.target.checked
-    }))
-  }
+      isBanner: !!e.target.checked, // 항상 boolean
+    }));
+  };
 
   const handleChangeCategory = useCallback((e, name, parentCategoryId) => {
     const categoryId = e.target.id;
@@ -62,7 +62,7 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
                     <input type='radio'
                       name="category"
                       id={i.categoryId}
-                      checked={i.categoryId === articleValues.categoryId}
+                      checked={i.categoryId === (articleValues?.categoryId ?? null)}
                       onChange={(e) => handleChangeCategory(e, i.categoryName, categoryId)}
                     />
                   </CreateCategoryChild>
@@ -77,9 +77,19 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
         <small>배너 기사는 최대 3개까지 가능합니다.</small>
         {mode === 'create'
           ?
-          <input type='checkbox' className='banner-checkbox' onChange={handleCheck} />
+          <input
+            type='checkbox'
+            className='banner-checkbox'
+            checked={!!articleValues?.isBanner}
+            onChange={handleCheck}
+          />
           :
-          <input type='checkbox' className='banner-checkbox' onChange={handleCheck} checked={articleValues.isBanner} />
+          <input
+            type='checkbox'
+            className='banner-checkbox'
+            onChange={handleCheck}
+            checked={articleValues.isBanner}
+          />
         }
       </div>
     </CreateCategoryContainer>

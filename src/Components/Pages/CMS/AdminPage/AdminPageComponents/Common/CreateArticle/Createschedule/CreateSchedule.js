@@ -25,7 +25,7 @@ const ScheduleContainer = styled.div`
         border-radius: 2px;
         padding : 0 8px;
         cursor: pointer;
-        background-color: ${({ theme }) => theme.primary.red300};
+        background-color: #2d4dcc;
         color : ${({ theme }) => theme.neutral.gray0};
         outline: none;
 
@@ -47,7 +47,7 @@ const ScheduleContainer = styled.div`
 const IsScheduleActive = styled.span`
   font-size: 0.85rem;
   color : ${({ theme }) => theme.neutral.gray0};
-  background-color: ${({ theme }) => theme.primary.red500};
+  background-color: #2d4dcc;
   padding : 4px 8px;
   font-weight: bold;
   margin-right: 8px;
@@ -76,7 +76,7 @@ function CreateSchedule({ setIsReservation, articleValues, setArticleValues }) {
 
   return (
     <ScheduleContainer>
-      <IoIosArrowForward size={isMobile ? 20 : 24} color="#e23b3f" style={{ marginRight: '4px', cursor: 'pointer' }} onClick={() => {
+      <IoIosArrowForward size={isMobile ? 20 : 24} color="#2d4dcc" style={{ marginRight: '4px', cursor: 'pointer' }} onClick={() => {
         setIsReservation(false)
         setArticleValues((prev) => ({ ...prev, articleStatus: 'publish' }))
       }} />

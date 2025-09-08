@@ -46,6 +46,7 @@ const CreateFileImgBox = styled.div`
     opacity: 1;
     transition: opacity 0.2s;
   }
+  
   &:hover {
       svg {
       opacity: 0.5;
@@ -67,7 +68,7 @@ const CreateFileDesc = styled.span`
   cursor: pointer;
 
   &:hover {
-      background-color: ${({ theme, id }) => id === 'select' ? theme.primary.red300 : theme.primary.red700};
+      background-color: ${({ theme, id }) => id === 'select' ? '#4d80ff' : theme.primary.red700};
       color: ${({ theme, id }) => theme.neutral.gray0};
   }
 

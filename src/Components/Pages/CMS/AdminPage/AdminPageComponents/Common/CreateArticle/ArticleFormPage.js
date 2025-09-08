@@ -118,7 +118,7 @@ const SubmitBtn = styled.button`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.primary.red700};
+    background-color: #4d80ff;
     transform: scale(1.005);
     box-shadow: 0 5px 3px 1px rgba(0, 0, 0, 0.2);
   }
@@ -313,7 +313,6 @@ function ArticleFormPage({ mode }) {
         }
       }
     })
-
   };
 
   useEffect(() => {

@@ -15,7 +15,7 @@ const NeedReservation = styled.div`
   width: fit-content;
   height: 30px;
   padding : 4px 8px;
-  background-color: ${({ theme }) => theme.primary.red300};
+  background-color: #4d80ff;
   color : ${({ theme }) => theme.neutral.gray0};
   border-radius: 2px;
   display : flex;
@@ -29,7 +29,7 @@ const NeedReservation = styled.div`
   transition: background-color 0.3s, box-shadow 0.3s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.primary.red700};
+    background-color: #2d4dcc;
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
   }
 

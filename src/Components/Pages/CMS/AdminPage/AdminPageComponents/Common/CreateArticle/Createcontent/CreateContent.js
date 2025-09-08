@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import { EditorContainer, NeedReservation, ReservationDescrip } from "./Createcontent.style";
@@ -14,6 +14,13 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
   const quillRef = useRef(null);
   const contentOneRun = useRef(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const [isVideo, setIsVideo] = useState(false);
+  const clearedOnVideoRef = useRef(false); // ✅ 동영상 리뷰 모드 진입 시 1회만 초기화
+
+  const placeholderText =
+    mode === 'create' && isVideo ? 'URL(링크)을(를) 입력해 주세요. (내용은 작성하지 않습니다.)' : '';
+
+  const editorKey = `${isMobile ? 'mobile' : 'desktop'}-${isVideo ? 'video' : 'normal'}`;
 
   const imageHandler = useCallback(() => {
 
@@ -92,7 +99,7 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
   const modules = useMemo(() => ({
     toolbar: {
       container: isMobile
-        ? [['image']] // 모바일: 이미지만
+        ? [['image']]
         : [
           ['bold', 'italic', 'underline', 'strike'],
           [{ list: 'ordered' }, { list: 'bullet' }],
@@ -104,7 +111,7 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
 
   const formats = useMemo(() => (
     isMobile
-      ? ['image'] // 모바일: 이미지 포맷만 허용
+      ? ['image']
       : ['bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'image']
   ), [isMobile]);
 
@@ -124,6 +131,31 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
       contentOneRun.current = true;
     }
   }, [articleValues, mode, setSavedContentImgs, contentOneRun]);
+
+  useEffect(() => {
+    if (mode !== 'create') return;
+
+    if (articleValues.categoryName === '동영상 리뷰') {
+      setIsVideo(true);
+    } else { setIsVideo(false); }
+  }, [articleValues, mode]);
+
+  useEffect(() => {
+    if (mode !== 'create') return;
+
+    if (isVideo) {
+      if (!clearedOnVideoRef.current) {
+        const v = articleValues?.articleContent ?? '';
+        const isEmpty = v === '' || v === '<p><br></p>' || v === '<p></p>';
+        if (!isEmpty) {
+          setArticleValues(prev => ({ ...prev, articleContent: '' }));
+        }
+        clearedOnVideoRef.current = true;
+      }
+    } else {
+      clearedOnVideoRef.current = false;
+    }
+  }, [mode, isVideo, articleValues?.articleContent, setArticleValues]);
 
   return (
     <EditorContainer>
@@ -145,12 +177,13 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
           articleValues={articleValues}
         />}
       <ReactQuill
-        key={isMobile ? 'mobile' : 'desktop'}
+        key={editorKey}
         ref={quillRef}
-        value={articleValues.articleContent}
+        value={articleValues.articleContent || ''}
         modules={modules}
         formats={formats}
         onChange={handleChange}
+        placeholder={placeholderText}
       />
     </EditorContainer>
   );

@@ -252,12 +252,53 @@ function CategoryByArticles({ categoryId, categoryInfo, mode, keyword, isMobile,
                   {
                     group?.findArticles ?
                       group.findArticles.map((article, i) => (
-                        <ListItems key={i} onClick={() => navigate(`/news/${article.articleId}`)}>
+                        <ListItems
+                          key={i}
+                          onClick={() => {
+                            if (article?.category?.categoryName === '동영상 리뷰') {
+                              let url = null;
+
+                              if (article?.articleContent) {
+                                // DOMParser를 이용해서 HTML 파싱
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(article?.articleContent, "text/html");
+
+                                const aTag = doc.querySelector("a[href]");
+                                if (aTag) {
+                                  url = aTag.getAttribute("href");
+                                } else {
+                                  const pTag = doc.querySelector("p");
+                                  if (pTag) {
+                                    const text = pTag.textContent.trim();
+                                    const urlMatch = text.match(/https?:\/\/[^\s]+/);
+                                    if (urlMatch) {
+                                      url = urlMatch[0];
+                                    }
+                                  }
+                                }
+                              }
+
+                              if (url) {
+                                window.open(url, "_blank", "noopener,noreferrer");
+                              } else {
+                                console.warn("링크를 찾을 수 없습니다.", article?.articleContent);
+                              }
+                            } else {
+                              navigate(`/news/${article?.articleId}`);
+                            }
+                          }}
+                        >
                           <article>
                             <ImageBox src={article.articleBanner} alt={`news-preview-image-${i}`} />
                             <TextBox>
                               <h2 className='news-title'>{article.articleTitle}</h2>
-                              <p className='news-content'>{htmlToPlainText(article.articleContent)}</p>
+                              {
+                                article?.category?.categoryName !== '동영상 리뷰'
+                                  ?
+                                  <p className='news-content'>{htmlToPlainText(article.articleContent)}</p>
+                                  :
+                                  <p className='news-content'>{article.articleSubTitle}</p>
+                              }
                               <TagBox>
                                 {
                                   article.ArticleTag.slice(0, 5).map((t, i) => (
@@ -280,7 +321,41 @@ function CategoryByArticles({ categoryId, categoryInfo, mode, keyword, isMobile,
                             <React.Fragment key={i}>
                               {
                                 group?.randomArticles.map((article, i) => (
-                                  <RandomArticleBox key={i} onClick={() => navigate(`/news/${article.articleId}`)}>
+                                  <RandomArticleBox
+                                    key={i}
+                                    onClick={() => {
+                                      if (article?.category?.categoryName === '동영상 리뷰') {
+                                        let url = null;
+
+                                        if (article?.articleContent) {
+                                          const parser = new DOMParser();
+                                          const doc = parser.parseFromString(article?.articleContent, "text/html");
+
+                                          const aTag = doc.querySelector("a[href]");
+                                          if (aTag) {
+                                            url = aTag.getAttribute("href");
+                                          } else {
+                                            const pTag = doc.querySelector("p");
+                                            if (pTag) {
+                                              const text = pTag.textContent.trim();
+                                              const urlMatch = text.match(/https?:\/\/[^\s]+/);
+                                              if (urlMatch) {
+                                                url = urlMatch[0];
+                                              }
+                                            }
+                                          }
+                                        }
+
+                                        if (url) {
+                                          window.open(url, "_blank", "noopener,noreferrer");
+                                        } else {
+                                          console.warn("링크를 찾을 수 없습니다.", article?.articleContent);
+                                        }
+                                      } else {
+                                        navigate(`/news/${article?.articleId}`);
+                                      }
+                                    }}
+                                  >
                                     <RandomArticleImg src={article.articleBanner} />
                                     <RandomTextBox>
                                       <span>{article.category.categoryName}</span>

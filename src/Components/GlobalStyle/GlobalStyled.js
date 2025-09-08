@@ -47,7 +47,7 @@ const GlobalStyledComponent = createGlobalStyle`
   .quill .ql-toolbar {
     width: fit-content;
     border : none;
-    background-color:${({ theme }) => theme.neutral.gray300};
+    background-color: #ccdbff;
     border-radius: 4px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;

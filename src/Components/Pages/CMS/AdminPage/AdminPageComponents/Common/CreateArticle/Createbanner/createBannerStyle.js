@@ -126,19 +126,20 @@ const LoginUserBox = styled.div`
   position: absolute;
   left : 24px;
   bottom : 4px;
-  background-color: ${({ theme }) => theme.neutral.gray100};
+  background-color: #436fd9;
   border-radius: 3px;
-  padding : 2px 8px;
-  border : 1px solid black;
+  padding : 8px 16px;
   font-weight: 600;
   z-index: 1;
   cursor: pointer;
+  color : ${({ theme }) => theme.neutral.gray0};
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
 
   & > .login-user-info {
-    font-size: .75rem;
+    font-size: .8rem;
 
   @media (max-width : 767px) {
-      font-size: .6rem;
+      font-size: .65rem;
     }
   }
 
@@ -147,6 +148,7 @@ const LoginUserBox = styled.div`
     top : 16px;
     bottom : auto;
     border-radius: 0;
+    padding : 6px 10px;
   }
 `;
 
@@ -179,23 +181,25 @@ const SelectBtn = styled.div`
   left : 101%;
   bottom : 0;
   border : none;
-  padding : 2px 6px;
+  padding : 8px;
   border-radius: 3px;
-  font-size: .75rem;
+  font-size: .8rem;
   cursor: pointer;
   z-index: 1;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.25s;
+  background-color: #436fd9;
 
   transform: ${({ $userBoxActive }) => $userBoxActive ? 'rotate(180deg)' : 'rotate(0deg)'};
-  color: ${({ $hasPreview }) => $hasPreview ? '#fff' : '#000'};
+  color: #ccdbff;
 
   &:hover {
-    color : ${({ theme }) => theme.neutral.gray300};
+    opacity: 0.6;
   }
 
   @media (max-width : 767px) {
-    font-size: .6rem;
+    font-size: .65rem;
     border-radius: 0;
+    padding : 6px;
 
     transform: ${({ $userBoxActive }) => $userBoxActive ? 'rotate(0deg)' : 'rotate(180deg)'};
   }
@@ -204,22 +208,25 @@ const SelectBtn = styled.div`
 const UserSelector = styled.li`
   white-space: nowrap;
   width: fit-content;
-  font-size: .75rem;
-  padding : 4px 8px;
-  background-color: ${({ theme }) => theme.neutral.gray100};
+  font-size: .8rem;
+  padding : 8px 16px;
+  background-color: #243566;
   border-radius: 3px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
   font-weight: 400;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.27) inset;
+  color : ${({ theme }) => theme.neutral.gray600};
 
   &:hover {
-    background-color: ${({ theme }) => theme.neutral.gray600};
+    background-color: #436fd9;
     color : ${({ theme }) => theme.neutral.gray100};
   }
 
   @media (max-width : 767px) {
     border-radius: 0;
-    font-size: .6rem;
+    font-size: .65rem;
+    padding : 6px 10px;
   }
 `;
 
