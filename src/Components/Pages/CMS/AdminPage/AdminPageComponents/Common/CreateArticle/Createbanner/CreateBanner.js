@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
+import { FaUserCircle } from "react-icons/fa";
 import {
   BannerContainer,
   TitleInput,
@@ -143,6 +144,7 @@ function CreateBanner({ articleValues, setArticleValues, mode, usersData }) {
       {previewImg && <BannerContainerWrap style={{ pointerEvents: "none" }} />}
 
       <LoginUserBox>
+        <FaUserCircle />
         <div className="login-user-info" >
           {currentUser
             ? `${currentUser.name} ${currentUser.rank} ${currentUser.email}`
@@ -165,6 +167,7 @@ function CreateBanner({ articleValues, setArticleValues, mode, usersData }) {
               className="other-user"
               onClick={() => handleClickUser(user.adminId)}
             >
+              <FaUserCircle />
               {user.name} {user.rank} <strong>{user.email}</strong>
             </UserSelector>
           ))}

@@ -217,6 +217,8 @@ const UserSelector = styled.li`
   font-weight: 400;
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.27) inset;
   color : ${({ theme }) => theme.neutral.gray600};
+  display: flex;
+  align-items: center;
 
   &:hover {
     background-color: #436fd9;
