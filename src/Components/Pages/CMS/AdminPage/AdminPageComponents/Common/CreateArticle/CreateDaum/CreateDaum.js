@@ -54,8 +54,9 @@ const ToggleWrap = styled.button`
   cursor: pointer;
 `;
 const Knob = styled.span`
-  position: absolute; top: 4px;
-  left: ${p => p.$on ? '20px' : '4px'};
+  position: absolute;
+  top : 3px;
+  left: ${p => p.$on ? '18px' : '4px'};
   width: 16px; height: 16px; border-radius: 50%;
   background: #eee; box-shadow: 0 0 4px 1px rgba(0,0,0,.4);
   transition: left .25s ease;
