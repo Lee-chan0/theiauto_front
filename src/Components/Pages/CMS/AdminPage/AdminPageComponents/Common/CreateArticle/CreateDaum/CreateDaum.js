@@ -35,6 +35,8 @@ const CommentBox = styled.label`
   display: flex;
   align-items: center;
   gap: 8px;
+
+  & > img { width: 56px; height: 40px; object-fit: contain; display: block; }
 `;
 const CommentSelector = styled.span`
   font-size: .83rem;
@@ -82,6 +84,7 @@ function CreateDaum({
           </LogoBox>
 
           <CommentBox>
+            <img src={daumLogo} alt="daum-logo" />
             <CommentSelector>기사 댓글 허용</CommentSelector>
             <ToggleWrap
               type="button"
