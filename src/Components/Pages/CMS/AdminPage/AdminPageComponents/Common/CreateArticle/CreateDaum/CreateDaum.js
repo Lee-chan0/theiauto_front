@@ -97,23 +97,11 @@ function CreateDaum({
             </ToggleWrap>
           </CommentBox>
 
-          {/* 상태 뱃지 */}
-          {daumPush?.status && (
-            <span style={{ fontSize: '.8rem', color: '#666' }}>
-              상태: {daumPush.status}
-            </span>
-          )}
-          {daumPush?.error && (
-            <span style={{ fontSize: '.8rem', color: '#d33' }}>
-              오류: {daumPush.error}
-            </span>
-          )}
-
           {mode === 'update' && daumPush?.status === 'SUCCESS' && articleId && (
             <a
               href={`${serverOrigin || ''}/integrations/daum/preview/${articleId}`}
               target="_blank" rel="noreferrer"
-              style={{ fontSize: '.8rem', marginLeft: 8 }}
+              style={{ fontSize: '.8rem', marginLeft: 8, color: '#2d4dcc', fontWeight: '700' }}
             >
               미리보기
             </a>
