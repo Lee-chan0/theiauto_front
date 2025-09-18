@@ -35,6 +35,9 @@ const DaumDescription = styled.span`
 
 function CreateDaum({ sendToDaum, setSendToDaum, daumPush, articleId }) {
 
+  console.log(daumPush.status);
+  console.log(12300);
+
   return (
     <DaumContainer>
       <DaumCheckForm>
