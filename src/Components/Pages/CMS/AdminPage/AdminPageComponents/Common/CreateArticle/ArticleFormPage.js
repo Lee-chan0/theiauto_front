@@ -1,4 +1,4 @@
-// src/…/ArticleFormPage.jsx
+// src/.../ArticleFormPage.jsx
 import styled, { keyframes } from "styled-components";
 import AdminPageSideNav from "../SideNav/AdminPageSideNav";
 import CreateBanner from "./Createbanner/CreateBanner";
@@ -29,107 +29,41 @@ function change5MinDate() {
 }
 
 const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 `;
 
 const LoadingContainer = styled.div`
-  position: fixed;
-  top: 0;
-  left: 240px;
-  right: 0;
-  bottom: 0;
-  width: calc(100% - 240px);
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
+  position: fixed; top: 0; left: 240px; right: 0; bottom: 0;
+  width: calc(100% - 240px); height: 100%;
+  background-color: rgba(0,0,0,.8); z-index: 3;
+  display: flex; justify-content: center; align-items: center;
   @media (max-width: 767px) {
-    width: 100%;
-    background-color: transparent;
+    width: 100%; background-color: transparent;
   }
-
   & > .spinner-container {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    svg {
-      color: #fff;
-      animation: ${rotate} 1s linear infinite;
-    }
+    width: 100%; height: 100%; display:flex; justify-content:center; align-items:center;
+    svg { color: #fff; animation: ${rotate} 1s linear infinite; }
   }
 `;
 
-const CreateArticleContainer = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
+const CreateArticleContainer = styled.div` width: 100%; height: 100%; `;
 const LayoutContainer = styled.div`
-  width: calc(100% - 240px);
-  height: 100%;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: -1;
-  overflow-y: auto;
-
-  @media (max-width: 767px) {
-    width: 100%;
-    position: static;
-  }
-
-  & > .spinner-container {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    svg {
-      animation: ${rotate} 1s linear infinite;
-    }
-  }
+  width: calc(100% - 240px); height: 100%;
+  position: fixed; right:0; top:0; z-index:-1; overflow-y:auto;
+  @media (max-width: 767px) { width:100%; position: static; }
+  & > .spinner-container { width:100%; height:100%; display:flex; justify-content:center; align-items:center;
+    svg { animation: ${rotate} 1s linear infinite; } }
 `;
 
 const SubmitBtn = styled.button`
-  width: 100%;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 2px;
-  font-size: 1rem;
-  font-weight: bold;
-  color: ${({ theme }) => theme.neutral.gray0};
-  background-color: ${({ theme }) => theme.neutral.gray900};
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-  will-change: background-color, transform, box-shadow;
-
-  &.delete-btn {
-    width: 80px;
-  }
-
-  &:hover {
-    background-color: #4d80ff;
-    transform: scale(1.005);
-    box-shadow: 0 5px 3px 1px rgba(0, 0, 0, 0.2);
-  }
-
-  @media (max-width: 767px) {
-    font-size: 0.9rem;
-  }
+  width: 100%; border: none; padding: 8px 16px; border-radius: 2px;
+  font-size: 1rem; font-weight: bold; color: ${({ theme }) => theme.neutral.gray0};
+  background-color: ${({ theme }) => theme.neutral.gray900}; cursor: pointer;
+  transition: background-color .2s, transform .2s, box-shadow .2s;
+  &:hover { background-color: #4d80ff; transform: scale(1.005); box-shadow: 0 5px 3px 1px rgba(0,0,0,.2); }
+  &.delete-btn { width: 80px; }
+  @media (max-width:767px){ font-size:.9rem; }
 `;
 
 const FILED_LABEL = {
@@ -159,36 +93,32 @@ const INITIAL_ARTICLE_VALUES = {
 
 const INITIAL_DAUM_PUSH = { uuid: null, status: null, error: null };
 
-// ✅ 서버 베이스 URL (없으면 상대경로 사용)
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_SERVER_BASE_URL) ||
+const SERVER_ORIGIN =
+  (typeof import.meta !== "undefined" && import.meta.env?.VITE_SERVER_ORIGIN) ||
   process.env.REACT_APP_SERVER_BASE_URL ||
   "";
 
 function ArticleFormPage({ mode }) {
   const [articleValues, setArticleValues] = useState(INITIAL_ARTICLE_VALUES);
   const [isReservation, setIsReservation] = useState(false);
-  const [prevImageUrls, setPrevImageUrls] = useState([]); // 삭제되면 object storage에서 삭제하는 로직
+  const [prevImageUrls, setPrevImageUrls] = useState([]);
   const [savedContentImgs, setSavedContentImgs] = useState([]);
-  const [sendToDaum, setSendToDaum] = useState(true); // ✅ 기본 체크
+  const [sendToDaum, setSendToDaum] = useState(true);     // ✅ 다음 전송 ON/OFF
+  const [enableComment, setEnableComment] = useState(true); // ✅ 댓글 허용 ON/OFF
   const [daumPush, setDaumPush] = useState(INITIAL_DAUM_PUSH);
   const daumTimerRef = useRef(null);
 
   const { articleId } = useParams();
   const isMobile = useMediaQuery({ maxWidth: 767 });
-  const { data: usersInfo } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => fetchUsersInfo(),
-  });
+  const { data: usersInfo } = useQuery({ queryKey: ["users"], queryFn: () => fetchUsersInfo() });
   const usersData = usersInfo?.usersInfo || [];
   const { data: findArticle, isLoading } = useFetchArticle(articleId);
-  const needUpdateArticle = useMemo(
-    () => findArticle?.findArticle || [],
-    [findArticle]
-  );
+  const needUpdateArticle = useMemo(() => findArticle?.findArticle || [], [findArticle]);
+
   const createMutation = useCreateArticle();
   const updateMutation = useUpdateArticle();
   const deleteMutation = useDeleteArticle();
+
   const overflowBlock = useRef(null);
   const { setIsSearchBarActive } = useSideNavState();
   const navigate = useNavigate();
@@ -206,19 +136,16 @@ function ArticleFormPage({ mode }) {
     daumTimerRef.current = setInterval(async () => {
       try {
         const r = await fetch(
-          `${API_BASE}/integrations/daum/result?env=prod&by=uuid&value=${uuid}`,
+          `${SERVER_ORIGIN}/integrations/daum/result?env=prod&by=uuid&value=${uuid}`,
           { credentials: "include" }
         );
         const j = await r.json();
         const st = j?.data?.status;
         const err = j?.data?.errorMessage || null;
         setDaumPush((prev) => ({ ...prev, status: st, error: err }));
-
-        if (st === "SUCCESS" || st === "FAIL") {
-          stopDaumPolling();
-        }
+        if (st === "SUCCESS" || st === "FAIL") stopDaumPolling();
       } catch {
-        // 네트워크 일시 오류 → 다음 틱에 재시도
+        // 일시 오류는 다음 틱에 재시도
       }
     }, 7000);
   };
@@ -226,10 +153,8 @@ function ArticleFormPage({ mode }) {
   // ----- 송고 트리거 -----
   const triggerDaumPush = async (id) => {
     try {
-      const res = await fetch(
-        `${API_BASE}/integrations/daum/articles/${id}/push?env=prod`,
-        { method: "POST", credentials: "include" }
-      );
+      const url = `${SERVER_ORIGIN}/integrations/daum/articles/${id}/push?env=prod&enableComment=${enableComment ? 'true' : 'false'}`;
+      const res = await fetch(url, { method: "POST", credentials: "include" });
       const json = await res.json();
 
       if (json?.ok && json?.data?.uuid) {
@@ -251,9 +176,8 @@ function ArticleFormPage({ mode }) {
   // ----- 삭제 -----
   const handleDelete = (e) => {
     e.preventDefault();
-
     Swal.fire({
-      title: '<span style="color : red;">!</span>',
+      title: '<span style="color:red;">!</span>',
       html: "<span>지워진 기사는 <span>복구할 수 없습니다.</span><br>기사를 삭제하시겠습니까?</span>",
       showCancelButton: true,
       confirmButtonText: "삭제",
@@ -287,12 +211,8 @@ function ArticleFormPage({ mode }) {
 
     const parser = document.createElement("div");
     parser.innerHTML = articleValues.articleContent;
-    const imgSrcList = Array.from(parser.querySelectorAll("img")).map(
-      (img) => img.src
-    );
-    const filterImageArr = savedContentImgs.filter(
-      (url) => !imgSrcList.includes(url)
-    );
+    const imgSrcList = Array.from(parser.querySelectorAll("img")).map((img) => img.src);
+    const filterImageArr = savedContentImgs.filter((url) => !imgSrcList.includes(url));
     filterImageArr.forEach((delUrl) => formData.append("needfulDelUrl", delUrl));
 
     const canSkipKeys = ["articleImageUrl", "publishTime", "isBanner"];
@@ -301,11 +221,8 @@ function ArticleFormPage({ mode }) {
       if (!canSkipKeys.includes(item)) {
         if (!articleValues[item] || articleValues[item].length === 0) {
           Swal.fire({
-            toast: true,
-            position: "top",
-            width: "fit-content",
-            icon: "error",
-            timer: 2000,
+            toast: true, position: "top", width: "fit-content",
+            icon: "error", timer: 2000,
             title: `${FILED_LABEL[item]}은(는) 필수 입력란입니다.`,
             showConfirmButton: false,
             showClass: { popup: "swal-clipboard-up-in" },
@@ -318,11 +235,8 @@ function ArticleFormPage({ mode }) {
     }
 
     articleValues.tagName.forEach((tag) => formData.append("tagName", tag));
-
     Object.keys(articleValues).forEach((key) => {
-      if (!notAllowedKeys.includes(key)) {
-        formData.append(key, articleValues[key]);
-      }
+      if (!notAllowedKeys.includes(key)) formData.append(key, articleValues[key]);
     });
 
     const result = await Swal.fire({
@@ -339,9 +253,7 @@ function ArticleFormPage({ mode }) {
           <p><span>기사 발행 시간</span> 
             ${articleValues.articleStatus === "publish"
             ? format(Date.now(), "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
-            : format(articleValues.publishTime, "yyyy년 MM월 dd일 a hh시 mm분", {
-              locale: ko,
-            })
+            : format(articleValues.publishTime, "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
           }
           </p>`
         }
@@ -360,11 +272,8 @@ function ArticleFormPage({ mode }) {
     try {
       if (mode === "create") {
         formData.append("file", articleValues.articleBanner);
-        articleValues.articleImageUrl.forEach((file) =>
-          formData.append("files", file)
-        );
+        articleValues.articleImageUrl.forEach((file) => formData.append("files", file));
 
-        // ✅ mutateAsync로 생성 결과에서 새 articleId 받기
         const created = await createMutation.mutateAsync(formData);
         const newId =
           created?.article?.articleId ??
@@ -372,11 +281,11 @@ function ArticleFormPage({ mode }) {
           created?.data?.articleId ??
           created?.data?.article?.articleId;
 
-        // ✅ 자동 송고 조건: 체크 ON + publish 상태 + 새 ID 존재
+        // create 후에는 리스트로 이동 → 미리보기/폴링 필요 없으면 바로 종료
         if (newId && sendToDaum && articleValues.articleStatus === "publish") {
+          // 송고만 수행(화면은 곧 이동하므로 상태 뱃지는 실사용상 의미 적음)
           await triggerDaumPush(newId);
         }
-
         setArticleValues(INITIAL_ARTICLE_VALUES);
         navigate("/theiautoCMS/adminpage");
       } else if (mode === "update") {
@@ -385,7 +294,6 @@ function ArticleFormPage({ mode }) {
         } else {
           formData.append("articleBanner", articleValues.articleBanner);
         }
-
         articleValues.articleImageUrl.forEach((img) =>
           img instanceof File
             ? formData.append("files", img)
@@ -394,30 +302,21 @@ function ArticleFormPage({ mode }) {
 
         await updateMutation.mutateAsync({ formData, articleId });
 
-        // ✅ 자동 송고 조건: 체크 ON + publish 상태
         if (sendToDaum && articleValues.articleStatus === "publish") {
           await triggerDaumPush(Number(articleId));
+          // update 화면에서는 폴링 상태/미리보기 버튼이 그대로 보임
         }
-
-        setArticleValues(INITIAL_ARTICLE_VALUES);
-        navigate("/theiautoCMS/adminpage");
       }
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "저장 실패",
-        text: err?.message || "알 수 없는 오류",
-      });
+      Swal.fire({ icon: "error", title: "저장 실패", text: err?.message || "알 수 없는 오류" });
     }
   };
 
   // 상세 불러오기 → 폼 채우기
   useEffect(() => {
     if (mode === "update" && needUpdateArticle) {
-      const articleImages =
-        needUpdateArticle?.ArticleImage?.map((img) => img.articleImageUrl) || [];
-      const tagNames =
-        needUpdateArticle?.ArticleTag?.map((tag) => tag.tag.tagName) || [];
+      const articleImages = needUpdateArticle?.ArticleImage?.map((img) => img.articleImageUrl) || [];
+      const tagNames = needUpdateArticle?.ArticleTag?.map((tag) => tag.tag.tagName) || [];
 
       setArticleValues({
         articleTitle: needUpdateArticle?.articleTitle,
@@ -448,86 +347,20 @@ function ArticleFormPage({ mode }) {
     }
   }, [createMutation.isPending, deleteMutation.isPending, updateMutation.isPending]);
 
-  useEffect(() => {
-    return () => {
-      stopDaumPolling();
-    };
-  }, []);
+  useEffect(() => () => stopDaumPolling(), []);
 
+  // 로딩 UI
   if (createMutation.isPending || deleteMutation.isPending || updateMutation.isPending) {
     return (
       <CreateArticleContainer>
         <AdminPageSideNav setIsSearchBarActive={setIsSearchBarActive} />
         <LayoutContainer ref={overflowBlock}>
           <LoadingContainer>
-            <div
-              className="spinner-container"
-              style={{
-                padding: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <div className="spinner-container" style={{ padding: 40, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <CgSpinner size={32} />
             </div>
           </LoadingContainer>
-
-          <CreateBanner
-            articleValues={articleValues}
-            setArticleValues={setArticleValues}
-            mode={mode}
-          />
-          <CreateCategory
-            articleValues={articleValues}
-            setArticleValues={setArticleValues}
-            mode={mode}
-            usersData={usersData}
-          />
-          <CreateContent
-            articleValues={articleValues}
-            setArticleValues={setArticleValues}
-            setSavedContentImgs={setSavedContentImgs}
-            isReservation={isReservation}
-            setIsReservation={setIsReservation}
-            mode={mode}
-          />
-          <CreateTag
-            articleValues={articleValues}
-            setArticleValues={setArticleValues}
-          />
-          <CreateFile
-            articleValues={articleValues}
-            setArticleValues={setArticleValues}
-            mode={mode}
-            prevImageUrls={prevImageUrls}
-            setPrevImageUrls={setPrevImageUrls}
-          />
-          {/* ✅ 상태/체크박스 연결 */}
-          <CreateDaum
-            sendToDaum={sendToDaum}
-            setSendToDaum={setSendToDaum}
-            daumPush={daumPush}
-            articleId={articleId}
-          />
-          <div style={{ width: "100%", padding: "0 24px 24px 24px" }}>
-            <SubmitBtn onClick={handleSubmit}>
-              {mode === "create" ? "업로드" : "수정"}
-            </SubmitBtn>
-            {mode === "update" && (
-              <div
-                style={{
-                  marginTop: "8px",
-                  display: "flex",
-                  flexDirection: "row-reverse",
-                }}
-              >
-                <SubmitBtn className="delete-btn" onClick={handleDelete}>
-                  삭제
-                </SubmitBtn>
-              </div>
-            )}
-          </div>
+          {/* 내용은 렌더만 유지 */}
         </LayoutContainer>
       </CreateArticleContainer>
     );
@@ -546,22 +379,13 @@ function ArticleFormPage({ mode }) {
     );
   }
 
-  // ----- 기본 화면 -----
+  // 기본 화면
   return (
     <CreateArticleContainer>
       <AdminPageSideNav mode={mode} setIsSearchBarActive={setIsSearchBarActive} />
       <LayoutContainer ref={overflowBlock}>
-        <CreateBanner
-          articleValues={articleValues}
-          setArticleValues={setArticleValues}
-          mode={mode}
-        />
-        <CreateCategory
-          articleValues={articleValues}
-          setArticleValues={setArticleValues}
-          mode={mode}
-          usersData={usersData}
-        />
+        <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+        <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} usersData={usersData} />
         <CreateContent
           articleValues={articleValues}
           setArticleValues={setArticleValues}
@@ -570,10 +394,7 @@ function ArticleFormPage({ mode }) {
           setIsReservation={setIsReservation}
           mode={mode}
         />
-        <CreateTag
-          articleValues={articleValues}
-          setArticleValues={setArticleValues}
-        />
+        <CreateTag articleValues={articleValues} setArticleValues={setArticleValues} />
         <CreateFile
           articleValues={articleValues}
           setArticleValues={setArticleValues}
@@ -581,11 +402,17 @@ function ArticleFormPage({ mode }) {
           prevImageUrls={prevImageUrls}
           setPrevImageUrls={setPrevImageUrls}
         />
+
+        {/* ✅ 다음 연동 영역 */}
         <CreateDaum
+          mode={mode}
+          articleId={articleId}
           sendToDaum={sendToDaum}
           setSendToDaum={setSendToDaum}
+          enableComment={enableComment}
+          setEnableComment={setEnableComment}
           daumPush={daumPush}
-          articleId={articleId}
+          serverOrigin={SERVER_ORIGIN}
         />
 
         <div
@@ -599,16 +426,8 @@ function ArticleFormPage({ mode }) {
             {mode === "create" ? "업로드" : "수정"}
           </SubmitBtn>
           {mode === "update" && (
-            <div
-              style={{
-                marginTop: "8px",
-                display: "flex",
-                flexDirection: "row-reverse",
-              }}
-            >
-              <SubmitBtn className="delete-btn" onClick={handleDelete}>
-                삭제
-              </SubmitBtn>
+            <div style={{ marginTop: 8, display: "flex", flexDirection: "row-reverse" }}>
+              <SubmitBtn className="delete-btn" onClick={handleDelete}>삭제</SubmitBtn>
             </div>
           )}
         </div>
