@@ -6,7 +6,7 @@ const CreateFileContainer = styled.div`
   grid-template-columns: repeat(8, 1fr);
   grid-auto-rows: auto;
   gap : 8px;
-  margin-bottom : 40px;
+  margin-bottom : 24px;
 
   position: relative;
 
