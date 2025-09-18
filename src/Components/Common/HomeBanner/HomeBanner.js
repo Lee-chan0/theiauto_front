@@ -31,7 +31,6 @@ function HomeBanner({ isMobile }) {
   const { bannerHeightRef, setOverScroll } = useScrollStickyState();
   const [activeRemainIndex, setActiveRemainIndex] = useState(0);
 
-
   useEffect(() => {
     if (isLoading) return;
     if (!bannerHeightRef.current) return;

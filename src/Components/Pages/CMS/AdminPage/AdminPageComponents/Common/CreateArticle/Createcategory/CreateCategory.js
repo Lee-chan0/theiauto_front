@@ -2,15 +2,28 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFetchCategories } from '../../../../../../../Hooks/ApiHooks/Category/useFetchCategories';
 import {
   CreateCategoryContainer, CreateCategoryChild,
-  CreateCategoryParent, CreateChildContainer
+  CreateCategoryParent, CreateChildContainer,
+  UserSelector, LoginUserBox, SelectUserBox, UserDescriptionBox
 } from './CreateCategory.style';
 
-function CreateCategory({ articleValues, setArticleValues, mode }) {
+function CreateCategory({ articleValues, setArticleValues, mode, usersData }) {
   const [clickCategoryName, setClickCategoryName] = useState("");
   const [parentCategories, setParentCategories] = useState([]);
   const [parentBoxNum, setParentBoxNum] = useState(null);
+  const [userBoxActive, setUserBoxActive] = useState(false);
   const { data: categories } = useFetchCategories();
   const categoriesArray = useMemo(() => categories?.categories || [], [categories]);
+
+  const currentUser = useMemo(() => {
+    if (!Array.isArray(usersData) || usersData.length === 0) return null;
+    return usersData.find((u) => u.adminId === articleValues.adminId) || null;
+  }, [usersData, articleValues.adminId]);
+
+  const otherUsers = useMemo(() => {
+    if (!Array.isArray(usersData) || usersData.length === 0) return [];
+    if (!currentUser) return usersData;
+    return usersData.filter((u) => u.adminId !== currentUser.adminId);
+  }, [usersData, currentUser]);
 
 
   const handleCheck = (e) => {
@@ -18,6 +31,14 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
       ...prev,
       isBanner: !!e.target.checked, // 항상 boolean
     }));
+  };
+
+  const handleClickUser = (adminId) => {
+    setArticleValues((prev) => ({
+      ...prev,
+      adminId,
+    }));
+    setUserBoxActive(false);
   };
 
   const handleChangeCategory = useCallback((e, name, parentCategoryId) => {
@@ -41,7 +62,31 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
   }, [categoriesArray]);
   return (
     <CreateCategoryContainer>
-      <span className='category-title'>카테고리</span>
+      <UserDescriptionBox>
+        <span>카테고리</span>
+        <LoginUserBox className='login-user-box'>
+          <div className="login-user-info" onClick={() => setUserBoxActive((prev) => !prev)}>
+            {
+              currentUser
+                ?
+                `${currentUser.name} ${currentUser.rank} ${currentUser.email}`
+                :
+                "작성자 선택"
+            }
+          </div>
+          <SelectUserBox $userBoxActive={userBoxActive}>
+            {(currentUser ? otherUsers : usersData || []).map((user) => (
+              <UserSelector
+                key={user.adminId}
+                className="other-user"
+                onClick={() => handleClickUser(user.adminId)}
+              >
+                {user.name} {user.rank} &nbsp; <strong>{user.email}</strong>
+              </UserSelector>
+            ))}
+          </SelectUserBox>
+        </LoginUserBox>
+      </UserDescriptionBox>
       {
         parentCategories.map(({ categoryName, categoryId }) => (
           <CreateCategoryParent
@@ -59,10 +104,11 @@ function CreateCategory({ articleValues, setArticleValues, mode }) {
                     $categoryName={clickCategoryName}
                   >
                     {i.categoryName}
-                    <input type='radio'
+                    <input
+                      type='radio'
                       name="category"
                       id={i.categoryId}
-                      checked={i.categoryId === (articleValues?.categoryId ?? null)}
+                      checked={!!(i.categoryId === articleValues?.categoryId)}
                       onChange={(e) => handleChangeCategory(e, i.categoryName, categoryId)}
                     />
                   </CreateCategoryChild>

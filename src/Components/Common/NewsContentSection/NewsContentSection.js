@@ -54,6 +54,25 @@ const NewsContainer = styled.article`
 const NewsContentBox = styled.div`
   width: 100%;
 
+  & > div {
+    & > img {
+      display: block;
+      width: 100%;
+      max-height: 640px;
+      object-fit: contain;
+      margin: 0;
+    }
+  }
+
+  & > div {
+      font-size: ${({ $isBasic }) => !$isBasic ? '1.07rem' : '1.5rem'};
+      line-height: 1.5;
+
+      @media (max-width: 767px) {
+      font-size: ${({ $isBasic }) => !$isBasic ? '.95rem' : '1.3rem'};
+    }
+  }
+
   & > p {
     font-size: ${({ $isBasic }) => !$isBasic ? '1.07rem' : '1.5rem'};
     line-height: 1.5;
@@ -263,9 +282,26 @@ function NewsContentSection({ newsData, isSticky }) {
   const [isBasic, setIsBasic] = useState(false);
   const [stickyTitleWidth, setStickyTitleWidth] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [sanitizedContent, setSanitizedContent] = useState(''); // ✨ 상태 추가
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const progressRef = useRef(null);
   const forStickyRef = useRef(null);
+
+  const removeImageAttributes = (content) => {
+    if (!content) return '';
+    const imgRegex = /<img([^>]*?)>/g;
+    return content.replace(imgRegex, (match, attributes) => {
+      const cleanedAttributes = attributes.replace(/\s*(width|height)="[^"]*"/gi, '');
+      return `<img${cleanedAttributes}>`;
+    });
+  };
+
+  useEffect(() => {
+    if (newsData?.articleContent) {
+      const cleanContent = removeImageAttributes(newsData.articleContent);
+      setSanitizedContent(DOMPurify.sanitize(cleanContent));
+    }
+  }, [newsData?.articleContent]);
 
   const clickTextSizeBtn = (e) => {
     e.preventDefault();
@@ -405,7 +441,7 @@ function NewsContentSection({ newsData, isSticky }) {
                   <NewsContentBox
                     $isBasic={isBasic}
                     $isSticky={isSticky}
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(newsData?.articleContent) }}
+                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                   />
                   <NewsContentTagSection newsData={newsData} />
                   <AuthorInfoTag newsData={newsData} isInsideContent={true} />
@@ -450,7 +486,7 @@ function NewsContentSection({ newsData, isSticky }) {
                   <NewsContentBox
                     $isBasic={isBasic}
                     $isSticky={isSticky}
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(newsData?.articleContent) }}
+                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                   />
                   <NewsContentTagSection newsData={newsData} />
                   <AuthorInfoTag newsData={newsData} isInsideContent={true} />
@@ -460,7 +496,6 @@ function NewsContentSection({ newsData, isSticky }) {
             </NewsContainer>
           </MobileContainer>
       }
-
     </LayoutContainer>
   )
 }

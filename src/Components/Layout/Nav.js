@@ -1,4 +1,3 @@
-// Nav.jsx
 import { useLocation, useNavigate } from 'react-router-dom';
 import logoWhite from '../../Assets/theiautoLogoWhite.png';
 import logoBlack from '../../Assets/theiautoLogoB_NoS.png';
@@ -21,8 +20,8 @@ import { fetchNavAd, patchClickCount } from '../../API/generalAPI/generalAdverti
 import useCarousel from '../Hooks/CommonHooks/useCarousel';
 import { FaYoutube } from "react-icons/fa";
 import { SiTistory } from "react-icons/si";
+import { FaInstagramSquare } from "react-icons/fa";
 import { SiNaver } from "react-icons/si";
-import { FaFacebookSquare } from "react-icons/fa";
 import { useMediaQuery } from 'react-responsive';
 import { BiSearchAlt2 } from "react-icons/bi";
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -324,8 +323,8 @@ function Nav() {
                 </a>
               </MoveNavItem>
               <MoveNavItem title='더아이오토 페이스북'>
-                <a href='https://www.facebook.com/?locale=ko_KR' target='_blank' rel='noreferrer'>
-                  <FaFacebookSquare color={focusOut ? '#F2F2F2' : '#1a1a1a'} size={20} />
+                <a href='https://www.instagram.com/theiauto_carmagazine' target='_blank' rel='noreferrer'>
+                  <FaInstagramSquare color={focusOut ? '#F2F2F2' : '#1a1a1a'} size={20} />
                 </a>
               </MoveNavItem>
             </MoveNavLists>
@@ -486,8 +485,8 @@ function Nav() {
                 $isCircleClick={isCircleClick}
                 variants={itemVariants}
               >
-                <a href='https://www.facebook.com/?locale=ko_KR' target='_blank' rel='noreferrer'>
-                  <FaFacebookSquare color='#1a1a1a' size={20} />
+                <a href='https://www.instagram.com/theiauto_carmagazine' target='_blank' rel='noreferrer'>
+                  <FaInstagramSquare color='#1a1a1a' size={20} />
                 </a>
               </CircleClickItem>
             </CircleClickNav>

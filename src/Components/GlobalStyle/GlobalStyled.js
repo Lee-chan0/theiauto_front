@@ -174,6 +174,11 @@ const GlobalStyledComponent = createGlobalStyle`
     width: 320px;
     border-radius: 0 !important;
 
+    & > h2 {
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
     & > .swal2-html-container {
       width: 100%;
       font-size: 0.8rem;

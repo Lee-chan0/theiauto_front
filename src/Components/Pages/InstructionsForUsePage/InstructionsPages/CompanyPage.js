@@ -45,12 +45,14 @@ const CompanyBackImg = styled.div`
 `;
 
 const IntroductionContainer = styled.div`
-  padding : 40px 240px;
+  padding : 40px 160px;
   padding-bottom : 0;
   line-height: 1.5;
 
   & > p {
     font-size: 1rem;
+    font-weight: 400;
+    cursor: auto;
   }
 `;
 

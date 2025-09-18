@@ -256,20 +256,22 @@ function ArticleFormPage({ mode }) {
     Swal.fire({
       title: '기사 발행',
       html: `
-        <div class="values-parent">
-          <p><span>제목</span> ${articleValues.articleTitle}</p>
-          <p><span>소제목</span> ${articleValues.articleSubTitle}</p>
-          <p><span>카테고리</span> ${articleValues.categoryName}</p>
-          <p><span>태그</span> ${articleValues.tagName}</p>
-          <p><span>기사 발행 시간</span> 
-          ${articleValues.articleStatus === 'publish'
-          ?
-          format(Date.now(), "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
-          :
-          format(articleValues.publishTime, "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
-        }</p>
-        </div>
-      `,
+            <div class="values-parent">
+              <p><span>제목</span> ${articleValues.articleTitle}</p>
+              <p><span>소제목</span> ${articleValues.articleSubTitle}</p>
+              <p><span>카테고리</span> ${articleValues.categoryName}</p>
+              <p><span>태그</span> ${articleValues.tagName}</p>
+              ${mode === 'update' ? '' : `
+              <p><span>기사 발행 시간</span> 
+              ${articleValues.articleStatus === 'publish'
+            ?
+            format(Date.now(), "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
+            :
+            format(articleValues.publishTime, "yyyy년 MM월 dd일 a hh시 mm분", { locale: ko })
+          }</p>
+              `}
+            </div>
+          `,
       showCancelButton: true,
       confirmButtonText: '완료',
       cancelButtonText: '취소',
@@ -366,8 +368,8 @@ function ArticleFormPage({ mode }) {
               <CgSpinner size={32} />
             </div>
           </LoadingContainer>
-          <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} usersData={usersData} />
-          <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+          <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+          <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} usersData={usersData} />
           <CreateContent
             articleValues={articleValues}
             setArticleValues={setArticleValues}
@@ -378,7 +380,7 @@ function ArticleFormPage({ mode }) {
           />
           <CreateTag articleValues={articleValues} setArticleValues={setArticleValues} />
           <CreateFile articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} prevImageUrls={prevImageUrls} setPrevImageUrls={setPrevImageUrls} />
-          <div style={{ width: '100%', padding: '24px', paddingTop: '0' }}>
+          <div style={{ width: '100%', padding: '0 24px 24px 24px' }}>
             <SubmitBtn onClick={handleSubmit}>{mode === 'create' ? '업로드' : '수정'}</SubmitBtn>
             {mode === 'update' &&
               (
@@ -412,8 +414,8 @@ function ArticleFormPage({ mode }) {
     <CreateArticleContainer>
       <AdminPageSideNav mode={mode} setIsSearchBarActive={setIsSearchBarActive} />
       <LayoutContainer ref={overflowBlock}>
-        <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} usersData={usersData} />
-        <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+        <CreateBanner articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} />
+        <CreateCategory articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} usersData={usersData} />
         <CreateContent
           articleValues={articleValues}
           setArticleValues={setArticleValues}
@@ -424,7 +426,7 @@ function ArticleFormPage({ mode }) {
         />
         <CreateTag articleValues={articleValues} setArticleValues={setArticleValues} />
         <CreateFile articleValues={articleValues} setArticleValues={setArticleValues} mode={mode} prevImageUrls={prevImageUrls} setPrevImageUrls={setPrevImageUrls} />
-        <div style={isMobile ? { width: '100%', padding: '8px', paddingTop: '0' } : { width: '100%', padding: '24px', paddingTop: '0' }}>
+        <div style={isMobile ? { width: '100%', padding: '0 8px 8px 8px', paddingTop: '0' } : { width: '100%', padding: '0 24px 24px 24px' }}>
           <SubmitBtn onClick={handleSubmit}>{mode === 'create' ? '업로드' : '수정'}</SubmitBtn>
           {mode === 'update' &&
             (

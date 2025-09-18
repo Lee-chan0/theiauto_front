@@ -390,8 +390,8 @@ function AdControl() {
     e.preventDefault();
 
     Swal.fire({
-      title: '정말 <span style="color: #e23b3f">삭제</span>하시겠습니까?',
-      html: '삭제하면 <b>복구할 수 없습니다.</b>',
+      title: '<span style="color: #e23b3f"><b>삭제</b></span>하시겠습니까?',
+      html: '삭제하면 복구할 수 없습니다.',
       showCancelButton: true,
       confirmButtonText: '삭제',
       cancelButtonText: '취소',
@@ -643,6 +643,7 @@ function AdControl() {
                   value={values.advertisementTitle}
                 />
               </div>
+
               <div className="ad-location">
                 <span>위치 <span style={{ color: 'red' }}>*</span></span>
                 <div className="radio-container">
@@ -655,6 +656,7 @@ function AdControl() {
                           name="select-item"
                           onChange={() => handleChangeLocation(item)}
                           checked={values.adLocation === item}
+
                         />
                       </div>
                     ))
@@ -715,7 +717,7 @@ function AdControl() {
             <button className="add-ad" onClick={() => navigate(`/theiautoCMS/adminpage/advertisement?addAd=true`)}>추가</button>
 
       }
-    </AdMainContainer>
+    </AdMainContainer >
   )
 }
 

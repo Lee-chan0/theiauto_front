@@ -45,7 +45,7 @@ const TodayDescription = styled.div`
 const TodayContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding : 0 16px;
+  padding : 0;
   position: relative;
   flex : 2;
 
@@ -59,7 +59,7 @@ const TodayLists = styled.ul`
   height: 100%;
   display: flex;
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 16px;
   position: relative;
 
   & > .swiper {

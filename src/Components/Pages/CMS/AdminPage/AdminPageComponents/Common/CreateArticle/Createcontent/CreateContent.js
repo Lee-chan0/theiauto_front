@@ -165,6 +165,10 @@ function CreateContent({ articleValues, setArticleValues, setSavedContentImgs, m
             setIsReservation(true)
             setArticleValues((prev) => ({ ...prev, articleStatus: 'scheduled' }))
           }}
+          style={{
+            opacity: isReservation ? '0' : '1',
+            visibility: isReservation ? 'hidden' : 'visible',
+          }}
           $isReservation={isReservation}
         >
           <ReservationDescrip>예약 기사 작성</ReservationDescrip>

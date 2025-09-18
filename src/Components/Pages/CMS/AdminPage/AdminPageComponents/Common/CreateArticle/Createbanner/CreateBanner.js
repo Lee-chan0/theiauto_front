@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { FaUserCircle } from "react-icons/fa";
 import {
   BannerContainer,
   TitleInput,
   SubTitleContainer,
   SubTitleInput,
   BannerContainerWrap,
-  SelectUserBox,
-  UserSelector,
-  SelectBtn,
-  LoginUserBox,
 } from "./createBannerStyle";
 import { BiImageAdd } from "react-icons/bi";
 import Swal from "sweetalert2";
@@ -24,7 +19,6 @@ function CreateBanner({ articleValues, setArticleValues, mode, usersData }) {
   const [previewImg, setPreviewImg] = useState(null);
   const updateOneRun = useRef(false);
   const createOneRun = useRef(false);
-  const [userBoxActive, setUserBoxActive] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const { setMobileMenuActive } = useSideNavState();
 
@@ -39,17 +33,6 @@ function CreateBanner({ articleValues, setArticleValues, mode, usersData }) {
       return null;
     }
   }, []);
-
-  const currentUser = useMemo(() => {
-    if (!Array.isArray(usersData) || usersData.length === 0) return null;
-    return usersData.find((u) => u.adminId === articleValues.adminId) || null;
-  }, [usersData, articleValues.adminId]);
-
-  const otherUsers = useMemo(() => {
-    if (!Array.isArray(usersData) || usersData.length === 0) return [];
-    if (!currentUser) return usersData;
-    return usersData.filter((u) => u.adminId !== currentUser.adminId);
-  }, [usersData, currentUser]);
 
   const handleTitleChange = (e) => {
     setArticleValues((prev) => ({
@@ -100,13 +83,7 @@ function CreateBanner({ articleValues, setArticleValues, mode, usersData }) {
     }));
   };
 
-  const handleClickUser = (adminId) => {
-    setArticleValues((prev) => ({
-      ...prev,
-      adminId,
-    }));
-    setUserBoxActive(false);
-  };
+
 
   useEffect(() => {
     if (!previewImg) return;
@@ -143,37 +120,6 @@ function CreateBanner({ articleValues, setArticleValues, mode, usersData }) {
       {isMobile && <IoMenu className="menu-bar" size={28} onClick={() => setMobileMenuActive((prev) => !prev)} />}
       {previewImg && <BannerContainerWrap style={{ pointerEvents: "none" }} />}
 
-      <LoginUserBox>
-        <FaUserCircle />
-        <div className="login-user-info" >
-          {currentUser
-            ? `${currentUser.name} ${currentUser.rank} ${currentUser.email}`
-            : "작성자 선택"}
-        </div>
-
-        <SelectBtn
-          $userBoxActive={userBoxActive}
-          onClick={() => setUserBoxActive((prev) => !prev)}
-          aria-label="작성자 선택 열기/닫기"
-          $hasPreview={previewImg}
-        >
-          ▲
-        </SelectBtn>
-
-        <SelectUserBox $userBoxActive={userBoxActive}>
-          {(currentUser ? otherUsers : usersData || []).map((user) => (
-            <UserSelector
-              key={user.adminId}
-              className="other-user"
-              onClick={() => handleClickUser(user.adminId)}
-            >
-              <FaUserCircle />
-              {user.name} {user.rank} <strong>{user.email}</strong>
-            </UserSelector>
-          ))}
-        </SelectUserBox>
-      </LoginUserBox>
-
       <input
         type="file"
         id="banner-image"
@@ -182,7 +128,7 @@ function CreateBanner({ articleValues, setArticleValues, mode, usersData }) {
         onChange={handleChangeBannerImg}
       />
       <label htmlFor="banner-image">
-        <BiImageAdd className="add-image" size={isMobile ? 36 : 48} color="white" style={{ zIndex: 1 }} />
+        <BiImageAdd className="add-image" size={isMobile ? 36 : 48} color="white" />
       </label>
 
       <TitleInput

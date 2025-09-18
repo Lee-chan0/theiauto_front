@@ -147,6 +147,7 @@ const TagBox = styled.div`
   gap : 16px;
 
   & > span {
+    white-space: nowrap;
     padding : 4px 8px;
     background-color: ${({ theme }) => theme.neutral.gray900};
     color : ${({ theme }) => theme.neutral.gray100};
@@ -247,7 +248,7 @@ function CategoryBanner({ categoryId }) {
           <TagBox>
             {
               bannerData?.ArticleTag?.length !== 0 &&
-              bannerData?.ArticleTag?.map((tag) => (
+              bannerData?.ArticleTag?.slice(0, 5).map((tag) => (
                 <span key={tag.tag.tagId}>#&nbsp;{tag.tag.tagName}</span>
               ))
             }

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import styled, { css, keyframes } from "styled-components"; // keyframes import 유지
+import styled, { css } from "styled-components"; // keyframes import 유지
 import { fetchHomeAd, patchClickCount } from "../../../API/generalAPI/generalAdvertisement.api";
 import React, { useEffect, useMemo } from "react";
 import RollingAd from '../HomeAd/RollingAd';
@@ -33,7 +33,6 @@ const AdLists = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 120px);
-  grid-auto-rows: auto;
   gap: 4px;
 `;
 
@@ -278,8 +277,7 @@ const bannerLocations = [
   '메인 배너 하단-1 (218 X 220)',
   '메인 배너 하단-2 (218 X 220)',
   '메인 배너 하단-3 (218 X 220)',
-  '메인 배너 하단-4 (218 X 220)',
-  '메인 배너 하단-5 (218 X 220)'
+  '메인 배너 하단-4 (218 X 220)'
 ];
 
 function NewsContentAside({ isSticky }) {

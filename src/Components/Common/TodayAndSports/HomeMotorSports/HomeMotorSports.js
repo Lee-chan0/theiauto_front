@@ -41,9 +41,9 @@ const textStyle = css`
 const MainContainer = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: 4px;
+  border-radius: 16px;
   background-color: ${({ theme }) => theme.neutral.gray0};
-  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   flex : 1;
 `;
 
@@ -64,6 +64,7 @@ const DescriptionBox = styled.div`
     font-weight: bold;
     color : ${({ theme }) => theme.primary.red700};
     border-right: 2px solid rgba(26, 26, 26, 0.2);
+    pointer-events: none;
   }
 
 `;
@@ -112,6 +113,7 @@ const MotorItems = styled.li`
   cursor: pointer;
 
   &:hover {
+
     & > article {
       & > div {
         & > h1 {
@@ -127,6 +129,7 @@ const MotorArticle = styled.article`
   height: 100%;
   display: flex;
   justify-content: space-between;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.5);
 
   & > img {
     width: 30%;

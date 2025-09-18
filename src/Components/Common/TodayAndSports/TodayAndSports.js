@@ -32,7 +32,8 @@ const NewsBox = styled.div`
   height: 400px;
   display: flex;
   gap : 16px;
-
+  overflow: hidden;
+  
   & > * {
     overflow: hidden;
   }

@@ -19,20 +19,23 @@ const ScheduleContainer = styled.div`
     .react-datepicker__input-container {
       input {
         font-size: .85rem;
-        font-weight: bold;
         border : none;
         height: 24px;
         border-radius: 2px;
         padding : 0 8px;
         cursor: pointer;
-        background-color: #2d4dcc;
-        color : ${({ theme }) => theme.neutral.gray0};
+        color : ${({ theme }) => theme.neutral.gray900};
+        transition: box-shadow 0.3s;
+        box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
         outline: none;
 
         @media (max-width : 767px) {
           font-size: .6rem;
         }
-          
+        
+        &:hover {
+          box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.78);
+        }
       }
     }
   }
@@ -46,12 +49,11 @@ const ScheduleContainer = styled.div`
 
 const IsScheduleActive = styled.span`
   font-size: 0.85rem;
-  color : ${({ theme }) => theme.neutral.gray0};
-  background-color: #2d4dcc;
+  color : ${({ theme }) => theme.neutral.gray900};
   padding : 4px 8px;
-  font-weight: bold;
   margin-right: 8px;
   border-radius: 2px;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
 
   @media (max-width : 767px) {
     font-size: .6rem;
@@ -76,7 +78,7 @@ function CreateSchedule({ setIsReservation, articleValues, setArticleValues }) {
 
   return (
     <ScheduleContainer>
-      <IoIosArrowForward size={isMobile ? 20 : 24} color="#2d4dcc" style={{ marginRight: '4px', cursor: 'pointer' }} onClick={() => {
+      <IoIosArrowForward size={isMobile ? 20 : 24} color="#1a1a1a" style={{ marginRight: '4px', cursor: 'pointer' }} onClick={() => {
         setIsReservation(false)
         setArticleValues((prev) => ({ ...prev, articleStatus: 'publish' }))
       }} />
@@ -91,7 +93,7 @@ function CreateSchedule({ setIsReservation, articleValues, setArticleValues }) {
         maxTime={new Date(0, 0, 0, 23, 59)}
         timeIntervals={5}
         onChange={(date) => setArticleValues((prev) => ({ ...prev, publishTime: date }))}
-        dateFormat="yyyy-MM-dd :: aa HH시 mm분"
+        dateFormat="yyyy-MM-dd aa HH시 mm분"
         timeCaption="시간"
         popperPlacement='bottom-start'
         customInput={<CustomInput />}

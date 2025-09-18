@@ -39,8 +39,7 @@ const AdInnerBox = styled.div`
 
 const AdsContainerWrapper = styled.div`
   width: 100%;
-  padding : 0 16px;
-  padding-right: 0;
+  padding : 0;
 `;
 
 const AdsRow = styled.ul`
